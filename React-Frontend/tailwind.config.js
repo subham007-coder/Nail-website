@@ -4,8 +4,24 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
+    extend: {
+      colors: {
+        pink: {
+          600: '#E91E63' // Adjust this hex code to match the exact pink in the screenshot
+        }
+      },
+      container: {
+        center: true,
+        padding: '1rem'
+      }
+    }
+  }
 }
