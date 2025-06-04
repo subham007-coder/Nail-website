@@ -25,12 +25,7 @@ export default function Navbar() {
 
       <div className="container mx-auto py-4">
         <div className="flex items-center justify-between px-4">
-          {/* Logo */}
-          <a href="/" className="flex-shrink-0">
-            <img src="/src/assets/logo.jpeg" alt="Nail Knack" className="h-20 md:h-20 rounded-full" />
-          </a>
-
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Moved to left */}
           <button 
             className="lg:hidden p-2 text-gray-600 hover:text-pink-600"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -41,6 +36,14 @@ export default function Navbar() {
               <FiMenu className="h-6 w-6" />
             )}
           </button>
+
+          {/* Logo - Centered on mobile */}
+          <a href="/" className="flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:transform-none">
+            <img src="/assets/logo.jpeg" alt="Nail Knack" className="h-14 md:h-20 rounded-full" />
+          </a>
+
+          {/* Placeholder div to maintain layout */}
+          <div className="lg:hidden w-6"></div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
@@ -91,12 +94,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Updated to slide from left */}
       <div className={`
         lg:hidden fixed inset-0 bg-white z-50 transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="p-4">
+        <div className="p-4 h-full overflow-y-auto">
           <button 
             className="absolute top-4 right-4 p-2 text-gray-600 hover:text-pink-600"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -106,30 +109,52 @@ export default function Navbar() {
 
           <ul className="mt-12 space-y-4">
             <li className="border-b border-gray-100 pb-2">
-              <a href="/" className="text-gray-800 hover:text-pink-600">HOME</a>
+              <a href="/" className="text-gray-800 hover:text-pink-600 block py-2">HOME</a>
             </li>
-            <li className="border-b border-gray-100 pb-2">
+            <li className="border-b border-gray-100">
               <button 
-                className="flex items-center justify-between w-full text-gray-800 hover:text-pink-600"
+                className="flex items-center justify-between w-full text-gray-800 hover:text-pink-600 py-2"
                 onClick={() => setShopHover(!shopHover)}
               >
                 SHOP
-                <svg className={`w-4 h-4 transition-transform ${shopHover ? 'rotate-180' : ''}`} 
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg 
+                  className={`w-4 h-4 transition-transform duration-300 ${shopHover ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              {shopHover && (
-                <div className="mt-2 ml-4 space-y-2">
-                  <p className="font-medium">Shop By Category</p>
-                  <ul className="ml-4 space-y-2">
-                    <li className="text-gray-600 hover:text-pink-600">Best Sellers</li>
-                    <li className="text-gray-600 hover:text-pink-600">French nails</li>
-                    {/* ...other categories... */}
-                  </ul>
-                  {/* ...other shop sections... */}
+              <div className={`
+                overflow-hidden transition-all duration-300 ease-in-out
+                ${shopHover ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}
+              `}>
+                <div className="py-2 px-4 space-y-4">
+                  {/* Shop Categories */}
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Shop By Category</h4>
+                    <ul className="space-y-2 ml-2">
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Best Sellers</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">French nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Casual Wear Nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Toe Nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Ombre Nails</li>
+                    </ul>
+                  </div>
+                  {/* Shop By Shape */}
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Shop By Shape</h4>
+                    <ul className="space-y-2 ml-2">
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Coffin Nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Stiletto Nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">Square Nails</li>
+                      {/* ...other shapes... */}
+                    </ul>
+                  </div>
+                  {/* Add other shop sections similarly */}
                 </div>
-              )}
+              </div>
             </li>
             <li className="border-b border-gray-100 pb-2">
               <a href="/sale" className="text-gray-800 hover:text-pink-600">SALE</a>
