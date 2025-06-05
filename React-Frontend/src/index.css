@@ -1,3 +1,98 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: white !important;
+    display: none !important;
+  }
+
+  @media (min-width: 768px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      display: flex !important;
+    }
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+  }
+
+  @media (min-width: 768px) {
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 2rem !important;
+    }
+  }
+
+  .swiper-pagination {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .swiper-pagination-bullet {
+    margin: 0 !important;
+    background: #E91E63 !important;
+    opacity: 0.3;
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: white !important;
+    opacity: 1 !important;
+  }
+
+  @media (min-width: 768px) {
+    .swiper-pagination-bullet {
+      width: 10px !important;
+      height: 10px !important;
+    }
+  }
+
+  .product-slider .swiper-slide {
+    height: auto;
+  }
+
+  .product-slider .swiper-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .product-slider .swiper-pagination {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .product-slider .swiper-pagination-bullet {
+    background: #E91E63;
+    opacity: 0.3;
+  }
+
+  .product-slider .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+
+  .product-slider .swiper-slide {
+    height: auto;
+  }
+
+  .group:hover .group-hover\:translate-y-0 {
+    transform: translate(-50%, 0);
+  }
+
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+}
