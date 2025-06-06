@@ -27,7 +27,7 @@ const imageGroups = [
     ]
   },
   {
-    id: 2,
+    id: 3,
     images: [
       'https://wdtmakehub.wpengine.com/wp-content/uploads/2024/12/MH-gallery-10.jpg',
       'https://wdtmakehub.wpengine.com/wp-content/uploads/2024/12/MH-gallery-9.jpg',

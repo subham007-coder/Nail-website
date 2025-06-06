@@ -31,7 +31,7 @@ const testimonials = [
     review: "These nails are perfect for special occasions. I received so many compliments on my wedding day!",
     date: '3 weeks ago'
   },{
-    id: 3,
+    id: 4,
     name: 'Michelle Davis',
     image: 'https://randomuser.me/api/portraits/women/3.jpg',
     rating: 5,
