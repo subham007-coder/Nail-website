@@ -6,5 +6,13 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     extensions: ['.js', '.jsx', '.json']
+  },
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   }
 })
