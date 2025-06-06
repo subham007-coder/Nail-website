@@ -1,9 +1,9 @@
-import AboutUs from '../components/AboutUs';
-import Carousel from '../components/Carousel'
-import Navbar from '../components/Navbar'
-import ProductSlider from '../components/ProductSlider'
-import ShopbyCat from '../components/ShopbyCat';
-import Weoffer from '../components/Weoffer';
+import AboutUs from '../components/AboutUs.jsx';
+import Carousel from '../components/Carousel.jsx'
+import Navbar from '../components/Navbar.jsx'
+import ProductSlider from '../components/ProductSlider.jsx'
+import ShopbyCat from '../components/ShopbyCat.jsx';
+import Weoffer from '../components/Weoffer.jsx';
 
 function Home() {
   return (
