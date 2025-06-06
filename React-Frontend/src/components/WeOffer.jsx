@@ -30,7 +30,7 @@ function Weoffer() {
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {offers.map((offer) => (
-          <div key={offer.id} className="flex flex-col items-center text-center">
+          <div key={offer.id} className="flex flex-col items-center text-center bg-[#F5E6DA] text-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
             <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-6 bg-gray-100">
               <img
                 src={offer.image}
