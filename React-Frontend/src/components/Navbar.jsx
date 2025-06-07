@@ -65,7 +65,7 @@ export default function Navbar() {
             <a href="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</a>
             <a href="/designer" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">DESIGNER NAILS</a>
             <a href="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</a>
-            <a href="/blog" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BLOG</a>
+            {/* <a href="/blog" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BLOG</a> */}
             <a href="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</a>
           </div>
 

@@ -9,6 +9,7 @@ import WeOffer from '../components/WeOffer.jsx';
 import Groupimages from '../components/Groupimages.jsx';
 import BookAppo from '../components/BookAppo.jsx';
 import InstaFeed from '../components/InstaFeed.jsx';
+import Footer from '../components/Footer.jsx';
 
 function Home() {
   return (
@@ -24,6 +25,7 @@ function Home() {
         <Groupimages/>
         <BookAppo/>
         <InstaFeed/>
+        <Footer/>
     </div>
   )
 }

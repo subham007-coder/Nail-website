@@ -1,0 +1,113 @@
+import React from 'react';
+import { FiInstagram, FiFacebook, FiTwitter, FiYoutube } from 'react-icons/fi';
+
+function Footer() {
+  return (
+    <footer className="bg-gray-900 text-gray-300">
+      {/* Main Footer */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* About Section */}
+          <div className="space-y-4">
+            <img 
+              src="/assets/logo2.PNG" 
+              alt="Nailz By Angana Logo" 
+              className="w-32 md:w-40 object-contain filter brightness-110 hover:brightness-125 transition-all duration-300"
+            />
+            <p className="text-sm leading-relaxed">
+              Experience the perfect blend of style and convenience with our premium press-on nails. 
+              Designed for the modern woman who values both beauty and time.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="hover:text-pink-500 transition-colors">
+                <FiInstagram className="w-5 h-5" />
+              </a>
+              <a href="#" className="hover:text-pink-500 transition-colors">
+                <FiFacebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="hover:text-pink-500 transition-colors">
+                <FiTwitter className="w-5 h-5" />
+              </a>
+              <a href="#" className="hover:text-pink-500 transition-colors">
+                <FiYoutube className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Quick Links</h3>
+            <ul className="space-y-2">
+              {['Home', 'About Us', 'Shop', 'Contact'].map((item) => (
+                <li key={item}>
+                  <a href="#" className="text-sm hover:text-pink-500 transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Customer Service */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Customer Service</h3>
+            <ul className="space-y-2">
+              {[
+                'Shipping Policy',
+                'Return Policy',
+                'FAQ',
+                'Track Order'
+              ].map((item) => (
+                <li key={item}>
+                  <a href="#" className="text-sm hover:text-pink-500 transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Stay Updated</h3>
+            <p className="text-sm">Subscribe to our newsletter for exclusive offers and updates.</p>
+            <form className="flex flex-col space-y-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="px-4 py-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-800">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-sm">
+              © {new Date().getFullYear()} Nailz By Angana. All rights reserved.
+            </p>
+            <div className="flex space-x-6">
+              <a href="#" className="text-sm hover:text-pink-500 transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-sm hover:text-pink-500 transition-colors">
+                Terms of Service
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;
