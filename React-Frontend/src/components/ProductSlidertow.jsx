@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { FiHeart, FiEye, FiShoppingCart } from 'react-icons/fi';
 
 // Import Swiper styles
@@ -102,7 +102,7 @@ function ProductSlider() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl md:text-3xl font-bold">Designer Luxe Press On Nails Set</h2>
         <div className="hidden md:flex gap-4">
           <button className="swiper-button-prev-custom p-2 rounded-full border border-gray-300 hover:border-pink-600 hover:text-pink-600 transition-colors">
@@ -119,11 +119,15 @@ function ProductSlider() {
       </div>
 
       <Swiper
-        modules={[Navigation, Pagination]}
+        modules={[Navigation, Pagination, Autoplay]}
         navigation={{
           prevEl: '.swiper-button-prev-custom',
           nextEl: '.swiper-button-next-custom',
         }}
+        autoplay={{
+						delay: 3000,
+						disableOnInteraction: false,
+					}}
         // pagination={{
         //   enabled: true,
         //   clickable: true,
@@ -137,7 +141,7 @@ function ProductSlider() {
           1024: { slidesPerView: 4, spaceBetween: 30 },
         }}
         grabCursor={true}
-        className="product-slider"
+        className="product-slider bg-[#F5E6DA] rounded-lg"
       >
         {products.map((product) => (
           <SwiperSlide key={product.id} className="pb-12">

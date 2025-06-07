@@ -5,8 +5,9 @@ import ProductSlider from '../components/ProductSlider.jsx';
 import ProductSlidertow from '../components/ProductSlidertow.jsx';
 import ShopbyCat from "../components/ShopbyCat.jsx";
 import Testimonial from '../components/Testimonial.jsx';
-import WeOffer from '../components/WeOffer.jsx';
+import WeOffer from '../components/Weoffer.jsx';
 import Groupimages from '../components/Groupimages.jsx';
+import BookAppo from '../components/BookAppo.jsx';
 
 function Home() {
   return (
@@ -20,6 +21,7 @@ function Home() {
         <Testimonial/>
         <ProductSlidertow/>
         <Groupimages/>
+        <BookAppo/>
     </div>
   )
 }

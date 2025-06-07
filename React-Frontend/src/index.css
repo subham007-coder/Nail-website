@@ -108,4 +108,16 @@
   .gallery-slider .swiper-wrapper {
     transition-timing-function: linear !important;
   }
+
+  .product-slider.swiper {
+    padding: 10px 10px !important;
+  }
+
+  .testimonial-slider {
+    @apply pb-12; /* Add padding bottom for pagination dots */
+  }
+
+  .testimonial-slider .swiper-wrapper {
+    @apply pb-4; /* Add some space between slides and pagination */
+  }
 }
