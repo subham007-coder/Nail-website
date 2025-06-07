@@ -120,4 +120,20 @@
   .testimonial-slider .swiper-wrapper {
     @apply pb-4; /* Add some space between slides and pagination */
   }
+
+  .instagram-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4;
+  }
+
+  .instagram-post {
+    @apply relative aspect-square overflow-hidden rounded-xl;
+  }
+
+  .instagram-post img {
+    @apply transition-transform duration-700;
+  }
+
+  .instagram-post:hover img {
+    @apply scale-110;
+  }
 }
