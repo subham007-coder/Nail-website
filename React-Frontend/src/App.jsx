@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import Home from './pages/Home'
+import Home from './pages/Home';
 import Login from './components/Login';
+import ScrollProvider from './components/ScrollProvider';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     const auth = localStorage.getItem('isAuthenticated');
     if (auth === 'true') {
       setIsAuthenticated(true);
@@ -16,12 +17,11 @@ function App() {
     setIsAuthenticated(true);
   };
 
-
   return (
-    <>
+    <ScrollProvider>
       {isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />}
-    </>
-  )
+    </ScrollProvider>
+  );
 }
 
-export default App
+export default App;
