@@ -37,14 +37,14 @@ function Carousel() {
     <div className="relative">
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
-        navigation={{
-          enabled: true,
-          hideOnClick: true,
-        }}
-        pagination={{ 
-          clickable: true,
-          dynamicBullets: true 
-        }}
+        // navigation={{
+        //   enabled: true,
+        //   hideOnClick: true,
+        // }}
+        // pagination={{ 
+        //   clickable: true,
+        //   dynamicBullets: true 
+        // }}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,

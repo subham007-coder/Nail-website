@@ -19,10 +19,10 @@ function Footer() {
               Designed for the modern woman who values both beauty and time.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-pink-500 transition-colors">
+              <a href="https://www.instagram.com/nailz_by_angana?igsh=ZnAxNnk2OTQzeGpl" className="hover:text-pink-500 transition-colors">
                 <FiInstagram className="w-5 h-5" />
               </a>
-              <a href="#" className="hover:text-pink-500 transition-colors">
+              <a href="https://www.facebook.com/AnganaNailStudio?rdid=qjK8SFMNBJ65k8uY&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1GxhvS2UTB%2F#" className="hover:text-pink-500 transition-colors">
                 <FiFacebook className="w-5 h-5" />
               </a>
               <a href="#" className="hover:text-pink-500 transition-colors">

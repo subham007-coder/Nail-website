@@ -39,7 +39,7 @@ export default function Navbar() {
 
           {/* Logo - Centered on mobile */}
           <a href="/" className="flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:transform-none">
-            <img src="/assets/logo.jpeg" alt="Nail Knack" className="h-14 md:h-20 rounded-full" />
+            <img src="/assets/logo2.PNG" alt="Nail Knack" className="h-14 md:h-20 rounded-full bg-black" />
           </a>
 
           {/* Placeholder div to maintain layout */}
