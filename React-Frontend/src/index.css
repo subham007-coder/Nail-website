@@ -136,4 +136,8 @@
   .instagram-post:hover img {
     @apply scale-110;
   }
+
+  [data-animation] {
+    will-change: transform, opacity;
+  }
 }

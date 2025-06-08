@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { FiStar } from 'react-icons/fi';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -46,56 +47,60 @@ const testimonials = [
 ];
 
 function Testimonial() {
+	useScrollAnimation();
+
 	return (
 		<div className="bg-gray-50">
 			<div className="container mx-auto px-4 py-16">
-				<h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
+				<h2 className="text-2xl md:text-3xl font-bold text-center mb-8" data-animation="fade-up">
 					What Our Customers Say
 				</h2>
 
-				<Swiper
-					modules={[Autoplay, Pagination]}
-					autoplay={{
-						delay: 5000,
-						disableOnInteraction: false,
-					}}
-					breakpoints={{
-						640: { slidesPerView: 1 },
-						768: { slidesPerView: 2, spaceBetween: 20 },
-						1024: { slidesPerView: 3, spaceBetween: 30 },
-					}}
-					className="testimonial-slider"
-				>
-					{testimonials.map((testimonial) => (
-						<SwiperSlide key={testimonial.id}>
-							<div className="bg-white p-6 rounded-xl shadow-md">
-								<div className="flex items-center gap-4 mb-4">
-									<img
-										src={testimonial.image}
-										alt={testimonial.name}
-										className="w-12 h-12 rounded-full object-cover"
-									/>
-									<div>
-										<h3 className="font-medium">{testimonial.name}</h3>
-										<p className="text-gray-500 text-sm">
-											{testimonial.date}
-										</p>
+				<div data-animation="stagger">
+					<Swiper
+						modules={[Autoplay, Pagination]}
+						autoplay={{
+							delay: 5000,
+							disableOnInteraction: false,
+						}}
+						breakpoints={{
+							640: { slidesPerView: 1 },
+							768: { slidesPerView: 2, spaceBetween: 20 },
+							1024: { slidesPerView: 3, spaceBetween: 30 },
+						}}
+						className="testimonial-slider"
+					>
+						{testimonials.map((testimonial) => (
+							<SwiperSlide key={testimonial.id} data-stagger>
+								<div className="bg-white p-6 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300">
+									<div className="flex items-center gap-4 mb-4">
+										<img
+											src={testimonial.image}
+											alt={testimonial.name}
+											className="w-12 h-12 rounded-full object-cover"
+										/>
+										<div>
+											<h3 className="font-medium">{testimonial.name}</h3>
+											<p className="text-gray-500 text-sm">
+												{testimonial.date}
+											</p>
+										</div>
 									</div>
-								</div>
 
-								<div className="flex text-yellow-400 mb-3">
-									{[...Array(testimonial.rating)].map((_, index) => (
-										<FiStar key={index} className="w-4 h-4 fill-current" />
-									))}
-								</div>
+									<div className="flex text-yellow-400 mb-3">
+										{[...Array(testimonial.rating)].map((_, index) => (
+											<FiStar key={index} className="w-4 h-4 fill-current" />
+										))}
+									</div>
 
-								<p className="text-gray-600 leading-relaxed">
-									{testimonial.review}
-								</p>
-							</div>
-						</SwiperSlide>
-					))}
-				</Swiper>
+									<p className="text-gray-600 leading-relaxed">
+										{testimonial.review}
+									</p>
+								</div>
+							</SwiperSlide>
+						))}
+					</Swiper>
+				</div>
 			</div>
 		</div>
 	);

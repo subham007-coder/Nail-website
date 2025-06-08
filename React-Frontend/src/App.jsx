@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './components/Login';
 import ScrollProvider from './components/ScrollProvider';
+import EntryPopup from './components/EntryPopup';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <ScrollProvider>
+      <EntryPopup/>
       {isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />}
     </ScrollProvider>
   );
