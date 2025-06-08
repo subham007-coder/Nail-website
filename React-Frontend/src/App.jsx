@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Login from './components/Login';
 import ScrollProvider from './components/ScrollProvider';
 import EntryPopup from './components/EntryPopup';
+import FloatingBar from './components/FlotingBar';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +23,7 @@ function App() {
     <ScrollProvider>
       <EntryPopup/>
       {isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />}
+      <FloatingBar />
     </ScrollProvider>
   );
 }

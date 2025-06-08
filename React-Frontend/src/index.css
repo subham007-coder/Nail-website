@@ -140,4 +140,16 @@
   [data-animation] {
     will-change: transform, opacity;
   }
+
+  /* Ensure content doesn't get hidden behind floating bar on mobile */
+  .has-floating-bar {
+    padding-bottom: 4rem;
+  }
+
+  /* Hide floating bar on desktop */
+  @screen md {
+    .has-floating-bar {
+      padding-bottom: 0;
+    }
+  }
 }

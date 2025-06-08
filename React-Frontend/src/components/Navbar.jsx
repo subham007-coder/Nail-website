@@ -5,6 +5,7 @@ import ShopMegaMenu from './ShopMegaMenu';
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [shopHover, setShopHover] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   return (
     <nav className="w-full bg-white relative">
@@ -24,77 +25,105 @@ export default function Navbar() {
       </div>
 
       <div className="container mx-auto py-4">
-        <div className="flex items-center justify-between px-4">
-          {/* Mobile Menu Button - Moved to left */}
-          <button 
-            className="lg:hidden p-2 text-gray-600 hover:text-pink-600"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? (
-              <FiX className="h-6 w-6" />
-            ) : (
+        {/* Mobile Navigation */}
+        <div className="lg:hidden">
+          <div className="flex items-center justify-between px-4">
+            {/* Hamburger Menu */}
+            <button 
+              className="p-2 text-gray-600 hover:text-pink-600"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
               <FiMenu className="h-6 w-6" />
-            )}
-          </button>
+            </button>
 
-          {/* Logo - Centered on mobile */}
-          <a href="/" className="flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:transform-none">
-            <img src="/assets/logo2.PNG" alt="Nail Knack" className="h-14 md:h-20 rounded-full bg-black" />
-          </a>
+            {/* Logo */}
+            <a href="/" className="flex-shrink-0">
+              <img 
+                src="/assets/logo2.PNG" 
+                alt="Nail Knack" 
+                className="h-16 md:h-20 rounded-full object-contain bg-black"
+              />
+            </a>
 
-          {/* Placeholder div to maintain layout */}
-          <div className="lg:hidden w-6"></div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            <a href="/" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">HOME</a>
-
-            {/* SHOP with Mega Menu */}
-            <div className="relative group">
-              <a href="#" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium flex items-center">
-                SHOP
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </a>
-              <div className="absolute left-0 top-full w-[800px] hidden group-hover:block z-50 pt-4">
-                <ShopMegaMenu />
-              </div>
+            {/* Cart Icon */}
+            <div className="relative">
+              <FiShoppingCart className="h-6 w-6 text-gray-600" />
+              <span className="absolute -top-2 -right-2 bg-pink-600 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
             </div>
-
-            <a href="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</a>
-            <a href="/designer" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">DESIGNER NAILS</a>
-            <a href="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</a>
-            {/* <a href="/blog" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BLOG</a> */}
-            <a href="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</a>
           </div>
 
-          {/* Search and Icons */}
-          <div className="flex items-center gap-6">
-            <div className="hidden lg:block relative">
+          {/* Search Bar */}
+          <div className="px-4 pt-4">
+            <div className="relative">
               <input
                 type="text"
-                placeholder="I'm looking for..."
-                className="w-64 pl-10 pr-4 py-2 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-[#E91E63]"
+                placeholder="Search products..."
+                className="w-full px-4 py-2 pl-10 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-pink-600 focus:bg-white transition-all"
               />
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
             </div>
-            <div className="flex items-center gap-4">
-              <FiUser className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
-              <div className="relative">
-                <FiHeart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
-                <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+          </div>
+        </div>
+
+        {/* Desktop Navigation */}
+        <div className="hidden lg:block">
+          <div className="flex items-center justify-between px-4">
+            {/* Logo - Centered on mobile */}
+            <a href="/" className="flex-shrink-0">
+              <img src="/assets/logo2.PNG" alt="Nail Knack" className="h-14 md:h-20 rounded-full bg-black" />
+            </a>
+
+            {/* Desktop Navigation Links */}
+            <div className="flex items-center space-x-8">
+              <a href="/" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">HOME</a>
+
+              {/* SHOP with Mega Menu */}
+              <div className="relative group">
+                <a href="#" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium flex items-center">
+                  SHOP
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </a>
+                <div className="absolute left-0 top-full w-[800px] hidden group-hover:block z-50 pt-4">
+                  <ShopMegaMenu />
+                </div>
               </div>
-              <div className="relative">
-                <FiShoppingCart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
-                <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+
+              <a href="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</a>
+              <a href="/designer" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">DESIGNER NAILS</a>
+              <a href="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</a>
+              {/* <a href="/blog" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BLOG</a> */}
+              <a href="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</a>
+            </div>
+
+            {/* Search and Icons */}
+            <div className="flex items-center gap-6">
+              <div className="hidden lg:block relative">
+                <input
+                  type="text"
+                  placeholder="I'm looking for..."
+                  className="w-64 pl-10 pr-4 py-2 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-[#E91E63]"
+                />
+                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
+              <div className="flex items-center gap-4">
+                <FiUser className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
+                <div className="relative">
+                  <FiHeart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
+                  <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                </div>
+                <div className="relative">
+                  <FiShoppingCart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
+                  <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu - Updated to slide from left */}
+      {/* Mobile Menu Slide-out */}
       <div className={`
         lg:hidden fixed inset-0 bg-white z-50 transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
