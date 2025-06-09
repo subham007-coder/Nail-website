@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiMenu, FiX, FiUser, FiHeart, FiShoppingCart, FiSearch } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import ShopMegaMenu from './ShopMegaMenu';
 
 export default function Navbar() {

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import AboutUs from '../components/AboutUs.jsx';
 import Carousel from '../components/Carousel.jsx';
 import Navbar from '../components/Navbar.jsx';
