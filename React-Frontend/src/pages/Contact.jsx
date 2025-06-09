@@ -232,7 +232,7 @@ function Contact() {
               />
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#f7cde6] p-8 rounded-lg shadow-lg">
               <ContactInfo
                 icon={<FiMail />}
                 title="Mail Us"
