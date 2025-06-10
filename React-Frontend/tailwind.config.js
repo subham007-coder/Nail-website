@@ -21,7 +21,14 @@ export default {
       container: {
         center: true,
         padding: '1rem'
-      }
-    }
-  }
+      },
+      boxShadow: {
+        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+        'soft-lg': '0 8px 30px rgba(0, 0, 0, 0.08)',
+      },
+      fontFamily: {
+        'serif': ['Playfair Display', 'serif'], // Add this elegant font
+      },
+    },
+  },
 }

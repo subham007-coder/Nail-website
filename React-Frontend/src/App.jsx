@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './components/Login';
 import Contact from './pages/Contact';
+import Appointment from './pages/Appointment'; // Import the Appointment component
 import ScrollProvider from './components/ScrollProvider';
 import EntryPopup from './components/EntryPopup';
 import FloatingBar from './components/FlotingBar';
@@ -31,6 +32,8 @@ function App() {
             element={isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />} 
           />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/appointment" element={<Appointment />} /> {/* Add the Appointment route */}
+          {/* Add other routes as needed */}
         </Routes>
         <FloatingBar />
       </ScrollProvider>

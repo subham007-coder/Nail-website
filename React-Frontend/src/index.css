@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap');
+
 @layer components {
   .swiper-button-next,
   .swiper-button-prev {
@@ -167,5 +169,30 @@
     50% {
       transform: translateY(-20px) rotate(180deg);
     }
+  }
+
+  /* DatePicker Custom Styles */
+  .react-datepicker {
+    @apply font-sans border-0 shadow-lg !important;
+  }
+
+  .react-datepicker__header {
+    @apply bg-transparent border-0 !important;
+  }
+
+  .react-datepicker__current-month {
+    @apply text-gray-800 font-serif text-lg mb-4 !important;
+  }
+
+  .react-datepicker__day--selected {
+    @apply bg-pink-600 text-white !important;
+  }
+
+  .react-datepicker__day--keyboard-selected {
+    @apply bg-pink-100 text-gray-900 !important;
+  }
+
+  .react-datepicker__day {
+    @apply transition-all duration-200 !important;
   }
 }

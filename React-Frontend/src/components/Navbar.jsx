@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { FiMenu, FiX, FiUser, FiHeart, FiShoppingCart, FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { FiMenu, FiX, FiUser, FiHeart, FiShoppingCart, FiSearch } from 'react-icons/fi';
 import ShopMegaMenu from './ShopMegaMenu';
 
 export default function Navbar() {
@@ -19,9 +19,9 @@ export default function Navbar() {
             <div className="bg-white text-black px-2 py-0.5 rounded text-xs">52</div>
             <div className="bg-white text-black px-2 py-0.5 rounded text-xs">03</div>
           </div>
-          <button className="bg-white text-[#E91E63] px-4 py-1 rounded text-sm hover:bg-gray-50">
+          <Link to="/shop" className="bg-white text-[#E91E63] px-4 py-1 rounded text-sm hover:bg-gray-50">
             Shop Now
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -38,13 +38,13 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <a href="/" className="flex-shrink-0">
+            <Link to="/" className="flex-shrink-0">
               <img 
                 src="/assets/logo2.PNG" 
                 alt="Nail Knack" 
                 className="h-16 md:h-20 rounded-full object-contain bg-black"
               />
-            </a>
+            </Link>
 
             {/* Cart Icon */}
             <div className="relative">
@@ -69,33 +69,32 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <div className="hidden lg:block">
           <div className="flex items-center justify-between px-4">
-            {/* Logo - Centered on mobile */}
-            <a href="/" className="flex-shrink-0">
+            {/* Logo */}
+            <Link to="/" className="flex-shrink-0">
               <img src="/assets/logo2.PNG" alt="Nail Knack" className="h-14 md:h-20 rounded-full bg-black" />
-            </a>
+            </Link>
 
             {/* Desktop Navigation Links */}
             <div className="flex items-center space-x-8">
-              <a href="/" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">HOME</a>
+              <Link to="/" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">HOME</Link>
 
               {/* SHOP with Mega Menu */}
               <div className="relative group">
-                <a href="#" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium flex items-center">
+                <Link to="/shop" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium flex items-center">
                   SHOP
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
-                </a>
+                </Link>
                 <div className="absolute left-0 top-full w-[800px] hidden group-hover:block z-50 pt-4">
                   <ShopMegaMenu />
                 </div>
               </div>
 
-              <a href="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</a>
-              <a href="/designer" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">DESIGNER NAILS</a>
-              <a href="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</a>
-              {/* <a href="/blog" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BLOG</a> */}
-              <a href="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</a>
+              <Link to="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</Link>
+              <Link to="/appointment" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BOOK AN APPOINTMENT</Link>
+              <Link to="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</Link>
+              <Link to="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</Link>
             </div>
 
             {/* Search and Icons */}
@@ -139,7 +138,7 @@ export default function Navbar() {
 
           <ul className="mt-12 space-y-4">
             <li className="border-b border-gray-100 pb-2">
-              <a href="/" className="text-gray-800 hover:text-pink-600 block py-2">HOME</a>
+              <Link to="/" className="text-gray-800 hover:text-pink-600 block py-2">HOME</Link>
             </li>
             <li className="border-b border-gray-100">
               <button 
@@ -187,19 +186,19 @@ export default function Navbar() {
               </div>
             </li>
             <li className="border-b border-gray-100 pb-2">
-              <a href="/sale" className="text-gray-800 hover:text-pink-600">SALE</a>
+              <Link to="/sale" className="text-gray-800 hover:text-pink-600">SALE</Link>
             </li>
             <li className="border-b border-gray-100 pb-2">
-              <a href="/designer" className="text-gray-800 hover:text-pink-600">DESIGNER NAILS</a>
+              <Link to="/appointment" className="text-gray-800 hover:text-pink-600">BOOK AN APPOINTMENT</Link>
             </li>
             <li className="border-b border-gray-100 pb-2">
-              <a href="/tutorial" className="text-gray-800 hover:text-pink-600">TUTORIAL</a>
+              <Link to="/tutorial" className="text-gray-800 hover:text-pink-600">TUTORIAL</Link>
             </li>
             <li className="border-b border-gray-100 pb-2">
-              <a href="/blog" className="text-gray-800 hover:text-pink-600">BLOG</a>
+              <Link to="/blog" className="text-gray-800 hover:text-pink-600">BLOG</Link>
             </li>
             <li className="border-b border-gray-100 pb-2">
-              <a href="/contact" className="text-gray-800 hover:text-pink-600">CONTACT US</a>
+              <Link to="/contact" className="text-gray-800 hover:text-pink-600">CONTACT US</Link>
             </li>
           </ul>
         </div>

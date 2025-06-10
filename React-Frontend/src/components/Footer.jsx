@@ -1,7 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FiInstagram, FiFacebook, FiTwitter, FiYoutube } from 'react-icons/fi';
 
 function Footer() {
+  // Update quickLinks array
+  const quickLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'About Us', path: '/about' },
+    { name: 'Shop', path: '/shop' },
+    { name: 'Book an Appointment', path: '/appointment' },
+    { name: 'Contact', path: '/contact' }
+  ];
+
   return (
     <footer className="bg-gray-900 text-gray-300">
       {/* Main Footer */}
@@ -38,11 +48,14 @@ function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-white">Quick Links</h3>
             <ul className="space-y-2">
-              {['Home', 'About Us', 'Shop', 'Contact'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm hover:text-pink-500 transition-colors">
-                    {item}
-                  </a>
+              {quickLinks.map((link) => (
+                <li key={link.name}>
+                  <Link 
+                    to={link.path}
+                    className="text-sm hover:text-pink-500 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
