@@ -4,7 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-   theme: {
+  theme: {
     screens: {
       'sm': '640px',
       'md': '768px',
@@ -27,7 +27,8 @@ export default {
         'soft-lg': '0 8px 30px rgba(0, 0, 0, 0.08)',
       },
       fontFamily: {
-        'serif': ['Playfair Display', 'serif'], // Add this elegant font
+        'sans': ['Inter', 'sans-serif'],
+        'serif': ['Playfair Display', 'serif'],
       },
     },
   },

@@ -40,24 +40,123 @@ function Appointment() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF8F5]"> {/* Soft ivory background */}
+    <div className="min-h-screen bg-[#FDF8F5]">
       <Navbar />
       
-      {/* Enhanced Banner Section */}
-      <div className="relative h-[300px] md:h-[350px] overflow-hidden bg-gradient-to-r from-pink-50 via-[#FDF8F5] to-pink-100">
-        <div className="absolute inset-0 bg-[url('/assets/nail-banner.jpg')] opacity-20 bg-cover bg-center"></div>
+      {/* Banner Section */}
+      <div className="relative h-[200px] md:h-[250px] overflow-hidden bg-gradient-to-r from-pink-50 to-purple-500">
+        {/* Main Gradient Bubbles */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative h-full flex flex-col items-center justify-center text-center z-10 px-4"
-        >
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-gray-800 mb-4 font-serif">
-            Book Your Appointment
-          </h1>
-          <p className="text-sm md:text-base text-gray-600 max-w-md mx-auto font-light">
-            Transform your nails into works of art with our expert nail care services
-          </p>
-        </motion.div>
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full
+            bg-gradient-to-r from-pink-300 to-pink-400 opacity-50 blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, -20, 0],
+            opacity: [0.4, 0.6, 0.4]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute bottom-[-30%] right-[-10%] w-[400px] h-[400px] rounded-full
+            bg-gradient-to-l from-pink-100 to-purple-200 opacity-40 blur-3xl"
+        />
+
+        {/* Floating Elements */}
+        <motion.div
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 360],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute top-1/4 left-1/4 w-8 h-8 md:w-12 md:h-12 bg-pink-100 rounded-full opacity-40"
+        />
+        <motion.div
+          animate={{
+            y: [0, 30, 0],
+            x: [0, 20, 0],
+            rotate: [0, -360]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute bottom-1/4 right-1/3 w-6 h-6 md:w-10 md:h-10 bg-purple-100 rounded-lg opacity-40 transform rotate-45"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            y: [0, -15, 0],
+            x: [0, 15, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute top-1/3 right-1/4 w-4 h-4 md:w-8 md:h-8 border-2 border-pink-200 rounded-full opacity-40"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 0.8, 1],
+            rotate: [0, 180, 360]
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute bottom-1/3 left-1/3 w-5 h-5 md:w-9 md:h-9 bg-purple-100 transform rotate-45 opacity-40"
+        />
+
+        {/* Content - Keeping your existing font styles */}
+        <div className="relative h-full flex flex-col items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-gray-800 mb-4 font-serif">
+              Book Your Appointment
+            </h1>
+            <p className="text-sm md:text-base text-gray-600 max-w-md mx-auto font-light">
+              Transform your nails into works of art with our expert nail care services
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Add Breadcrumb Section here */}
+      <div className="bg-gray-50 border-b">
+        <div className="container mx-auto px-4 py-3">
+          <nav className="flex text-sm">
+            <Link to="/" className="text-gray-600 hover:text-pink-600">
+              Home
+            </Link>
+            <span className="mx-2 text-gray-400">/</span>
+            <span className="text-pink-600">Book Your Appointment</span>
+          </nav>
+        </div>
       </div>
 
       {/* Main Booking Section */}
@@ -69,18 +168,44 @@ function Appointment() {
               <h2 className="text-2xl font-serif mb-8 text-center text-gray-800">Select Your Date</h2>
               
               {/* Enhanced Date Picker Container */}
-              <div className="bg-gradient-to-br from-pink-50/50 to-purple-50/50 p-6 rounded-2xl border border-pink-100/50 flex justify-center">
+              <div className="bg-gradient-to-br from-pink-50/50 to-purple-50/50 p-4 sm:p-6 rounded-2xl border border-pink-100/50 flex justify-center items-center max-w-full">
                 <DatePicker
                   selected={selectedDate}
                   onChange={date => setSelectedDate(date)}
                   inline
                   minDate={new Date()}
+                  renderCustomHeader={({
+                    date,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled,
+                  }) => (
+                    <div className="flex items-center justify-between px-2 py-2">
+                      <button
+                        onClick={decreaseMonth}
+                        disabled={prevMonthButtonDisabled}
+                        className="p-2 hover:bg-pink-50 rounded-full transition-colors disabled:opacity-50"
+                      >
+                        <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <h3 className="font-serif text-lg text-gray-800">
+                        {date.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                      </h3>
+                      <button
+                        onClick={increaseMonth}
+                        disabled={nextMonthButtonDisabled}
+                        className="p-2 hover:bg-pink-100 rounded-full transition-colors disabled:opacity-50"
+                      >
+                        <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                   calendarClassName="!font-light !text-gray-800"
-                  dayClassName={date =>
-                    `hover:!bg-pink-100 hover:!rounded-full w-10 h-10 !mx-auto flex items-center justify-center
-                    transition-all duration-200
-                    ${date.getMonth() === new Date().getMonth() ? 'text-gray-800' : 'text-gray-400'}`
-                  }
                   monthClassName={() => "!font-serif"}
                   weekDayClassName={() => "!text-gray-500 !font-medium !text-sm"}
                 />
