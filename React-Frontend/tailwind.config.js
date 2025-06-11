@@ -15,7 +15,7 @@ export default {
     extend: {
       colors: {
         pink: {
-          600: '#E91E63' // Adjust this hex code to match the exact pink in the screenshot
+          600: '#E91E63'
         }
       },
       container: {
