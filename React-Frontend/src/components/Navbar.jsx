@@ -91,7 +91,7 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <Link to="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</Link>
+              {/* <Link to="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</Link> */}
               <Link to="/appointment" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BOOK AN APPOINTMENT</Link>
               <Link to="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</Link>
               <Link to="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</Link>
