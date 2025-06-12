@@ -7,6 +7,7 @@ import Appointment from './pages/Appointment'; // Import the Appointment compone
 import ScrollProvider from './components/ScrollProvider';
 import EntryPopup from './components/EntryPopup';
 import FloatingBar from './components/FlotingBar';
+import Tutorial from './pages/Tutorial';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,8 +33,10 @@ function App() {
             element={isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />} 
           />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/appointment" element={<Appointment />} /> {/* Add the Appointment route */}
+          <Route path="/appointment" element={<Appointment />} />
           {/* Add other routes as needed */}
+          <Route path="/tutorial" element={<Tutorial/>} />
+          {/* Redirect to home if no route matches */}
         </Routes>
         <FloatingBar />
       </ScrollProvider>
