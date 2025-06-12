@@ -9,11 +9,51 @@ function ProductGrid({ filters }) {
       id: 1,
       name: "Classic French Tips",
       price: 299,
-      image: "/images/products/french-tips.jpg",
+      image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
       category: "French Nails",
       // ...other product details
     },
-    // ...more products
+    {
+      id: 1,
+      name: "Classic French Tips",
+      price: 299,
+      image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+      category: "French Nails",
+      // ...other product details
+    },
+    {
+      id: 1,
+      name: "Classic French Tips",
+      price: 299,
+      image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+      category: "French Nails",
+      // ...other product details
+    },
+    {
+      id: 1,
+      name: "Classic French Tips",
+      price: 299,
+      image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+      category: "French Nails",
+      // ...other product details
+    },
+    {
+      id: 1,
+      name: "Classic French Tips",
+      price: 299,
+      image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+      category: "French Nails",
+      // ...other product details
+    },
+    {
+      id: 1,
+      name: "Classic French Tips",
+      price: 299,
+      image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+      category: "French Nails",
+      // ...other product details
+    },
+    
   ];
 
   return (

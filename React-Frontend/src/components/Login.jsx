@@ -10,6 +10,7 @@ function Login({ onLogin }) {
     if (password === 'ADSU24') {
       onLogin();
       localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('loginTime', Date.now().toString()); // save login time
     } else {
       setError('Incorrect password');
     }

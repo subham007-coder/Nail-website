@@ -13,12 +13,34 @@ import Shop from './pages/Shop';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const auth = localStorage.getItem('isAuthenticated');
-    if (auth === 'true') {
+  // useEffect(() => {
+  //   const auth = localStorage.getItem('isAuthenticated');
+  //   if (auth === 'true') {
+  //     setIsAuthenticated(true);
+  //   }
+  // }, []);
+
+
+useEffect(() => {
+  const auth = localStorage.getItem('isAuthenticated');
+  const loginTime = localStorage.getItem('loginTime');
+
+  if (auth === 'true' && loginTime) {
+    const now = Date.now();
+    const timeDiff = now - parseInt(loginTime); // difference in milliseconds
+    const twoHours = 2 * 60 * 60 * 1000; // 2 hours in ms
+
+    if (timeDiff < twoHours) {
       setIsAuthenticated(true);
+    } else {
+      // Logout if 2 hours have passed
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('loginTime');
+      setIsAuthenticated(false);
     }
-  }, []);
+  }
+}, []);
+
 
   const handleLogin = () => {
     setIsAuthenticated(true);
