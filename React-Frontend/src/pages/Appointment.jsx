@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CustomCalendar from '../components/CustomCalendar';
 
 function Appointment() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    address: '',  // Changed from email to address
     phone: '',
     service: ''
   });
@@ -146,7 +145,7 @@ function Appointment() {
         </div>
       </div>
 
-      {/* Add Breadcrumb Section here */}
+      {/* Breadcrumb Section */}
       <div className="bg-gray-50 border-b">
         <div className="container mx-auto px-4 py-3">
           <nav className="flex text-sm">
@@ -159,6 +158,34 @@ function Appointment() {
         </div>
       </div>
 
+      {/* Notice Banner */}
+      <div className="bg-pink-50">
+        <div className="container mx-auto px-4 py-4">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center space-x-2 text-pink-700"
+          >
+            <svg 
+              className="w-5 h-5 flex-shrink-0" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+              />
+            </svg>
+            <p className="text-sm font-medium">
+              No Home Service Available – All appointments must be at the studio
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
       {/* Main Booking Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
@@ -167,49 +194,11 @@ function Appointment() {
             <div className="bg-white p-8 rounded-3xl shadow-soft">
               <h2 className="text-2xl font-serif mb-8 text-center text-gray-800">Select Your Date</h2>
               
-              {/* Enhanced Date Picker Container */}
-              <div className="bg-gradient-to-br from-pink-50/50 to-purple-50/50 p-4 sm:p-6 rounded-2xl border border-pink-100/50 flex justify-center items-center max-w-full">
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={date => setSelectedDate(date)}
-                  inline
-                  minDate={new Date()}
-                  renderCustomHeader={({
-                    date,
-                    decreaseMonth,
-                    increaseMonth,
-                    prevMonthButtonDisabled,
-                    nextMonthButtonDisabled,
-                  }) => (
-                    <div className="flex items-center justify-between px-2 py-2">
-                      <button
-                        onClick={decreaseMonth}
-                        disabled={prevMonthButtonDisabled}
-                        className="p-2 hover:bg-pink-50 rounded-full transition-colors disabled:opacity-50"
-                      >
-                        <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </button>
-                      <h3 className="font-serif text-lg text-gray-800">
-                        {date.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                      </h3>
-                      <button
-                        onClick={increaseMonth}
-                        disabled={nextMonthButtonDisabled}
-                        className="p-2 hover:bg-pink-100 rounded-full transition-colors disabled:opacity-50"
-                      >
-                        <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                  calendarClassName="!font-light !text-gray-800"
-                  monthClassName={() => "!font-serif"}
-                  weekDayClassName={() => "!text-gray-500 !font-medium !text-sm"}
-                />
-              </div>
+              {/* Replace the old DatePicker with CustomCalendar */}
+              <CustomCalendar
+                selectedDate={selectedDate}
+                onChange={date => setSelectedDate(date)}
+              />
 
               {/* Enhanced Time Selection */}
               {selectedDate && (
@@ -284,19 +273,19 @@ function Appointment() {
                     />
                   </div>
 
-                  {/* Email Field */}
+                  {/* Address Field */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-600">
-                      Email Address
+                      Address
                     </label>
                     <input
-                      type="email"
+                      type="text"
                       required
                       className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-400 
                         focus:ring-2 focus:ring-pink-100 outline-none transition-all"
-                      placeholder="Enter your email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      placeholder="Enter your full address"
+                      value={formData.address}
+                      onChange={(e) => setFormData({...formData, address: e.target.value})}
                     />
                   </div>
 
