@@ -10,9 +10,11 @@ function Appointment() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    address: '',  // Changed from email to address
+    address: '',
     phone: '',
-    service: ''
+    service: '',
+    location: '',
+    customAddress: ''
   });
 
   const services = [
@@ -25,6 +27,15 @@ function Appointment() {
     "Nail Repair"
   ];
 
+  const locations = [
+    "Barasat",
+    "Madhyamgram",
+    "Ashoknagar",
+    "Habra",
+    "Machhalandapur",
+    "Other"
+  ];
+
   // Available time slots
   const timeSlots = [
     "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -34,8 +45,17 @@ function Appointment() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const finalAddress = formData.location === 'Other' 
+      ? formData.customAddress 
+      : formData.location;
+    
+    console.log({ 
+      ...formData, 
+      address: finalAddress,
+      appointmentDate: selectedDate, 
+      appointmentTime: selectedTime 
+    });
     // Add your form submission logic here
-    console.log({ ...formData, appointmentDate: selectedDate, appointmentTime: selectedTime });
   };
 
   return (
@@ -273,20 +293,51 @@ function Appointment() {
                     />
                   </div>
 
-                  {/* Address Field */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-600">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-400 
-                        focus:ring-2 focus:ring-pink-100 outline-none transition-all"
-                      placeholder="Enter your full address"
-                      value={formData.address}
-                      onChange={(e) => setFormData({...formData, address: e.target.value})}
-                    />
+                  {/* Location and Address Fields */}
+                  <div className="space-y-5">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-600">
+                        Select Location
+                      </label>
+                      <select
+                        required
+                        className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-400 
+                          focus:ring-2 focus:ring-pink-100 outline-none transition-all bg-white text-gray-700"
+                        value={formData.location}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          location: e.target.value,
+                          customAddress: e.target.value === 'Other' ? formData.customAddress : ''
+                        })}
+                      >
+                        <option value="">Choose your location</option>
+                        {locations.map((location) => (
+                          <option key={location} value={location}>{location}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {formData.location === 'Other' && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-2"
+                      >
+                        <label className="block text-sm font-medium text-gray-600">
+                          Your Address
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-400 
+                            focus:ring-2 focus:ring-pink-100 outline-none transition-all"
+                          placeholder="Enter your full address"
+                          value={formData.customAddress}
+                          onChange={(e) => setFormData({...formData, customAddress: e.target.value})}
+                        />
+                      </motion.div>
+                    )}
                   </div>
 
                   {/* Phone Field */}
