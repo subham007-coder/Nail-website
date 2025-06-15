@@ -9,6 +9,9 @@ import EntryPopup from './components/EntryPopup';
 import FloatingBar from './components/FlotingBar';
 import Tutorial from './pages/Tutorial';
 import Shop from './pages/Shop';
+import Wishlist from './pages/cart-and-wishlist/Wishlist';
+import Cart from './pages/cart-and-wishlist/Cart';
+import Account from './pages/Account';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -60,6 +63,9 @@ useEffect(() => {
           {/* Add other routes as needed */}
           <Route path="/tutorial" element={<Tutorial/>} />
           <Route path="/shop" element={<Shop/>} />
+          <Route path="/wishlist" element={<Wishlist/>} />
+          <Route path="/cart" element={<Cart/>} />
+          <Route path="/account" element={<Account />} />
           {/* Redirect to home if no route matches */}
         </Routes>
         <FloatingBar />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FiHome, FiUser, FiShoppingBag, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -35,14 +36,14 @@ function FloatingBar() {
           <div className="bg-white rounded-full shadow-lg border border-gray-100">
             <div className="flex justify-between items-center px-6 py-4">
               {menuItems.map((item) => (
-                <a
+                <Link
                   key={item.label}
-                  href={item.link}
+                  to={item.link}
                   className="flex flex-col items-center text-gray-600 hover:text-pink-600 transition-colors"
                 >
                   {item.icon}
                   <span className="text-[10px] mt-1 font-medium">{item.label}</span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>

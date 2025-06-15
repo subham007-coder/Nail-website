@@ -49,7 +49,7 @@ export default function Navbar() {
             {/* Cart Icon */}
             <div className="relative">
               <FiShoppingCart className="h-6 w-6 text-gray-600" />
-              <span className="absolute -top-2 -right-2 bg-pink-600 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
+              {/* <span className="absolute -top-2 -right-2 bg-pink-600 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span> */}
             </div>
           </div>
 
@@ -111,11 +111,11 @@ export default function Navbar() {
                 <FiUser className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
                 <div className="relative">
                   <FiHeart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
-                  <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                  {/* <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span> */}
                 </div>
                 <div className="relative">
                   <FiShoppingCart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
-                  <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                  {/* <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span> */}
                 </div>
               </div>
             </div>
@@ -185,18 +185,18 @@ export default function Navbar() {
                 </div>
               </div>
             </li>
-            <li className="border-b border-gray-100 pb-2">
+            {/* <li className="border-b border-gray-100 pb-2">
               <Link to="/sale" className="text-gray-800 hover:text-pink-600">SALE</Link>
-            </li>
+            </li> */}
             <li className="border-b border-gray-100 pb-2">
               <Link to="/appointment" className="text-gray-800 hover:text-pink-600">BOOK AN APPOINTMENT</Link>
             </li>
             <li className="border-b border-gray-100 pb-2">
               <Link to="/tutorial" className="text-gray-800 hover:text-pink-600">TUTORIAL</Link>
             </li>
-            <li className="border-b border-gray-100 pb-2">
+            {/* <li className="border-b border-gray-100 pb-2">
               <Link to="/blog" className="text-gray-800 hover:text-pink-600">BLOG</Link>
-            </li>
+            </li> */}
             <li className="border-b border-gray-100 pb-2">
               <Link to="/contact" className="text-gray-800 hover:text-pink-600">CONTACT US</Link>
             </li>
