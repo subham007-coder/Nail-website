@@ -13,7 +13,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
       {/* Product Image */}
       <Link to={`/shop/${product.id}`} className="w-full md:w-48 h-48 rounded-xl overflow-hidden">
         <img
-          src={product.image}
+          src={"https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360"}
           alt={product.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />

@@ -48,8 +48,10 @@ export default function Navbar() {
 
             {/* Cart Icon */}
             <div className="relative">
-              <FiShoppingCart className="h-6 w-6 text-gray-600" />
-              {/* <span className="absolute -top-2 -right-2 bg-pink-600 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span> */}
+              <Link to="/cart" className="relative">
+                <FiShoppingCart className="h-6 w-6 text-gray-600" />
+                {/* <span className="absolute -top-2 -right-2 bg-pink-600 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span> */}
+              </Link>
             </div>
           </div>
 
@@ -108,15 +110,17 @@ export default function Navbar() {
                 <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
               <div className="flex items-center gap-4">
-                <FiUser className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
-                <div className="relative">
+                <Link to="/account">
+                  <FiUser className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
+                </Link>
+                <Link to="/wishlist" className="relative">
                   <FiHeart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
                   {/* <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span> */}
-                </div>
-                <div className="relative">
+                </Link>
+                <Link to="/cart" className="relative">
                   <FiShoppingCart className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
                   {/* <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span> */}
-                </div>
+                </Link>
               </div>
             </div>
           </div>
