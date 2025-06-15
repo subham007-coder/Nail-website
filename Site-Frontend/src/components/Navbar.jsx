@@ -11,15 +11,27 @@ export default function Navbar() {
   return (
     <nav className="w-full bg-white relative">
       {/* Flash Sale Bar */}
-      <div className="bg-[#E91E63] text-white py-2 px-4">
-        <div className="container mx-auto flex items-center justify-center gap-4">
-          <span className="text-sm font-medium">FLASH SALE ENDING SOON</span>
+      <div className="bg-[#E91E63] text-white py-1.5 px-4">
+        <div className="container mx-auto flex items-center justify-center gap-3">
+          <span className="text-xs md:text-sm font-medium font-serif tracking-wider">
+            FLASH SALE ENDING SOON
+          </span>
           <div className="flex gap-1">
-            <div className="bg-white text-black px-2 py-0.5 rounded text-xs">11</div>
-            <div className="bg-white text-black px-2 py-0.5 rounded text-xs">52</div>
-            <div className="bg-white text-black px-2 py-0.5 rounded text-xs">03</div>
+            <div className="bg-white text-black px-1.5 py-0.5 rounded text-[10px] md:text-xs font-mono">
+              11
+            </div>
+            <div className="bg-white text-black px-1.5 py-0.5 rounded text-[10px] md:text-xs font-mono">
+              52
+            </div>
+            <div className="bg-white text-black px-1.5 py-0.5 rounded text-[10px] md:text-xs font-mono">
+              03
+            </div>
           </div>
-          <Link to="/shop" className="bg-white text-[#E91E63] px-4 py-1 rounded text-sm hover:bg-gray-50">
+          <Link 
+            to="/shop" 
+            className="bg-white text-center text-[#E91E63] px-3 py-0.5 rounded text-[10px] md:text-xs 
+              hover:bg-gray-50 transition-colors font-medium tracking-wide"
+          >
             Shop Now
           </Link>
         </div>

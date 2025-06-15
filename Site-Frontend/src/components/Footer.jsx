@@ -6,7 +6,7 @@ function Footer() {
   // Update quickLinks array
   const quickLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About Us', path: '/about' },
+    // { name: 'About Us', path: '/about' },
     { name: 'Shop', path: '/shop' },
     { name: 'Book an Appointment', path: '/appointment' },
     { name: 'Contact', path: '/contact' }
