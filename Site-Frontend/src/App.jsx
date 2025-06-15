@@ -12,6 +12,7 @@ import Shop from './pages/Shop';
 import Wishlist from './pages/cart-and-wishlist/Wishlist';
 import Cart from './pages/cart-and-wishlist/Cart';
 import Account from './pages/Account';
+import ProductDetails from './pages/ProductDetails';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,6 +67,7 @@ useEffect(() => {
           <Route path="/wishlist" element={<Wishlist/>} />
           <Route path="/cart" element={<Cart/>} />
           <Route path="/account" element={<Account />} />
+          <Route path="/shop/:id" element={<ProductDetails />} />
           {/* Redirect to home if no route matches */}
         </Routes>
         <FloatingBar />
