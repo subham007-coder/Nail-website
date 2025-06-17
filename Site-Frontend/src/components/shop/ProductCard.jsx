@@ -106,9 +106,9 @@ function ProductCard({ product }) {
             <button 
               onClick={handleAddToCart}
               className="flex-1 bg-pink-600 text-white px-3 py-2 rounded-lg text-sm font-medium
-                flex items-center justify-center gap-1 hover:bg-pink-700 transition-colors"
+                flex items-center justify-center gap-1 hover:bg-pink-700 transition-colors whitespace-nowrap"
             >
-              <FiShoppingCart className="w-4 h-4" />
+              <FiShoppingCart className="w-4 h-4 hidden sm:block" />
               <span className="hidden xs:inline">Add to Cart</span>
             </button>
             <button 
