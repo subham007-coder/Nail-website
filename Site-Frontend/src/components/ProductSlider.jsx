@@ -123,8 +123,8 @@ function ProductSlider() {
 	};
 
 	return (
-		<div className="container mx-auto px-4 py-6">
-			<h2 className="text-2xl md:text-3xl font-bold mb-8" data-animation="fade-up">
+		<div className="container mx-auto px-4 py-4 sm:py-6"> {/* Reduced padding on mobile */}
+			<h2 className="text-xl md:text-3xl font-bold mb-4 sm:mb-8" data-animation="fade-up">
 				French Press on Nails
 			</h2>
 
@@ -140,23 +140,35 @@ function ProductSlider() {
 						disableOnInteraction: false,
 					}}
 					breakpoints={{
-						320: { slidesPerView: 1.2, spaceBetween: 10 },
-						480: { slidesPerView: 2, spaceBetween: 15 },
-						768: { slidesPerView: 3, spaceBetween: 20 },
-						1024: { slidesPerView: 4, spaceBetween: 30 },
+						320: { 
+							slidesPerView: 2.2,  // Show more slides on mobile
+							spaceBetween: 8      // Reduced spacing on mobile
+						},
+						480: { 
+							slidesPerView: 2.5, 
+							spaceBetween: 12 
+						},
+						768: { 
+							slidesPerView: 3, 
+							spaceBetween: 20 
+						},
+						1024: { 
+							slidesPerView: 4, 
+							spaceBetween: 30 
+						},
 					}}
 					grabCursor={true}
-					className="product-slider bg-[#F5E6DA] rounded-lg"
+					className="product-slider bg-[#F5E6DA] rounded-lg p-3 sm:p-4" // Added padding to slider
 				>
 					{products.map((product) => (
-						<SwiperSlide key={product.id} className="pb-12" data-stagger>
+						<SwiperSlide key={product.id} className="pb-8 sm:pb-12" data-stagger>
 							<div
 								className="group relative"
 								onMouseEnter={() => handleMouseEnter(product.id)}
 								onMouseLeave={() => handleMouseLeave(product.id)}
 								data-card
 							>
-								<div className="relative aspect-[3/4] overflow-hidden rounded-lg">
+								<div className="relative aspect-[3/4] sm:aspect-[3/4] overflow-hidden rounded-lg">
 									<img
 										src={
 											hoveredProducts.has(product.id)
@@ -167,7 +179,9 @@ function ProductSlider() {
 										className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
 									/>
 
-									<div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+									{/* Action buttons - Hidden on mobile */}
+									<div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transform translate-x-4 
+										transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 hidden sm:flex">
 										<button className="p-2 bg-white rounded-full shadow-md hover:bg-pink-600 hover:text-white transition-colors">
 											<FiHeart className="w-5 h-5" />
 										</button>
@@ -180,11 +194,13 @@ function ProductSlider() {
 									</div>
 								</div>
 
-								<div className="mt-4 text-center">
-									<h3 className="text-sm font-medium text-gray-900">{product.name}</h3>
-									<div className="mt-2 flex items-center justify-center gap-2">
-										<span className="text-pink-600">₹{product.salePrice}</span>
-										<span className="text-gray-500 line-through">₹{product.price}</span>
+								<div className="mt-2 sm:mt-4 text-center">
+									<h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-1 sm:line-clamp-2">
+										{product.name}
+									</h3>
+									<div className="mt-1 sm:mt-2 flex items-center justify-center gap-2">
+										<span className="text-sm sm:text-base text-pink-600">₹{product.salePrice}</span>
+										<span className="text-xs sm:text-sm text-gray-500 line-through">₹{product.price}</span>
 									</div>
 								</div>
 							</div>

@@ -43,9 +43,9 @@ function Groupimages() {
   useScrollAnimation();
 
   return (
-    <div className="py-6 overflow-hidden">
+    <div className="py-3 overflow-hidden">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8" data-animation="fade-up">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" data-animation="fade-up">
           Our Gallery
         </h2>
 

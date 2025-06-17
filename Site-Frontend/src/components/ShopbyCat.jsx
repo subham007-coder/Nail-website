@@ -31,8 +31,8 @@ function ShopbyCat() {
   useScrollAnimation();
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h2 className="text-2xl md:text-3xl font-bold mb-8" data-animation="fade-up">
+    <div className="container mx-auto px-4 py-2">
+      <h2 className="text-2xl md:text-3xl font-bold mb-4" data-animation="fade-up">
         Shop By Occasion
       </h2>
       
