@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FiX, FiHome, FiCalendar, FiShoppingBag, FiUsers, FiBox } from 'react-icons/fi';
+import { FiX, FiHome, FiCalendar, FiShoppingBag, FiUsers, FiBox, FiMail } from 'react-icons/fi';
 
 function Sidebar({ open, setOpen }) {
   const location = useLocation();
@@ -10,6 +10,7 @@ function Sidebar({ open, setOpen }) {
     { name: 'Products', icon: FiBox, href: '/products' },
     { name: 'Orders', icon: FiShoppingBag, href: '/orders' },
     { name: 'Users', icon: FiUsers, href: '/users' },
+    { name: 'Contact', icon: FiMail, href: '/contact' },
   ];
 
   return (

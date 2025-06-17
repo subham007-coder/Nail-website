@@ -5,6 +5,7 @@ import Appointments from './pages/Appointments'
 import Products from './pages/Products'
 import Orders from './pages/Orders'
 import Users from './pages/Users'
+import Contact from './pages/Contact'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
+          <Route path="contact" element={<Contact />} />
         </Route>
       </Routes>
     </Router>
