@@ -89,19 +89,19 @@ function ProductGrid({ filters }) {
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       {Object.entries(productCategories).map(([category, products]) => (
-        <div key={category} className="space-y-6">
+        <div key={category} className="space-y-4">
           <motion.h2 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-2xl font-serif text-gray-800"
+            className="text-xl font-serif text-gray-900"
           >
             {category}
           </motion.h2>
           
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
             {products.map((product) => (
               <motion.div
                 key={product.id}
