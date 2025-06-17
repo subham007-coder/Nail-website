@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import ShopFilters from '../components/shop/ShopFilters';
-import ProductGrid from '../components/shop/ProductGrid';
-import MobileFilters from '../components/shop/MobileFilters';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import ShopFilters from "../components/shop/ShopFilters";
+import ProductGrid from "../components/shop/ProductGrid";
+import MobileFilters from "../components/shop/MobileFilters";
 
 function Shop() {
   const [filters, setFilters] = useState({
@@ -16,7 +16,7 @@ function Shop() {
     shape: [],
     occasion: [],
     texture: [],
-    color: []
+    color: [],
   });
 
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -24,7 +24,7 @@ function Shop() {
   return (
     <div className="min-h-screen bg-[#FDF8F5]">
       <Navbar />
-      
+
       {/* Banner Section */}
       <div className="relative h-[200px] md:h-[250px] overflow-hidden bg-gradient-to-r from-pink-50 to-purple-500">
         {/* Main Gradient Bubbles */}
@@ -32,12 +32,12 @@ function Shop() {
           animate={{
             scale: [1, 1.2, 1],
             x: [0, 20, 0],
-            opacity: [0.5, 0.7, 0.5]
+            opacity: [0.5, 0.7, 0.5],
           }}
           transition={{
             duration: 8,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
           className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full
             bg-gradient-to-r from-pink-300 to-pink-400 opacity-50 blur-3xl"
@@ -46,12 +46,12 @@ function Shop() {
           animate={{
             scale: [1, 1.1, 1],
             x: [0, -20, 0],
-            opacity: [0.4, 0.6, 0.4]
+            opacity: [0.4, 0.6, 0.4],
           }}
           transition={{
             duration: 10,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
           className="absolute bottom-[-30%] right-[-10%] w-[400px] h-[400px] rounded-full
             bg-gradient-to-l from-pink-100 to-purple-200 opacity-40 blur-3xl"
@@ -62,12 +62,12 @@ function Shop() {
           animate={{
             y: [0, -20, 0],
             rotate: [0, 360],
-            scale: [1, 1.1, 1]
+            scale: [1, 1.1, 1],
           }}
           transition={{
             duration: 15,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute top-1/4 left-1/4 w-8 h-8 md:w-12 md:h-12 bg-pink-100 rounded-full opacity-40"
         />
@@ -75,12 +75,12 @@ function Shop() {
           animate={{
             y: [0, 30, 0],
             x: [0, 20, 0],
-            rotate: [0, -360]
+            rotate: [0, -360],
           }}
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute bottom-1/4 right-1/3 w-6 h-6 md:w-10 md:h-10 bg-purple-100 rounded-lg opacity-40 transform rotate-45"
         />
@@ -88,24 +88,24 @@ function Shop() {
           animate={{
             scale: [1, 1.2, 1],
             y: [0, -15, 0],
-            x: [0, 15, 0]
+            x: [0, 15, 0],
           }}
           transition={{
             duration: 12,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute top-1/3 right-1/4 w-4 h-4 md:w-8 md:h-8 border-2 border-pink-200 rounded-full opacity-40"
         />
         <motion.div
           animate={{
             scale: [1, 0.8, 1],
-            rotate: [0, 180, 360]
+            rotate: [0, 180, 360],
           }}
           transition={{
             duration: 18,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute bottom-1/3 left-1/3 w-5 h-5 md:w-9 md:h-9 bg-purple-100 transform rotate-45 opacity-40"
         />
@@ -132,7 +132,9 @@ function Shop() {
       <div className="bg-gray-50 border-b">
         <div className="container mx-auto px-4 py-3">
           <nav className="flex text-sm">
-            <Link to="/" className="text-gray-600 hover:text-pink-600">Home</Link>
+            <Link to="/" className="text-gray-600 hover:text-pink-600">
+              Home
+            </Link>
             <span className="mx-2 text-gray-400">/</span>
             <span className="text-pink-600">Shop</span>
           </nav>
@@ -140,22 +142,35 @@ function Shop() {
       </div>
 
       {/* Shop Content */}
-      <div className="container mx-auto px-2 sm:px-4 py-8"> {/* Reduced padding */}
+      <div className="container mx-auto px-2 sm:px-4 py-8">
+        {" "}
+        {/* Reduced padding */}
         {/* Mobile Filter Button */}
-        <div className="lg:hidden mb-4 px-2"> {/* Added padding to filter button container */}
+        <div className="lg:hidden mb-4 px-2">
+          {" "}
+          {/* Added padding to filter button container */}
           <button
             onClick={() => setIsMobileFiltersOpen(true)}
             className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl
                      text-gray-600 font-medium flex items-center justify-center
                      hover:bg-gray-50 transition-colors"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+              />
             </svg>
             Filter Products
           </button>
         </div>
-
         <div className="flex gap-8">
           {/* Desktop Filters */}
           <div className="hidden lg:block w-64 flex-shrink-0">

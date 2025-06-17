@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import ProductCard from './ProductCard';
+import React from "react";
+import { motion } from "framer-motion";
+import ProductCard from "./ProductCard";
 
 function ProductGrid({ filters }) {
   // Sample products data with additional properties
@@ -10,7 +10,8 @@ function ProductGrid({ filters }) {
         id: 1,
         name: "Classic French Tips",
         price: 299,
-        image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+        image:
+          "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
         category: "French Nails",
         isNew: true,
         isPopular: false,
@@ -22,7 +23,8 @@ function ProductGrid({ filters }) {
         id: 2,
         name: "Classic French Tips",
         price: 299,
-        image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+        image:
+          "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
         category: "French Nails",
         isNew: true,
         isPopular: false,
@@ -34,7 +36,8 @@ function ProductGrid({ filters }) {
         id: 3,
         name: "Classic French Tips",
         price: 299,
-        image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+        image:
+          "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
         category: "French Nails",
         isNew: true,
         isPopular: false,
@@ -46,7 +49,8 @@ function ProductGrid({ filters }) {
         id: 4,
         name: "Classic French Tips",
         price: 299,
-        image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+        image:
+          "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
         category: "French Nails",
         isNew: true,
         isPopular: false,
@@ -61,7 +65,8 @@ function ProductGrid({ filters }) {
         id: 1,
         name: "Glitter Ombre",
         price: 399,
-        image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+        image:
+          "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
         category: "Ombre Nails",
         isNew: false,
         isPopular: true,
@@ -73,7 +78,8 @@ function ProductGrid({ filters }) {
         id: 2,
         name: "Glitter Ombre",
         price: 399,
-        image: "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
+        image:
+          "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360",
         category: "Ombre Nails",
         isNew: false,
         isPopular: true,
@@ -85,23 +91,26 @@ function ProductGrid({ filters }) {
     ],
     "Classic Collection": [
       // ...classic products
-    ]
+    ],
   };
 
   return (
     <div className="space-y-6">
       {Object.entries(productCategories).map(([category, products]) => (
-        <div key={category} className="space-y-3"> {/* Reduced vertical gap */}
-          <motion.h2 
+        <div key={category} className="space-y-3">
+          {" "}
+          {/* Reduced vertical gap */}
+          <motion.h2
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-xl font-serif text-gray-900 px-2" 
+            className="text-xl font-serif text-gray-900 px-2"
           >
             {category}
           </motion.h2>
-          
-          <div className="grid grid-cols-2 gap-2 sm:gap-4"> {/* Updated grid and gaps */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-4">
+            {" "}
+            {/* Updated grid and gaps */}
             {products.map((product) => (
               <motion.div
                 key={product.id}
