@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiMessageCircle, FiMapPin } from 'react-icons/fi';
@@ -6,13 +6,47 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function Contact() {
-  const reasons = [
-    "General Inquiry",
-    "Product Support",
-    "Booking Appointment",
-    "Wholesale Query",
-    "Other"
-  ];
+  const [contactData, setContactData] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchContactData();
+  }, []);
+
+  const fetchContactData = async () => {
+    try {
+      const response = await fetch('https://nail-website-backend.onrender.com/api/contact');
+      if (!response.ok) {
+        throw new Error('Failed to fetch contact data');
+      }
+      const data = await response.json();
+      setContactData(data);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching contact data:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -111,10 +145,10 @@ function Contact() {
             className="text-center"
           >
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-2">
-              Contact
+              {contactData.header.title}
             </h1>
             <p className="text-sm md:text-base text-gray-600">
-              Get in touch with us
+              {contactData.header.subtitle}
             </p>
           </motion.div>
         </div>
@@ -155,13 +189,13 @@ function Contact() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input
                   type="text"
-                  placeholder="Full Name *"
+                  placeholder={contactData.formLabels.fullName}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                   required
                 />
                 <input
                   type="tel"
-                  placeholder="Contact Number *"
+                  placeholder={contactData.formLabels.contactNumber}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                   required
                 />
@@ -169,7 +203,7 @@ function Contact() {
               
               <input
                 type="email"
-                placeholder="Email Address *"
+                placeholder={contactData.formLabels.email}
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                 required
               />
@@ -178,14 +212,14 @@ function Contact() {
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                 required
               >
-                <option value="">Select Enquiry Reason *</option>
-                {reasons.map((reason) => (
+                <option value="">{contactData.formLabels.reasonLabel}</option>
+                {contactData.form.reasons.map((reason) => (
                   <option key={reason} value={reason}>{reason}</option>
                 ))}
               </select>
               
               <textarea
-                placeholder="Message"
+                placeholder={contactData.formLabels.message}
                 rows="4"
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all resize-none"
               ></textarea>
@@ -198,7 +232,7 @@ function Contact() {
                   required
                 />
                 <label htmlFor="privacy" className="text-sm text-gray-600">
-                  Agree To Our Friendly Privacy Policy
+                  {contactData.form.privacyPolicyText}
                 </label>
               </div>
               
@@ -233,26 +267,14 @@ function Contact() {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#f7cde6] p-8 rounded-lg shadow-lg">
-              <ContactInfo
-                icon={<FiMail />}
-                title="Mail Us"
-                items={["info@example.com", "info@example.com"]}
-              />
-              <ContactInfo
-                icon={<FiPhone />}
-                title="Call Us"
-                items={["+000 - 123456789", "+000 - 123456789"]}
-              />
-              <ContactInfo
-                icon={<FiMessageCircle />}
-                title="Chat with Us"
-                items={["+00-123-456789", "+00-123-456789"]}
-              />
-              <ContactInfo
-                icon={<FiMapPin />}
-                title="We are located at"
-                items={["No: 58 A, East Madison Street,", "Baltimore, MD, USA 4508"]}
-              />
+              {contactData.contactInfo.map((info, index) => (
+                <ContactInfo
+                  key={index}
+                  icon={getIcon(info.icon)}
+                  title={info.title}
+                  items={info.items}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -261,6 +283,22 @@ function Contact() {
     </div>
   );
 }
+
+// Helper function to get the correct icon
+const getIcon = (iconName) => {
+  switch (iconName) {
+    case 'mail':
+      return <FiMail />;
+    case 'phone':
+      return <FiPhone />;
+    case 'chat':
+      return <FiMessageCircle />;
+    case 'location':
+      return <FiMapPin />;
+    default:
+      return <FiMail />;
+  }
+};
 
 // Contact Info Component
 function ContactInfo({ icon, title, items }) {
