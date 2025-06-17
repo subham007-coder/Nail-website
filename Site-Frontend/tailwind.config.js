@@ -28,7 +28,7 @@ export default {
         'soft-lg': '0 8px 30px rgba(0, 0, 0, 0.08)',
       },
       fontFamily: {
-        'sans': ['Inter', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'],
         'serif': ['Playfair Display', 'serif'],
       },
     },

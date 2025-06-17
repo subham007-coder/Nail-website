@@ -140,9 +140,9 @@ function Shop() {
       </div>
 
       {/* Shop Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-8"> {/* Reduced padding */}
         {/* Mobile Filter Button */}
-        <div className="lg:hidden mb-4">
+        <div className="lg:hidden mb-4 px-2"> {/* Added padding to filter button container */}
           <button
             onClick={() => setIsMobileFiltersOpen(true)}
             className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl
