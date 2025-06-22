@@ -172,17 +172,11 @@ function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div className="space-y-8 bg-[#f7cde6] p-8 rounded-lg shadow-lg">
+            {/* Dynamic Content Above Form */}
             <div>
-              <h3 className="text-pink-600 font-medium mb-2">Keep Connected</h3>
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Get in Touch – Reach Out to Us
-              </h2>
-              <p className="text-gray-600">
-                Mattis at dolor et ullamcorper vel vel venenatis ex ac praesent vitae. 
-                Conubia egestas porta per maximus sem congue! Vulputate tristique 
-                interdum consectetur mollis nulla etiam quam lacinia molestie. 
-                Class a vestibulum amet.
-              </p>
+              <h3 className="text-pink-600 font-medium mb-2">{contactData.formSection?.heading}</h3>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">{contactData.formSection?.subheading}</h2>
+              <p className="text-gray-600">{contactData.formSection?.description}</p>
             </div>
 
             <form className="space-y-6">
@@ -248,23 +242,25 @@ function Contact() {
 
           {/* Contact Info */}
           <div className="space-y-8">
-            <motion.div
-              animate={{
-                y: [0, -10, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="w-full aspect-square max-w-md mx-auto"
-            >
-              <img
-                src="https://wdtmakehub.wpengine.com/wp-content/uploads/2025/03/h1-deco-bg-img.png"
-                alt="Contact Us"
-                className="w-full h-full object-contain"
-              />
-            </motion.div>
+            {contactData.formImage && (
+              <motion.div
+                animate={{
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="w-full aspect-square max-w-md mx-auto"
+              >
+                <img
+                  src={contactData.formImage}
+                  alt="Contact Us"
+                  className="w-full h-full object-contain"
+                />
+              </motion.div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#f7cde6] p-8 rounded-lg shadow-lg">
               {contactData.contactInfo.map((info, index) => (

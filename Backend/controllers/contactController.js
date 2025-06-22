@@ -11,6 +11,12 @@ const getContactData = async (req, res) => {
           title: "Contact",
           subtitle: "Get in touch with us"
         },
+        formSection: {
+          heading: "Keep Connected",
+          subheading: "Get in Touch – Reach Out to Us",
+          description: "Mattis at dolor et ullamcorper vel vel venenatis ex ac praesent vitae. Conubia egestas porta per maximus sem congue! Vulputate tristique interdum consectetur mollis nulla etiam quam lacinia molestie. Class a vestibulum amet."
+        },
+        formImage: "https://wdtmakehub.wpengine.com/wp-content/uploads/2025/03/h1-deco-bg-img.png",
         form: {
           reasons: [
             "General Inquiry",

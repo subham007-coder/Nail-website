@@ -63,6 +63,29 @@ function Contact() {
     }
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await fetch('https://nail-website-backend.onrender.com/api/contact/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.url) {
+        setEditedData({
+          ...editedData,
+          formImage: data.url
+        });
+      }
+    } catch (err) {
+      alert('Image upload failed');
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -114,6 +137,70 @@ function Contact() {
                   focus:border-pink-400 focus:ring-2 focus:ring-pink-100 
                   outline-none transition-all disabled:bg-gray-50"
               />
+            </div>
+          </div>
+        </div>
+
+         {/* Form Section Content */}
+        <div className="bg-white rounded-2xl shadow-soft p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Form Section Content</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Heading</label>
+              <input
+                type="text"
+                value={editedData?.formSection?.heading || ''}
+                onChange={e =>
+                  setEditedData({
+                    ...editedData,
+                    formSection: { ...editedData.formSection, heading: e.target.value }
+                  })
+                }
+                disabled={!editMode}
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Subheading</label>
+              <input
+                type="text"
+                value={editedData?.formSection?.subheading || ''}
+                onChange={e =>
+                  setEditedData({
+                    ...editedData,
+                    formSection: { ...editedData.formSection, subheading: e.target.value }
+                  })
+                }
+                disabled={!editMode}
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <textarea
+                value={editedData?.formSection?.description || ''}
+                onChange={e =>
+                  setEditedData({
+                    ...editedData,
+                    formSection: { ...editedData.formSection, description: e.target.value }
+                  })
+                }
+                disabled={!editMode}
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={!editMode}
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
+              />
+              {editedData?.formImage && (
+                <img src={editedData.formImage} alt="Form Section" className="mt-2 w-32 h-32 object-contain rounded" />
+              )}
             </div>
           </div>
         </div>

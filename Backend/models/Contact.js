@@ -5,12 +5,18 @@ const contactSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subtitle: { type: String, required: true }
   },
+  formSection: {
+    heading: { type: String, default: "" },
+    subheading: { type: String, default: "" },
+    description: { type: String, default: "" }
+  },
+  formImage: { type: String, default: "" },
   form: {
     reasons: [{ type: String }],
     privacyPolicyText: { type: String, required: true }
   },
   contactInfo: [{
-    icon: { type: String, required: true }, // "mail", "phone", "chat", "location"
+    icon: { type: String, required: true },
     title: { type: String, required: true },
     items: [{ type: String, required: true }]
   }],
