@@ -4,18 +4,19 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCalendar from '../components/CustomCalendar';
+import { apiRequest } from '../utils/api';
 
 function Appointment() {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    address: '',
     phone: '',
     service: '',
     location: '',
-    customAddress: ''
+    address: '',
   });
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   const services = [
     "Manicure",
@@ -43,19 +44,26 @@ function Appointment() {
     "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const finalAddress = formData.location === 'Other' 
-      ? formData.customAddress 
-      : formData.location;
-    
-    console.log({ 
-      ...formData, 
-      address: finalAddress,
-      appointmentDate: selectedDate, 
-      appointmentTime: selectedTime 
-    });
-    // Add your form submission logic here
+    setSubmitStatus(null);
+    try {
+      await apiRequest('/api/appointment-submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          appointmentDate: selectedDate,
+          appointmentTime: selectedTime,
+        }),
+      });
+      setSubmitStatus('success');
+      setFormData({ name: '', phone: '', service: '', location: '', address: '' });
+      setSelectedDate(null);
+      setSelectedTime(null);
+    } catch {
+      setSubmitStatus('error');
+    }
   };
 
   return (
@@ -307,7 +315,7 @@ function Appointment() {
                         onChange={(e) => setFormData({
                           ...formData,
                           location: e.target.value,
-                          customAddress: e.target.value === 'Other' ? formData.customAddress : ''
+                          address: e.target.value === 'Other' ? formData.address : ''
                         })}
                       >
                         <option value="">Choose your location</option>
@@ -333,8 +341,8 @@ function Appointment() {
                           className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-400 
                             focus:ring-2 focus:ring-pink-100 outline-none transition-all"
                           placeholder="Enter your full address"
-                          value={formData.customAddress}
-                          onChange={(e) => setFormData({...formData, customAddress: e.target.value})}
+                          value={formData.address}
+                          onChange={(e) => setFormData({...formData, address: e.target.value})}
                         />
                       </motion.div>
                     )}
@@ -367,6 +375,18 @@ function Appointment() {
                   Complete Booking
                   <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                 </button>
+
+                {/* Submit Status Message */}
+                {submitStatus === 'success' && (
+                  <p className="text-center text-sm text-green-600 mt-4">
+                    Appointment booked successfully!
+                  </p>
+                )}
+                {submitStatus === 'error' && (
+                  <p className="text-center text-sm text-red-600 mt-4">
+                    There was an error booking your appointment. Please try again.
+                  </p>
+                )}
               </form>
             </div>
           </div>
