@@ -25,7 +25,7 @@ function Contact() {
 
 const fetchContactData = async () => {
   try {
-    const data = await apiRequest('GET', '/api/contact');
+    const data = await apiRequest('/api/contact');
     setContactData(data);
   } catch (err) {
     setError(err.message);
@@ -44,7 +44,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setSubmitStatus(null);
   try {
-    await apiRequest('POST', '/api/contact-submissions', formState);
+    await apiRequest('/api/contact-submissions', formState);
     setSubmitStatus('success');
     setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
   } catch {
