@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiSave } from 'react-icons/fi';
 import Button from '../components/shared/Button';
+import { apiRequest } from '../utils/api';
 
 function Contact() {
   const [contactData, setContactData] = useState(null);
@@ -14,32 +15,25 @@ function Contact() {
 
   const fetchContactData = async () => {
     try {
-      const response = await fetch('https://nail-website-backend.onrender.com/api/contact');
-      const data = await response.json();
+      const data = await apiRequest('/api/contact');
       setContactData(data);
       setEditedData(data);
-      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching contact data:', error);
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleSave = async () => {
     try {
-      const response = await fetch('https://nail-website-backend.onrender.com/api/contact', {
+      const updatedData = await apiRequest('/api/contact', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(editedData),
+        headers: { 'Content-Type': 'application/json' },
       });
-
-      if (response.ok) {
-        const updatedData = await response.json();
-        setContactData(updatedData);
-        setEditMode(false);
-      }
+      setContactData(updatedData);
+      setEditMode(false);
     } catch (error) {
       console.error('Error updating contact data:', error);
     }
@@ -47,17 +41,12 @@ function Contact() {
 
   const handleSectionUpdate = async (section, data) => {
     try {
-      const response = await fetch(`https://nail-website-backend.onrender.com/api/contact/${section}`, {
+      await apiRequest(`/api/contact/${section}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
       });
-
-      if (response.ok) {
-        fetchContactData(); // Refresh data after update
-      }
+      fetchContactData();
     } catch (error) {
       console.error('Error updating section:', error);
     }
@@ -70,25 +59,20 @@ function Contact() {
     formData.append('image', file);
 
     try {
-      const res = await fetch('https://nail-website-backend.onrender.com/api/contact/upload-image', {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/upload-image`, {
         method: 'POST',
         body: formData,
       });
       const data = await res.json();
       if (data.url) {
-        setEditedData({
-          ...editedData,
-          formImage: data.url
-        });
+        setEditedData(prev => ({ ...prev, formImage: data.url }));
       }
     } catch (err) {
       alert('Image upload failed');
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="space-y-6">
@@ -97,7 +81,7 @@ function Contact() {
         <Button
           variant="primary"
           icon={editMode ? <FiSave /> : <FiEdit2 />}
-          onClick={() => editMode ? handleSave() : setEditMode(true)}
+          onClick={() => (editMode ? handleSave() : setEditMode(true))}
         >
           {editMode ? 'Save Changes' : 'Edit Page'}
         </Button>
@@ -113,14 +97,11 @@ function Contact() {
               <input
                 type="text"
                 value={editedData?.header?.title || ''}
-                onChange={(e) => setEditedData({
-                  ...editedData,
-                  header: { ...editedData.header, title: e.target.value }
-                })}
+                onChange={(e) =>
+                  setEditedData({ ...editedData, header: { ...editedData.header, title: e.target.value } })
+                }
                 disabled={!editMode}
-                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200 
-                  focus:border-pink-400 focus:ring-2 focus:ring-pink-100 
-                  outline-none transition-all disabled:bg-gray-50"
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-100 outline-none transition-all disabled:bg-gray-50"
               />
             </div>
             <div>
@@ -128,20 +109,17 @@ function Contact() {
               <input
                 type="text"
                 value={editedData?.header?.subtitle || ''}
-                onChange={(e) => setEditedData({
-                  ...editedData,
-                  header: { ...editedData.header, subtitle: e.target.value }
-                })}
+                onChange={(e) =>
+                  setEditedData({ ...editedData, header: { ...editedData.header, subtitle: e.target.value } })
+                }
                 disabled={!editMode}
-                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200 
-                  focus:border-pink-400 focus:ring-2 focus:ring-pink-100 
-                  outline-none transition-all disabled:bg-gray-50"
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-100 outline-none transition-all disabled:bg-gray-50"
               />
             </div>
           </div>
         </div>
 
-         {/* Form Section Content */}
+        {/* Form Section */}
         <div className="bg-white rounded-2xl shadow-soft p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4">Form Section Content</h2>
           <div className="space-y-4">
@@ -150,11 +128,8 @@ function Contact() {
               <input
                 type="text"
                 value={editedData?.formSection?.heading || ''}
-                onChange={e =>
-                  setEditedData({
-                    ...editedData,
-                    formSection: { ...editedData.formSection, heading: e.target.value }
-                  })
+                onChange={(e) =>
+                  setEditedData({ ...editedData, formSection: { ...editedData.formSection, heading: e.target.value } })
                 }
                 disabled={!editMode}
                 className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
@@ -165,10 +140,10 @@ function Contact() {
               <input
                 type="text"
                 value={editedData?.formSection?.subheading || ''}
-                onChange={e =>
+                onChange={(e) =>
                   setEditedData({
                     ...editedData,
-                    formSection: { ...editedData.formSection, subheading: e.target.value }
+                    formSection: { ...editedData.formSection, subheading: e.target.value },
                   })
                 }
                 disabled={!editMode}
@@ -179,10 +154,10 @@ function Contact() {
               <label className="block text-sm font-medium text-gray-700">Description</label>
               <textarea
                 value={editedData?.formSection?.description || ''}
-                onChange={e =>
+                onChange={(e) =>
                   setEditedData({
                     ...editedData,
-                    formSection: { ...editedData.formSection, description: e.target.value }
+                    formSection: { ...editedData.formSection, description: e.target.value },
                   })
                 }
                 disabled={!editMode}
@@ -199,7 +174,11 @@ function Contact() {
                 className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
               />
               {editedData?.formImage && (
-                <img src={editedData.formImage} alt="Form Section" className="mt-2 w-32 h-32 object-contain rounded" />
+                <img
+                  src={editedData.formImage}
+                  alt="Form Section"
+                  className="mt-2 w-32 h-32 object-contain rounded"
+                />
               )}
             </div>
           </div>
@@ -281,7 +260,7 @@ function Contact() {
                     newReasons[index] = e.target.value;
                     setEditedData({
                       ...editedData,
-                      form: { ...editedData.form, reasons: newReasons }
+                      form: { ...editedData.form, reasons: newReasons },
                     });
                   }}
                   disabled={!editMode}
@@ -294,10 +273,12 @@ function Contact() {
               <input
                 type="text"
                 value={editedData?.form?.privacyPolicyText || ''}
-                onChange={(e) => setEditedData({
-                  ...editedData,
-                  form: { ...editedData.form, privacyPolicyText: e.target.value }
-                })}
+                onChange={(e) =>
+                  setEditedData({
+                    ...editedData,
+                    form: { ...editedData.form, privacyPolicyText: e.target.value },
+                  })
+                }
                 disabled={!editMode}
                 className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-200"
               />
