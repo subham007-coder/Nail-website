@@ -11,6 +11,7 @@ function Sidebar({ open, setOpen }) {
     { name: 'Orders', icon: FiShoppingBag, href: '/orders' },
     { name: 'Users', icon: FiUsers, href: '/users' },
     { name: 'Contact', icon: FiMail, href: '/contact' },
+    { name: 'Contact Submissions', icon: FiMail, href: '/contact-submissions' },
   ];
 
   return (

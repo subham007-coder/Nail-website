@@ -6,6 +6,7 @@ import Products from './pages/Products'
 import Orders from './pages/Orders'
 import Users from './pages/Users'
 import Contact from './pages/Contact'
+import ContactSubmissions from './pages/ContactSubmissions'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="contact-submissions" element={<ContactSubmissions />} />
         </Route>
       </Routes>
     </Router>

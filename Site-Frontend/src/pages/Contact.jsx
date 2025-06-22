@@ -9,6 +9,14 @@ function Contact() {
   const [contactData, setContactData] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [formState, setFormState] = useState({
+    name: '',
+    contactNumber: '',
+    email: '',
+    reason: '',
+    message: ''
+  });
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   useEffect(() => {
     fetchContactData();
@@ -27,6 +35,30 @@ function Contact() {
       console.error('Error fetching contact data:', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitStatus(null);
+    try {
+      const res = await fetch('https://nail-website-backend.onrender.com/api/contact-submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState)
+      });
+      if (res.ok) {
+        setSubmitStatus('success');
+        setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch {
+      setSubmitStatus('error');
     }
   };
 
@@ -179,16 +211,22 @@ function Contact() {
               <p className="text-gray-600">{contactData.formSection?.description}</p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input
                   type="text"
+                  name="name"
+                  value={formState.name}
+                  onChange={handleInputChange}
                   placeholder={contactData.formLabels.fullName}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                   required
                 />
                 <input
                   type="tel"
+                  name="contactNumber"
+                  value={formState.contactNumber}
+                  onChange={handleInputChange}
                   placeholder={contactData.formLabels.contactNumber}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                   required
@@ -197,12 +235,18 @@ function Contact() {
               
               <input
                 type="email"
+                name="email"
+                value={formState.email}
+                onChange={handleInputChange}
                 placeholder={contactData.formLabels.email}
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                 required
               />
               
               <select
+                name="reason"
+                value={formState.reason}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                 required
               >
@@ -213,6 +257,9 @@ function Contact() {
               </select>
               
               <textarea
+                name="message"
+                value={formState.message}
+                onChange={handleInputChange}
                 placeholder={contactData.formLabels.message}
                 rows="4"
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all resize-none"
@@ -237,6 +284,18 @@ function Contact() {
                 Submit Now
                 <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
               </button>
+
+              {/* Submit Status Message */}
+              {submitStatus === 'success' && (
+                <div className="text-green-600 text-sm mt-4">
+                  Your message has been sent successfully!
+                </div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="text-red-600 text-sm mt-4">
+                  There was an error sending your message. Please try again.
+                </div>
+              )}
             </form>
           </div>
 
