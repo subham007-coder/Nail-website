@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { apiRequest } from '../utils/api';
 
 function ContactSubmissions() {
   const [submissions, setSubmissions] = useState([]);
@@ -9,26 +10,28 @@ function ContactSubmissions() {
     fetchSubmissions();
   }, []);
 
-  const fetchSubmissions = () => {
+  const fetchSubmissions = async () => {
     setLoading(true);
-    fetch('https://nail-website-backend.onrender.com/api/contact-submissions')
-      .then(res => res.json())
-      .then(data => {
-        setSubmissions(data);
-        setLoading(false);
-      });
+    try {
+      const data = await apiRequest('/api/contact-submissions');
+      setSubmissions(data);
+    } catch (err) {
+      console.error('Failed to fetch submissions:', err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
     setDeletingId(id);
     try {
-      const res = await fetch(`https://nail-website-backend.onrender.com/api/contact-submissions/${id}`, {
+      await apiRequest(`/api/contact-submissions/${id}`, {
         method: 'DELETE',
       });
-      if (res.ok) {
-        setSubmissions(submissions => submissions.filter(sub => sub._id !== id));
-      }
+      setSubmissions((prev) => prev.filter((sub) => sub._id !== id));
+    } catch (err) {
+      console.error('Failed to delete submission:', err.message);
     } finally {
       setDeletingId(null);
     }
@@ -41,7 +44,7 @@ function ContactSubmissions() {
       <h1 className="text-2xl font-serif text-gray-900">Contact Form Submissions</h1>
       <div className="bg-white rounded-2xl shadow-soft p-6 overflow-x-auto">
         <table className="min-w-full text-sm">
-          <thead className='bg-pink-200'>
+          <thead className="bg-pink-200">
             <tr>
               <th className="px-4 py-2">Date</th>
               <th className="px-4 py-2">Name</th>
@@ -53,7 +56,7 @@ function ContactSubmissions() {
             </tr>
           </thead>
           <tbody>
-            {submissions.map(sub => (
+            {submissions.map((sub) => (
               <tr key={sub._id}>
                 <td className="px-4 py-2">{new Date(sub.createdAt).toLocaleString()}</td>
                 <td className="px-4 py-2">{sub.name}</td>
