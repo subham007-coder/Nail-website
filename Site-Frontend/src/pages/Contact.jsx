@@ -44,7 +44,11 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setSubmitStatus(null);
   try {
-    await apiRequest('/api/contact-submissions', formState);
+    await apiRequest('/api/contact-submissions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formState),
+    });
     setSubmitStatus('success');
     setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
   } catch {
