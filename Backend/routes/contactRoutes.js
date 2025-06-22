@@ -17,10 +17,12 @@ router.patch('/:section', updateSection);
 // Image upload endpoint (Promise-based)
 router.post('/upload-image', upload.single('image'), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+    if (!req.file) {
+      console.log("No file uploaded");
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
 
-    // Wrap upload_stream in a Promise
-    const streamUpload = (req) => {
+    const streamUpload = () => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: 'contact-us' },
@@ -28,6 +30,7 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
             if (result) {
               resolve(result);
             } else {
+              console.error("Cloudinary Error:", error);
               reject(error);
             }
           }
@@ -36,11 +39,13 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
       });
     };
 
-    const result = await streamUpload(req);
+    const result = await streamUpload();
     res.json({ url: result.secure_url });
   } catch (err) {
+    console.error("Upload failed:", err);
     res.status(500).json({ message: err.message || 'Cloudinary upload failed' });
   }
 });
+
 
 module.exports = router;
