@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiMessageCircle, FiMapPin } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { apiRequest } from '../utils/api';
 
 function Contact() {
   const [contactData, setContactData] = useState(true);
@@ -22,45 +23,34 @@ function Contact() {
     fetchContactData();
   }, []);
 
-  const fetchContactData = async () => {
-    try {
-      const response = await fetch('https://nail-website-backend.onrender.com/api/contact');
-      if (!response.ok) {
-        throw new Error('Failed to fetch contact data');
-      }
-      const data = await response.json();
-      setContactData(data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching contact data:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const fetchContactData = async () => {
+  try {
+    const data = await apiRequest('GET', '/api/contact');
+    setContactData(data);
+  } catch (err) {
+    setError(err.message);
+    console.error('Error fetching contact data:', err);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleInputChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitStatus(null);
-    try {
-      const res = await fetch('https://nail-website-backend.onrender.com/api/contact-submissions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formState)
-      });
-      if (res.ok) {
-        setSubmitStatus('success');
-        setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
-      } else {
-        setSubmitStatus('error');
-      }
-    } catch {
-      setSubmitStatus('error');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSubmitStatus(null);
+  try {
+    await apiRequest('POST', '/api/contact-submissions', formState);
+    setSubmitStatus('success');
+    setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
+  } catch {
+    setSubmitStatus('error');
+  }
+};
 
   // Show loading state
   if (isLoading) {
