@@ -57,17 +57,25 @@ useEffect(() => {
         <Routes>
           <Route 
             path="/" 
-            element={isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />} 
-          />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/appointment" element={<Appointment />} />
+            element={isAuthenticated ? <Home /> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/contact" element={isAuthenticated ? <Contact /> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/appointment" element={isAuthenticated ? <Appointment /> : <Login onLogin={handleLogin} />} />
+
           {/* Add other routes as needed */}
-          <Route path="/tutorial" element={<Tutorial/>} />
-          <Route path="/shop" element={<Shop/>} />
-          <Route path="/wishlist" element={<Wishlist/>} />
-          <Route path="/cart" element={<Cart/>} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/shop/:id" element={<ProductDetails />} />
+          <Route path="/tutorial" element={isAuthenticated ? <Tutorial/> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/shop" element={isAuthenticated ? <Shop/> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/wishlist" element={isAuthenticated ? <Wishlist/> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/cart" element={isAuthenticated ? <Cart/> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/account" element={isAuthenticated ? <Account /> : <Login onLogin={handleLogin} />} />
+
+          <Route path="/shop/:id" element={isAuthenticated ? <ProductDetails /> : <Login onLogin={handleLogin} />} />
+
           {/* Redirect to home if no route matches */}
         </Routes>
         <FloatingBar />
