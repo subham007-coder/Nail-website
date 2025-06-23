@@ -5,9 +5,10 @@ const AppointmentSubmission = require('../models/AppointmentSubmission');
 // Create a new appointment
 router.post('/', async (req, res) => {
   try {
-    const { name, phone, service, location, address, appointmentDate, appointmentTime } = req.body;
+    const { name, email, phone, service, location, address, appointmentDate, appointmentTime } = req.body;
     const submission = new AppointmentSubmission({
       name,
+      email, // <-- Add this
       phone,
       service,
       location,

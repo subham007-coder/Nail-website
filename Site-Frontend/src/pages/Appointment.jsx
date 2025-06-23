@@ -9,6 +9,7 @@ import { apiRequest } from '../utils/api';
 function Appointment() {
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     phone: '',
     service: '',
     location: '',
@@ -298,6 +299,22 @@ function Appointment() {
                       placeholder="Enter your name"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    />
+                  </div>
+
+                  {/* Email Field */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-600">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-400 
+                        focus:ring-2 focus:ring-pink-100 outline-none transition-all"
+                      placeholder="Enter your email address"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
                   </div>
 

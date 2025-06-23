@@ -49,6 +49,7 @@ function AppointmentSubmissions() {
               <th className="px-4 py-2">Date</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Phone</th>
+              <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">Service</th>
               <th className="px-4 py-2">Location</th>
               <th className="px-4 py-2">Address</th>
@@ -62,6 +63,7 @@ function AppointmentSubmissions() {
                 <td className="px-4 py-2">{new Date(apt.createdAt).toLocaleString()}</td>
                 <td className="px-4 py-2">{apt.name}</td>
                 <td className="px-4 py-2">{apt.phone}</td>
+                <td className="px-4 py-2">{apt.email}</td>
                 <td className="px-4 py-2">{apt.service}</td>
                 <td className="px-4 py-2">{apt.location}</td>
                 <td className="px-4 py-2">{apt.address}</td>
