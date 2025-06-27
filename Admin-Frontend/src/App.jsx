@@ -8,6 +8,7 @@ import Users from './pages/Users'
 import Contact from './pages/Contact'
 import ContactSubmissions from './pages/ContactSubmissions'
 import AppointmentSubmissions from './pages/AppointmentSubmissions'
+import Banners from './pages/Banners'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="users" element={<Users />} />
           <Route path="contact" element={<Contact />} />
           <Route path="contact-submissions" element={<ContactSubmissions />} />
+          <Route path="banner" element={<Banners />} />
         </Route>
       </Routes>
     </Router>
