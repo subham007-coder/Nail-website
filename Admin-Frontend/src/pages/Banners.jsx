@@ -127,6 +127,13 @@ function Banners() {
             />
             Active
           </label>
+          <input
+            type="text"
+            placeholder="Button Text (e.g. Read More)"
+            value={form.buttonText || ''}
+            onChange={e => setForm({ ...form, buttonText: e.target.value })}
+            className="px-4 py-2 border rounded"
+          />
         </div>
         <button className="bg-pink-600 text-white px-6 py-2 rounded">{editingId ? 'Update' : 'Add'} Banner</button>
         {editingId && (

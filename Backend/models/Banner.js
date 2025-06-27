@@ -5,6 +5,7 @@ const bannerSchema = new mongoose.Schema({
   subtitle: { type: String },
   image: { type: String, required: true }, // URL to banner image
   link: { type: String }, // Optional: link to a page/product
+  buttonText: { type: String, default: "Learn More" }, // <-- Add this line
   order: { type: Number, default: 0 }, // For sorting banners
   active: { type: Boolean, default: true }
 }, { timestamps: true });
