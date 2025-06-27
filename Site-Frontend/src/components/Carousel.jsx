@@ -23,6 +23,15 @@ function Carousel() {
       .catch(console.error);
   }, []);
 
+  // Only render Swiper when banners are loaded
+  if (!banners.length) {
+    return (
+      <div className="h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] w-full flex items-center justify-center bg-gray-100">
+        <span className="text-gray-400">Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <Swiper
@@ -68,7 +77,7 @@ function Carousel() {
                         {slide.subtitle}
                       </motion.p>
                     )}
-                    {slide.link && (
+                    {slide.link && slide.buttonText && (
                       <motion.a
                         initial={{ y: 30, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -78,7 +87,7 @@ function Carousel() {
                           hover:bg-pink-600 hover:text-white transition-all duration-300 
                           transform hover:scale-105 text-sm sm:text-base"
                       >
-                        {slide.buttonText || 'Learn More'}
+                        {slide.buttonText}
                       </motion.a>
                     )}
                   </div>
