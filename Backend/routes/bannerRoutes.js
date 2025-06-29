@@ -42,6 +42,17 @@ router.delete('/:id', async (req, res) => {
   try {
     const banner = await Banner.findByIdAndDelete(req.params.id);
     if (!banner) return res.status(404).json({ message: 'Banner not found' });
+
+    // Delete image from Cloudinary if publicId exists
+    if (banner.publicId) {
+      try {
+        await cloudinary.uploader.destroy(banner.publicId);
+      } catch (cloudErr) {
+        // Log but don't block deletion
+        console.error('Cloudinary deletion error:', cloudErr);
+      }
+    }
+
     res.json({ message: 'Banner deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -67,7 +78,8 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
     };
 
     const result = await streamUpload();
-    res.json({ url: result.secure_url });
+    // Return both URL and public_id
+    res.json({ url: result.secure_url, public_id: result.public_id });
   } catch (err) {
     res.status(500).json({ message: err.message || 'Cloudinary upload failed' });
   }

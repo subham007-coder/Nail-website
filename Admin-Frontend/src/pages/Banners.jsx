@@ -30,8 +30,8 @@ function Banners() {
         body: formData,
       });
       const data = await res.json();
-      if (data.url) {
-        setForm({ ...form, image: data.url });
+      if (data.url && data.public_id) {
+        setForm({ ...form, image: data.url, publicId: data.public_id });
       }
     } catch {
       alert('Image upload failed');
