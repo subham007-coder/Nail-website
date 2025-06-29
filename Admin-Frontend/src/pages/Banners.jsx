@@ -3,9 +3,19 @@ import { apiRequest } from '../utils/api';
 
 function Banners() {
   const [banners, setBanners] = useState([]);
-  const [form, setForm] = useState({ title: '', subtitle: '', image: '', link: '', order: 0, active: true });
+  const [form, setForm] = useState({
+    title: '',
+    subtitle: '',
+    image: '',
+    publicId: '',
+    link: '',
+    order: '',
+    active: true,
+    buttonText: ''
+  });
   const [editingId, setEditingId] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchBanners();
@@ -40,8 +50,26 @@ function Banners() {
     }
   };
 
+  // Validation function
+  const isFormValid = () => {
+    return (
+      form.title.trim() &&
+      form.subtitle.trim() &&
+      form.image.trim() &&
+      form.publicId.trim() &&
+      form.link.trim() &&
+      form.buttonText.trim() &&
+      form.order !== '' // allow 0 as valid
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    if (!isFormValid()) {
+      setError('All fields are required.');
+      return;
+    }
     if (editingId) {
       await apiRequest(`/api/banners/${editingId}`, {
         method: 'PUT',
@@ -75,6 +103,9 @@ function Banners() {
     <div className="space-y-6">
       <h1 className="text-2xl font-serif text-gray-900">Banner Management</h1>
       <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl shadow-soft">
+        {error && (
+          <div className="text-red-600 text-sm mb-2">{error}</div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
@@ -86,6 +117,7 @@ function Banners() {
           />
           <input
             type="text"
+            required
             placeholder="Subtitle"
             value={form.subtitle}
             onChange={e => setForm({ ...form, subtitle: e.target.value })}
@@ -95,6 +127,7 @@ function Banners() {
           <div>
             <input
               type="file"
+              required
               accept="image/*"
               onChange={handleImageUpload}
               className="px-4 py-2 border rounded w-full"
@@ -107,7 +140,8 @@ function Banners() {
           </div>
           <input
             type="text"
-            placeholder="Link (optional)"
+            placeholder="Link"
+            required
             value={form.link}
             onChange={e => setForm({ ...form, link: e.target.value })}
             className="px-4 py-2 border rounded"
@@ -115,6 +149,7 @@ function Banners() {
           <input
             type="number"
             placeholder="Order"
+            required
             value={form.order}
             onChange={e => setForm({ ...form, order: Number(e.target.value) })}
             className="px-4 py-2 border rounded"
@@ -129,13 +164,19 @@ function Banners() {
           </label>
           <input
             type="text"
+            required
             placeholder="Button Text (e.g. Read More)"
             value={form.buttonText || ''}
             onChange={e => setForm({ ...form, buttonText: e.target.value })}
             className="px-4 py-2 border rounded"
           />
         </div>
-        <button className="bg-pink-600 text-white px-6 py-2 rounded">{editingId ? 'Update' : 'Add'} Banner</button>
+        <button
+          className="bg-pink-600 text-white px-6 py-2 rounded"
+          disabled={!isFormValid() || uploading}
+        >
+          {editingId ? 'Update' : 'Add'} Banner
+        </button>
         {editingId && (
           <button type="button" className="ml-4 text-gray-600" onClick={() => { setEditingId(null); setForm({ title: '', subtitle: '', image: '', link: '', order: 0, active: true }); }}>
             Cancel
