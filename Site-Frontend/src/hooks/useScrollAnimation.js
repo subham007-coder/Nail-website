@@ -34,6 +34,7 @@ export const useScrollAnimation = () => {
     const staggerContainers = document.querySelectorAll('[data-animation="stagger"]');
     staggerContainers.forEach((container) => {
       const items = container.querySelectorAll('[data-stagger]');
+      if (items.length === 0) return; // <-- Prevent GSAP warning
       gsap.fromTo(
         items,
         {
