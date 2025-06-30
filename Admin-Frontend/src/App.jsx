@@ -9,6 +9,7 @@ import Contact from './pages/Contact'
 import ContactSubmissions from './pages/ContactSubmissions'
 import AppointmentSubmissions from './pages/AppointmentSubmissions'
 import Banners from './pages/Banners'
+import InstaFeed from './pages/InstaFeed'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="contact-submissions" element={<ContactSubmissions />} />
           <Route path="banner" element={<Banners />} />
+          <Route path="/instafeed" element={<InstaFeed />} />
         </Route>
       </Routes>
     </Router>

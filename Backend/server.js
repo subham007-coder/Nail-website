@@ -25,7 +25,7 @@ app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/contact-submissions', require('./routes/contactSubmissionRoutes'));
 app.use('/api/appointment-submissions', require('./routes/appointmentSubmissionRoutes'));
 app.use('/api/banners', require('./routes/bannerRoutes'));
-
+app.use('/api/insta-posts', require('./routes/instaPostRoutes'));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
