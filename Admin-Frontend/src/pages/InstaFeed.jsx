@@ -141,21 +141,23 @@ function InstaFeed() {
       </form>
       <div className="bg-white rounded-xl shadow-soft p-6">
         <table className="min-w-full text-sm">
-          <thead>
+          <thead className='bg-pink-200'>
             <tr>
-              <th>Image</th>
-              <th>Likes</th>
-              <th>Comments</th>
-              <th>Actions</th>
+              <th className="px-4 py-2 text-left">Image</th>
+              <th className="px-4 py-2 text-center">Likes</th>
+              <th className="px-4 py-2 text-center">Comments</th>
+              <th className="px-4 py-2 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {posts.map(post => (
               <tr key={post._id}>
-                <td><img src={post.image} alt="" className="w-24 h-24 object-cover rounded" /></td>
-                <td>{post.likes}</td>
-                <td>{post.comments}</td>
-                <td>
+                <td className="px-4 py-2 text-left">
+                  <img src={post.image} alt="" className="w-24 h-24 object-cover rounded" />
+                </td>
+                <td className="px-4 py-2 text-center">{post.likes}</td>
+                <td className="px-4 py-2 text-center">{post.comments}</td>
+                <td className="px-4 py-2 text-center">
                   <button onClick={() => handleEdit(post)} className="text-blue-600 mr-2">Edit</button>
                   <button onClick={() => handleDelete(post._id)} className="text-red-600">Delete</button>
                 </td>
