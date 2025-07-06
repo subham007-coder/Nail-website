@@ -12,7 +12,7 @@ function Account() {
   const user = {
     name: 'John Doe',
     email: 'john@example.com',
-    phone: '+91 9876543210',
+    phone: '+91 9999999999',
     joinedDate: 'March 2024',
     orders: [
       {
