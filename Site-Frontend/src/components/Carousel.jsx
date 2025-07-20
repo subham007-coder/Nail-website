@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination, EffectFade } from 'swiper/modules';
 import { motion } from 'framer-motion';
-import { apiRequest } from '../utils/api'; // <-- Import your API helper
+import { apiRequest } from '../utils/api';
 
 // Import additional Swiper styles
 import 'swiper/css';
