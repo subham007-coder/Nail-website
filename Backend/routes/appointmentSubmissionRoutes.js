@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const AppointmentSubmission = require('../models/AppointmentSubmission');
+const { authenticateUser } = require('../config/auth');
 
 // Create a new appointment
-router.post('/', async (req, res) => {
+router.post('/', authenticateUser, async (req, res) => {
   try {
     const { name, email, phone, service, location, address, appointmentDate, appointmentTime } = req.body;
     const submission = new AppointmentSubmission({
       name,
-      email, // <-- Add this
+      email,
       phone,
       service,
       location,
       address,
       appointmentDate,
-      appointmentTime
+      appointmentTime,
+      userId: req.user.sub // Store Clerk user ID
     });
     await submission.save();
     res.status(201).json({ message: 'Appointment booked' });

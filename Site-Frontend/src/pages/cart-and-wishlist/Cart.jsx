@@ -1,41 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import CartItem from '../../components/shop/cart-and-wishlist/CartItem';
 import EmptyCart from '../../components/shop/cart-and-wishlist/EmptyCart';
+import { useCart } from '../../context/CartContext';
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Classic French Tips",
-      price: 299,
-      oldPrice: 399,
-      image: "path-to-image",
-      category: "French Nails",
-      quantity: 1,
-    },
-    // Add more items as needed
-  ]);
-
-  const handleRemoveFromCart = (productId) => {
-    setCartItems(items => items.filter(item => item.id !== productId));
-  };
-
-  const handleQuantityChange = (productId, newQuantity) => {
-    if (newQuantity < 1) return;
-    setCartItems(items =>
-      items.map(item =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
 
   return (
     <div className="min-h-screen bg-[#FDF8F5]">
@@ -72,8 +45,8 @@ function Cart() {
                   <CartItem
                     key={item.id}
                     product={item}
-                    onRemove={handleRemoveFromCart}
-                    onQuantityChange={handleQuantityChange}
+                    onRemove={removeFromCart}
+                    onQuantityChange={updateQuantity}
                   />
                 ))}
               </AnimatePresence>
@@ -91,7 +64,7 @@ function Cart() {
                 <div className="space-y-4">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
-                    <span>₹{calculateTotal()}</span>
+                    <span>₹{getCartTotal()}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Shipping</span>
@@ -100,7 +73,7 @@ function Cart() {
                   <div className="border-t pt-4">
                     <div className="flex justify-between text-lg font-medium text-gray-900">
                       <span>Total</span>
-                      <span>₹{calculateTotal()}</span>
+                      <span>₹{getCartTotal()}</span>
                     </div>
                   </div>
                 </div>

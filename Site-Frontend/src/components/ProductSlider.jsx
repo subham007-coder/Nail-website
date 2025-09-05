@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
+import { FiHeart, FiEye, FiShoppingCart, FiStar } from "react-icons/fi";
+import { adminApiRequest } from "../utils/api";
+import { useCart } from "../context/CartContext";
+import CartAnimation from "./shop/CartAnimation";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const products = [
+const fallbackProducts = [
   {
     id: 1,
     name: "Classic French Press On Nails",
@@ -21,94 +23,33 @@ const products = [
         "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
     },
   },
-  {
-    id: 2,
-    name: "Elegant Almond Press On Nails",
-    price: 799,
-    salePrice: 349,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
-  {
-    id: 3,
-    name: "Glamorous Glitter Press On Nails",
-    price: 899,
-    salePrice: 399,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
-  {
-    id: 4,
-    name: "Matte Black Press On Nails",
-    price: 799,
-    salePrice: 349,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
-  {
-    id: 5,
-    name: "French Tip Press On Nails",
-    price: 699,
-    salePrice: 299,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
-  {
-    id: 6,
-    name: "Ombre Press On Nails",
-    price: 799,
-    salePrice: 349,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
-  {
-    id: 7,
-    name: "Floral Design Press On Nails",
-    price: 899,
-    salePrice: 399,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
-  {
-    id: 8,
-    name: "Geometric Pattern Press On Nails",
-    price: 799,
-    salePrice: 349,
-    images: {
-      default:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_82386175-a9f3-4a7e-b574-99979d66cf9a.webp?v=1699124940&width=533",
-      hover:
-        "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_2_d28a6844-4386-4286-84a0-284ef960047e.webp?v=1699124940&width=720",
-    },
-  },
 ];
 
 function ProductSlider() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [hoveredProducts, setHoveredProducts] = useState(new Set());
+  const [animatingProduct, setAnimatingProduct] = useState(null);
+
+  const { addToCart, cartAnimation } = useCart();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await adminApiRequest("/v1/products");
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products");
+        setProducts(fallbackProducts);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleMouseEnter = (productId) => {
     setHoveredProducts((prev) => new Set([...prev, productId]));
@@ -122,106 +63,175 @@ function ProductSlider() {
     });
   };
 
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+    addToCart(product);
+    setAnimatingProduct(product);
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">Products</h2>
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-600"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">Products</h2>
+        <div className="bg-red-100 text-red-700 p-4 rounded-lg">{error}</div>
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">Products</h2>
+        <div className="bg-gray-100 p-4 rounded-lg">No products available</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto px-4 py-4 sm:py-6">
-      {" "}
-      {/* Reduced padding on mobile */}
+    <div className="container mx-auto px-4 py-8 relative">
+      {/* Cart Animation */}
+      {animatingProduct && (
+        <CartAnimation
+          product={animatingProduct}
+          onAnimationComplete={() => setAnimatingProduct(null)}
+        />
+      )}
+
       <h2
-        className="text-xl md:text-3xl font-bold mb-4 sm:mb-8"
+        className="text-2xl md:text-3xl font-bold mb-6"
         data-animation="fade-up"
       >
         French Press on Nails
       </h2>
-      <div data-animation="fade-in">
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          navigation={{
-            prevEl: ".swiper-button-prev-custom",
-            nextEl: ".swiper-button-next-custom",
-          }}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          breakpoints={{
-            320: {
-              slidesPerView: 2.2, // Show more slides on mobile
-              spaceBetween: 8, // Reduced spacing on mobile
-            },
-            480: {
-              slidesPerView: 2.5,
-              spaceBetween: 12,
-            },
-            768: {
-              slidesPerView: 3,
-              spaceBetween: 20,
-            },
-            1024: {
-              slidesPerView: 4,
-              spaceBetween: 30,
-            },
-          }}
-          grabCursor={true}
-          className="product-slider bg-[#F5E6DA] rounded-lg p-3 sm:p-4" // Added padding to slider
-        >
-          {products.map((product) => (
-            <SwiperSlide
-              key={product.id}
-              className="pb-8 sm:pb-12"
-              data-stagger
-            >
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        navigation={{
+          prevEl: ".swiper-button-prev-custom",
+          nextEl: ".swiper-button-next-custom",
+        }}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        breakpoints={{
+          320: { slidesPerView: 1.5, spaceBetween: 8 }, // Better for small phones
+          480: { slidesPerView: 2, spaceBetween: 10 },
+          640: { slidesPerView: 2.2, spaceBetween: 12 },
+          768: { slidesPerView: 3, spaceBetween: 18 },
+          1024: { slidesPerView: 4, spaceBetween: 24 },
+        }}
+        grabCursor={true}
+        className="product-slider bg-[#F5E6DA] rounded-xl p-4"
+      >
+        {products.map((product) => {
+          const productId = product._id || product.id;
+          const title = product.title?.en || product.name || "Product";
+          const description =
+            product.description?.en || product.description || "description";
+          const stock = product.stock?.en || product.stock || "In stock";
+          const originalPrice =
+            product.prices?.originalPrice || product.price || 0;
+          const salePrice = product.prices?.price || product.salePrice || 0;
+          const discount = product.prices?.discount || 0;
+
+          let mainImage, hoverImage;
+          if (product.image && product.image.length > 0) {
+            mainImage = product.image[0].replace(/\s+/g, "").replace(/`/g, "");
+            hoverImage =
+              product.image.length > 1
+                ? product.image[1].replace(/\s+/g, "").replace(/`/g, "")
+                : mainImage;
+          } else if (product.images) {
+            mainImage = product.images.default;
+            hoverImage = product.images.hover;
+          } else {
+            mainImage = "https://via.placeholder.com/300";
+            hoverImage = "https://via.placeholder.com/300";
+          }
+
+          return (
+            <SwiperSlide key={productId} className="pb-10">
               <div
-                className="group relative"
-                onMouseEnter={() => handleMouseEnter(product.id)}
-                onMouseLeave={() => handleMouseLeave(product.id)}
-                data-card
+                className="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+                onMouseEnter={() => handleMouseEnter(productId)}
+                onMouseLeave={() => handleMouseLeave(productId)}
               >
-                <div className="relative aspect-[3/4] sm:aspect-[3/4] overflow-hidden rounded-lg">
+                <div className="relative aspect-[3/4] overflow-hidden">
                   <img
                     src={
-                      hoveredProducts.has(product.id)
-                        ? product.images.hover
-                        : product.images.default
+                      hoveredProducts.has(productId) ? hoverImage : mainImage
                     }
-                    alt={product.name}
+                    alt={title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-
-                  {/* Action buttons - Hidden on mobile */}
-                  <div
-                    className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transform translate-x-4 
-										transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 hidden sm:flex"
-                  >
-                    <button className="p-2 bg-white rounded-full shadow-md hover:bg-pink-600 hover:text-white transition-colors">
+                  <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 hidden sm:flex">
+                    <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
                       <FiHeart className="w-5 h-5" />
                     </button>
-                    <button className="p-2 bg-white rounded-full shadow-md hover:bg-pink-600 hover:text-white transition-colors">
+                    <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
                       <FiEye className="w-5 h-5" />
                     </button>
-                    <button className="p-2 bg-white rounded-full shadow-md hover:bg-pink-600 hover:text-white transition-colors">
+                    <button
+                      onClick={(e) => handleAddToCart(e, product)}
+                      className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
+                    >
                       <FiShoppingCart className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
 
-                <div className="mt-2 sm:mt-4 text-center">
-                  <h3 className="text-xs sm:text-sm font-medium text-gray-900 line-clamp-1 sm:line-clamp-2">
-                    {product.name}
+                <div className="p-3 text-center">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 line-clamp-1">
+                    {title}
                   </h3>
-                  <div className="mt-1 sm:mt-2 flex items-center justify-center gap-2">
-                    <span className="text-sm sm:text-base text-pink-600">
-                      ₹{product.salePrice}
+                  <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 mt-1">
+                    {description}
+                  </p>
+                  <p className="text-xs text-green-600 mt-1">
+                    Only {stock} left!
+                  </p>
+
+                  <div className="mt-2 flex items-center justify-center gap-2">
+                    <span className="text-base font-bold text-pink-600">
+                      ₹{salePrice}
                     </span>
-                    <span className="text-xs sm:text-sm text-gray-500 line-through">
-                      ₹{product.price}
-                    </span>
+                    {originalPrice > salePrice && (
+                      <span className="text-sm text-gray-400 line-through">
+                        ₹{originalPrice}
+                      </span>
+                    )}
+                    {discount > 0 && (
+                      <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+                        {discount}% OFF
+                      </span>
+                    )}
                   </div>
+
+                  {/* Add to Cart Button */}
+                  <button
+                    onClick={(e) => handleAddToCart(e, product)}
+                    className="mt-3 w-full bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center gap-2 text-xs"
+                  >
+                    <FiShoppingCart className="w-4 h-4" />
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+          );
+        })}
+      </Swiper>
     </div>
   );
 }

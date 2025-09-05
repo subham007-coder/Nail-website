@@ -4,9 +4,10 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCalendar from '../components/CustomCalendar';
-import { apiRequest } from '../utils/api';
+import { useAuthenticatedApi } from '../hooks/useAuthenticatedApi';
 
 function Appointment() {
+  const { authenticatedRequest } = useAuthenticatedApi();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,7 +50,7 @@ function Appointment() {
     e.preventDefault();
     setSubmitStatus(null);
     try {
-      await apiRequest('/api/appointment-submissions', {
+      await authenticatedRequest('/api/appointment-submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

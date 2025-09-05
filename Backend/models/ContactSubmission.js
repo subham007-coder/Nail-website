@@ -6,6 +6,7 @@ const contactSubmissionSchema = new mongoose.Schema({
   email: { type: String, required: true },
   reason: { type: String, required: true },
   message: { type: String },
+  userId: { type: String }, // Clerk user ID
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiEdit2, FiUser, FiShoppingBag, FiCalendar } from 'react-icons/fi';
+// import { UserProfile } from '@clerk/clerk-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -47,63 +48,27 @@ function Account() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-serif text-gray-900">Profile Information</h2>
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="flex items-center gap-2 text-pink-600 hover:text-pink-700 transition-colors"
-        >
-          <FiEdit2 className="w-4 h-4" />
-          <span className="text-sm font-medium">
-            {isEditing ? 'Cancel Edit' : 'Edit Profile'}
-          </span>
-        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Full Name</label>
-          {isEditing ? (
-            <input
-              type="text"
-              defaultValue={user.name}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 
-                focus:ring-2 focus:ring-pink-100 outline-none transition-all"
-            />
-          ) : (
-            <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900">{user.name}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Phone Number</label>
-          {isEditing ? (
-            <input
-              type="tel"
-              defaultValue={user.phone}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 
-                focus:ring-2 focus:ring-pink-100 outline-none transition-all"
-            />
-          ) : (
-            <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900">{user.phone}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Email Address</label>
-          <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900">{user.email}</p>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Member Since</label>
-          <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900">{user.joinedDate}</p>
-        </div>
+      <div className="clerk-profile-container">
+        <UserProfile 
+          appearance={{
+            elements: {
+              rootBox: "w-full",
+              card: "shadow-none border-0",
+              navbar: "hidden",
+              navbarMobileMenuButton: "hidden",
+              headerTitle: "text-2xl font-serif text-gray-900",
+              headerSubtitle: "text-gray-600",
+              profileSectionTitle: "text-lg font-medium text-gray-900",
+              formButtonPrimary: "bg-pink-600 hover:bg-pink-700 text-white",
+              formFieldInput: "border-gray-200 focus:border-pink-400 focus:ring-pink-100",
+              identityPreviewText: "text-gray-900",
+              identityPreviewEditButton: "text-pink-600 hover:text-pink-700"
+            }
+          }}
+        />
       </div>
-
-      {isEditing && (
-        <button className="w-full sm:w-auto bg-pink-600 text-white px-8 py-3 rounded-xl 
-          hover:bg-pink-700 transition-colors duration-200 flex items-center justify-center gap-2">
-          Save Changes
-        </button>
-      )}
     </div>
   );
 

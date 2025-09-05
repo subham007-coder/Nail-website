@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiMessageCircle, FiMapPin } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useAuthenticatedApi } from '../hooks/useAuthenticatedApi';
 import { apiRequest } from '../utils/api';
 
 function Contact() {
+  const { authenticatedRequest } = useAuthenticatedApi();
   const [contactData, setContactData] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +46,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setSubmitStatus(null);
   try {
-    await apiRequest('/api/contact-submissions', {
+    await authenticatedRequest('/api/contact-submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formState),

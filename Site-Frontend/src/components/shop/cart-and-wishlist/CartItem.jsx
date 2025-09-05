@@ -3,6 +3,21 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 function CartItem({ product, onRemove, onQuantityChange }) {
+  // Helper function to safely extract category text
+  const getCategoryText = (category) => {
+    if (!category) return 'Nail Product';
+    if (typeof category === 'string') return category;
+    if (typeof category === 'object') {
+      if (category.name) {
+        return typeof category.name === 'object' && category.name.en 
+          ? category.name.en 
+          : category.name;
+      }
+      return 'Nail Product';
+    }
+    return 'Nail Product';
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -13,7 +28,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
       {/* Product Image */}
       <Link to={`/shop/${product.id}`} className="w-full md:w-48 h-48 rounded-xl overflow-hidden">
         <img
-          src={"https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360"}
+          src={product.image || "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360"}
           alt={product.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
@@ -28,7 +43,9 @@ function CartItem({ product, onRemove, onQuantityChange }) {
           >
             {product.name}
           </Link>
-          <p className="text-sm text-gray-500">{product.category}</p>
+          <p className="text-sm text-gray-500">
+            {getCategoryText(product.category)}
+          </p>
           
           {/* Price and Quantity Controls */}
           <div className="flex flex-wrap items-center justify-between gap-4 mt-4">

@@ -3,7 +3,7 @@ import AboutUs from '../components/AboutUs.jsx';
 import Carousel from '../components/Carousel.jsx';
 import Navbar from '../components/Navbar.jsx';
 import ProductSlider from '../components/ProductSlider.jsx';
-// import ProductSlidertow from '../components/ProductSlidertow.jsx';
+import ProductSlidertow from '../components/Product_Slider_Category.jsx';
 import ShopbyCat from "../components/ShopbyCat.jsx";
 import Testimonial from '../components/Testimonial.jsx';
 import WeOffer from '../components/WeOffer.jsx';
@@ -22,8 +22,8 @@ function Home() {
         <WeOffer/>
         <AboutUs/>
         <Testimonial/>
-        {/* <ProductSlidertow/> */}
-        <ProductSlider/>
+        <ProductSlidertow/>
+        {/* <ProductSlider/> */}
         <Groupimages/>
         <BookAppo/>
         <InstaFeed/>

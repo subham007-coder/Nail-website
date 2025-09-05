@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHome, FiUser, FiShoppingBag, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../context/CartContext';
 
 function FloatingBar() {
   const [isVisible, setIsVisible] = useState(false);
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,7 +24,20 @@ function FloatingBar() {
     { icon: <FiUser size={20} />, label: 'Account', link: '/account' },
     { icon: <FiShoppingBag size={20} />, label: 'Shop', link: '/shop' },
     { icon: <FiHeart size={20} />, label: 'Wishlist', link: '/wishlist' },
-    { icon: <FiShoppingCart size={20} />, label: 'Cart', link: '/cart' },
+    { 
+      icon: (
+        <div className="relative">
+          <FiShoppingCart size={20} />
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-pink-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </div>
+      ), 
+      label: 'Cart', 
+      link: '/cart' 
+    },
   ];
 
   return (

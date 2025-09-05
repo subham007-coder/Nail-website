@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const ContactSubmission = require('../models/ContactSubmission');
+const { authenticateUser } = require('../config/auth');
 
 // Create a new submission
-router.post('/', async (req, res) => {
+router.post('/', authenticateUser, async (req, res) => {
   try {
     const { name, contactNumber, email, reason, message } = req.body;
-    const submission = new ContactSubmission({ name, contactNumber, email, reason, message });
+    const submission = new ContactSubmission({ 
+      name, 
+      contactNumber, 
+      email, 
+      reason, 
+      message,
+      userId: req.user.sub // Store Clerk user ID
+    });
     await submission.save();
     res.status(201).json({ message: 'Submission received' });
   } catch (err) {
