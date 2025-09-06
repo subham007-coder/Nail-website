@@ -9,7 +9,7 @@ import { apiRequest } from '../utils/api';
 
 function Contact() {
   const { authenticatedRequest } = useAuthenticatedApi();
-  const [contactData, setContactData] = useState(true);
+  const [contactData, setContactData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formState, setFormState] = useState({
@@ -27,7 +27,7 @@ function Contact() {
 
 const fetchContactData = async () => {
   try {
-    const data = await apiRequest('/api/contact');
+    const data = await apiRequest('/v1/contacts/');
     setContactData(data);
   } catch (err) {
     setError(err.message);
@@ -44,16 +44,17 @@ const fetchContactData = async () => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  setSubmitStatus(null);
+  setSubmitStatus('loading');
   try {
-    await authenticatedRequest('/api/contact-submissions', {
+    await apiRequest('/v1/contact-submissions/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formState),
     });
     setSubmitStatus('success');
     setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
-  } catch {
+  } catch (error) {
+    console.error('Error submitting contact form:', error);
     setSubmitStatus('error');
   }
 };
@@ -72,6 +73,15 @@ const handleSubmit = async (e) => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-red-600">Error: {error}</div>
+      </div>
+    );
+  }
+
+  // Show loading state if contactData is not available
+  if (!contactData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-600 border-t-transparent"></div>
       </div>
     );
   }
@@ -173,10 +183,10 @@ const handleSubmit = async (e) => {
             className="text-center"
           >
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-2">
-              {contactData.header.title}
+              {contactData?.header?.title || 'Contact Us'}
             </h1>
             <p className="text-sm md:text-base text-gray-600">
-              {contactData.header.subtitle}
+              {contactData?.header?.subtitle || 'Get in touch with us'}
             </p>
           </motion.div>
         </div>
@@ -202,9 +212,9 @@ const handleSubmit = async (e) => {
           <div className="space-y-8 bg-[#f7cde6] p-8 rounded-lg shadow-lg">
             {/* Dynamic Content Above Form */}
             <div>
-              <h3 className="text-pink-600 font-medium mb-2">{contactData.formSection?.heading}</h3>
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">{contactData.formSection?.subheading}</h2>
-              <p className="text-gray-600">{contactData.formSection?.description}</p>
+              <h3 className="text-pink-600 font-medium mb-2">{contactData?.formSection?.heading || 'Keep Connected'}</h3>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">{contactData?.formSection?.subheading || 'Get in Touch – Reach Out to Us'}</h2>
+              <p className="text-gray-600">{contactData?.formSection?.description || 'We would love to hear from you. Send us a message and we will get back to you as soon as possible.'}</p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -214,7 +224,7 @@ const handleSubmit = async (e) => {
                   name="name"
                   value={formState.name}
                   onChange={handleInputChange}
-                  placeholder={contactData.formLabels.fullName}
+                  placeholder={contactData?.formLabels?.fullName || 'Full Name *'}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                   required
                 />
@@ -223,7 +233,7 @@ const handleSubmit = async (e) => {
                   name="contactNumber"
                   value={formState.contactNumber}
                   onChange={handleInputChange}
-                  placeholder={contactData.formLabels.contactNumber}
+                  placeholder={contactData?.formLabels?.contactNumber || 'Contact Number *'}
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                   required
                 />
@@ -234,7 +244,7 @@ const handleSubmit = async (e) => {
                 name="email"
                 value={formState.email}
                 onChange={handleInputChange}
-                placeholder={contactData.formLabels.email}
+                placeholder={contactData?.formLabels?.email || 'Email Address *'}
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                 required
               />
@@ -246,8 +256,8 @@ const handleSubmit = async (e) => {
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all"
                 required
               >
-                <option value="">{contactData.formLabels.reasonLabel}</option>
-                {contactData.form.reasons.map((reason) => (
+                <option value="">{contactData?.formLabels?.reasonLabel || 'Select Enquiry Reason *'}</option>
+                {(contactData?.form?.reasons || ['General Inquiry', 'Product Support', 'Booking Appointment', 'Wholesale Query', 'Other']).map((reason) => (
                   <option key={reason} value={reason}>{reason}</option>
                 ))}
               </select>
@@ -256,7 +266,7 @@ const handleSubmit = async (e) => {
                 name="message"
                 value={formState.message}
                 onChange={handleInputChange}
-                placeholder={contactData.formLabels.message}
+                placeholder={contactData?.formLabels?.message || 'Message'}
                 rows="4"
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition-all resize-none"
               ></textarea>
@@ -269,15 +279,16 @@ const handleSubmit = async (e) => {
                   required
                 />
                 <label htmlFor="privacy" className="text-sm text-gray-600">
-                  {contactData.form.privacyPolicyText}
+                  {contactData?.form?.privacyPolicyText || 'Agree To Our Friendly Privacy Policy'}
                 </label>
               </div>
               
               <button
                 type="submit"
-                className="bg-pink-600 text-white px-8 py-3 rounded-lg hover:bg-pink-700 transition-colors flex items-center group"
+                disabled={submitStatus === 'loading'}
+                className="bg-pink-600 text-white px-8 py-3 rounded-lg hover:bg-pink-700 transition-colors flex items-center group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Submit Now
+                {submitStatus === 'loading' ? 'Submitting...' : 'Submit Now'}
                 <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
               </button>
 
@@ -318,7 +329,7 @@ const handleSubmit = async (e) => {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#f7cde6] p-8 rounded-lg shadow-lg">
-              {contactData.contactInfo.map((info, index) => (
+              {(contactData?.contactInfo || []).map((info, index) => (
                 <ContactInfo
                   key={index}
                   icon={getIcon(info.icon)}

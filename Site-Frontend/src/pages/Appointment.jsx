@@ -4,10 +4,9 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCalendar from '../components/CustomCalendar';
-import { useAuthenticatedApi } from '../hooks/useAuthenticatedApi';
+import { apiRequest } from '../utils/api';
 
 function Appointment() {
-  const { authenticatedRequest } = useAuthenticatedApi();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,6 +18,7 @@ function Appointment() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const services = [
     "Manicure",
@@ -48,9 +48,18 @@ function Appointment() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation
+    if (!selectedDate || !selectedTime) {
+      setSubmitStatus('validation-error');
+      return;
+    }
+    
     setSubmitStatus(null);
+    setIsSubmitting(true);
+    
     try {
-      await authenticatedRequest('/api/appointment-submissions', {
+      await apiRequest('/v1/appointment-submissions/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -60,11 +69,14 @@ function Appointment() {
         }),
       });
       setSubmitStatus('success');
-      setFormData({ name: '', phone: '', service: '', location: '', address: '' });
+      setFormData({ name: '', email: '', phone: '', service: '', location: '', address: '' });
       setSelectedDate(null);
       setSelectedTime(null);
-    } catch {
+    } catch (error) {
+      console.error('Error booking appointment:', error);
       setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -386,23 +398,30 @@ function Appointment() {
                 {/* Enhanced Submit Button */}
                 <button
                   type="submit"
+                  disabled={isSubmitting || !selectedDate || !selectedTime}
                   className="w-full bg-pink-600 text-white px-8 py-4 rounded-xl hover:bg-pink-700 
                     transition-all duration-200 flex items-center justify-center group text-lg font-medium
-                    shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5"
+                    shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5
+                    disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  Complete Booking
+                  {isSubmitting ? 'Booking...' : 'Complete Booking'}
                   <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                 </button>
 
                 {/* Submit Status Message */}
                 {submitStatus === 'success' && (
                   <p className="text-center text-sm text-green-600 mt-4">
-                    Appointment booked successfully!
+                    Appointment booked successfully! We will contact you soon.
                   </p>
                 )}
                 {submitStatus === 'error' && (
                   <p className="text-center text-sm text-red-600 mt-4">
                     There was an error booking your appointment. Please try again.
+                  </p>
+                )}
+                {submitStatus === 'validation-error' && (
+                  <p className="text-center text-sm text-red-600 mt-4">
+                    Please select both date and time for your appointment.
                   </p>
                 )}
               </form>
