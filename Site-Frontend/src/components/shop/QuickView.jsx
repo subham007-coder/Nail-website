@@ -2,12 +2,28 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiMinus, FiPlus, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { useCartActions } from '../../hooks/useCartActions';
 
 function QuickView({ product, isOpen, onClose }) {
   const [selectedColor, setSelectedColor] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { addToCartWithAuth, addToWishlistWithAuth } = useCartActions();
 
   if (!isOpen) return null;
+
+  const handleAddToCart = () => {
+    const success = addToCartWithAuth(product, quantity);
+    if (success) {
+      onClose(); // Close quick view on successful add
+    }
+  };
+
+  const handleAddToWishlist = () => {
+    const success = addToWishlistWithAuth(product);
+    if (success) {
+      onClose(); // Close quick view on successful add
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -113,6 +129,7 @@ function QuickView({ product, isOpen, onClose }) {
                 {/* Action Buttons */}
                 <div className="space-y-3">
                   <button
+                    onClick={handleAddToCart}
                     className="w-full bg-pink-600 text-white py-3 px-6 rounded-xl 
                       hover:bg-pink-700 transition-colors flex items-center justify-center gap-2"
                   >
@@ -120,6 +137,7 @@ function QuickView({ product, isOpen, onClose }) {
                     Add to Cart
                   </button>
                   <button
+                    onClick={handleAddToWishlist}
                     className="w-full bg-gray-100 text-gray-900 py-3 px-6 rounded-xl 
                       hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                   >

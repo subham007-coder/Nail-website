@@ -8,9 +8,58 @@ function InstaFeed() {
   useScrollAnimation();
 
   useEffect(() => {
-    apiRequest("/api/insta-posts")
-      .then(setInstaPosts)
-      .catch(console.error);
+    apiRequest("/v1/insta-posts/")
+      .then(data => {
+        if (data.length > 0) {
+          setInstaPosts(data);
+        } else {
+          // Fallback data if no posts in database
+          setInstaPosts([
+            {
+              _id: 'fallback-1',
+              image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+              likes: '125',
+              comments: '23'
+            },
+            {
+              _id: 'fallback-2', 
+              image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+              likes: '89',
+              comments: '12'
+            },
+            {
+              _id: 'fallback-3',
+              image: 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+              likes: '156',
+              comments: '34'
+            },
+            {
+              _id: 'fallback-4',
+              image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+              likes: '203',
+              comments: '45'
+            },
+            {
+              _id: 'fallback-5',
+              image: 'https://images.unsplash.com/photo-1515688594390-b649af70d282?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+              likes: '178',
+              comments: '28'
+            }
+          ]);
+        }
+      })
+      .catch(err => {
+        console.error('Instagram posts fetch error:', err);
+        // Fallback data on error
+        setInstaPosts([
+          {
+            _id: 'fallback-1',
+            image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+            likes: '125',
+            comments: '23'
+          }
+        ]);
+      });
   }, []);
 
   return (

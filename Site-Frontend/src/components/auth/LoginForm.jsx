@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -9,9 +10,19 @@ const LoginForm = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
   
   const { login } = useAuth();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract message from navigation state
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,7 +41,18 @@ const LoginForm = () => {
       const result = await login(formData.email, formData.password);
       
       if (result.success) {
-        navigate('/');
+        // Handle pending action if exists
+        const pendingAction = location.state?.pendingAction;
+        if (pendingAction) {
+          if (pendingAction.type === 'addToCart') {
+            addToCart(pendingAction.product, pendingAction.quantity);
+          }
+          // Handle other pending actions as needed
+        }
+        
+        // Navigate to return URL or home
+        const from = location.state?.from?.pathname || '/';
+        navigate(from, { replace: true });
       } else {
         setError(result.error || 'Login failed');
       }
@@ -48,6 +70,11 @@ const LoginForm = () => {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
+          {message && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-700 text-center">{message}</p>
+            </div>
+          )}
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
             <Link

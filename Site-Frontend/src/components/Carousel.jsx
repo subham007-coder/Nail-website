@@ -18,9 +18,43 @@ function Carousel() {
   useEffect(() => {
     setMounted(true);
     // Fetch banners from backend
-    apiRequest('/api/banners')
-      .then(data => setBanners(data.filter(b => b.active).sort((a, b) => a.order - b.order)))
-      .catch(console.error);
+    apiRequest('/v1/banners/')
+      .then(data => {
+        const activeBanners = data.filter(b => b.active).sort((a, b) => a.order - b.order);
+        if (activeBanners.length > 0) {
+          setBanners(activeBanners);
+        } else {
+          // Fallback data if no banners in database
+          setBanners([
+            {
+              _id: 'fallback-1',
+              title: 'Welcome to Our Store',
+              subtitle: 'Discover amazing nail art products',
+              image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+              link: '/shop',
+              buttonText: 'Shop Now',
+              active: true,
+              order: 1
+            }
+          ]);
+        }
+      })
+      .catch(err => {
+        console.error('Banner fetch error:', err);
+        // Fallback data on error
+        setBanners([
+          {
+            _id: 'fallback-1',
+            title: 'Welcome to Our Store',
+            subtitle: 'Discover amazing nail art products',
+            image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+            link: '/shop',
+            buttonText: 'Shop Now',
+            active: true,
+            order: 1
+          }
+        ]);
+      });
   }, []);
 
   // Only render Swiper when banners are loaded

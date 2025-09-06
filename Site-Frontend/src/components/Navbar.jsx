@@ -15,7 +15,7 @@ export default function Navbar() {
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
 
-  const { user, logout } = useAuth(); // use your Auth context
+  const { user, logout, isAuthenticated } = useAuth(); // use your Auth context
 
   return (
     <nav className="w-full bg-white relative">
@@ -138,44 +138,56 @@ export default function Navbar() {
               <div className="flex items-center gap-4">
                 {/* User Menu (custom, using useAuth) */}
                 <div className="relative">
-                  <button
-                    onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="flex items-center gap-2 text-gray-800 hover:text-[#E91E63] transition-colors"
-                  >
-                    {user?.image ? (
-                      <img
-                        src={user.image}
-                        alt={user?.name || 'User'}
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                    ) : (
-                      <FiUser className="w-6 h-6" />
-                    )}
-                    <span className="hidden md:block text-sm font-medium">
-                      {user?.name || 'User'}
-                    </span>
-                  </button>
-
-                  {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
-                      <Link
-                        to="/account"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        My Account
-                      </Link>
+                  {isAuthenticated ? (
+                    <>
                       <button
-                        onClick={() => {
-                          logout();
-                          setShowUserMenu(false);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowUserMenu(!showUserMenu)}
+                        className="flex items-center gap-2 text-gray-800 hover:text-[#E91E63] transition-colors"
                       >
-                        <FiLogOut className="inline w-4 h-4 mr-2" />
-                        Sign Out
+                        {user?.image ? (
+                          <img
+                            src={user.image}
+                            alt={user?.name || 'User'}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                        ) : (
+                          <FiUser className="w-6 h-6" />
+                        )}
+                        <span className="hidden md:block text-sm font-medium">
+                          {user?.name || 'User'}
+                        </span>
                       </button>
-                    </div>
+
+                      {showUserMenu && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+                          <Link
+                            to="/account"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            My Account
+                          </Link>
+                          <button
+                            onClick={() => {
+                              logout();
+                              setShowUserMenu(false);
+                            }}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            <FiLogOut className="inline w-4 h-4 mr-2" />
+                            Sign Out
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="flex items-center gap-2 text-gray-800 hover:text-[#E91E63] transition-colors"
+                    >
+                      <FiUser className="w-6 h-6" />
+                      <span className="hidden md:block text-sm font-medium">Login</span>
+                    </Link>
                   )}
                 </div>
 
@@ -286,6 +298,41 @@ export default function Navbar() {
                 CONTACT US
               </Link>
             </li>
+            
+            {/* Authentication Links */}
+            {isAuthenticated ? (
+              <>
+                <li className="border-b border-gray-100 pb-2">
+                  <Link to="/account" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+                    MY ACCOUNT
+                  </Link>
+                </li>
+                <li className="border-b border-gray-100 pb-2">
+                  <button 
+                    onClick={() => {
+                      logout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="text-gray-800 hover:text-pink-600 w-full text-left"
+                  >
+                    SIGN OUT
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="border-b border-gray-100 pb-2">
+                  <Link to="/login" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+                    LOGIN
+                  </Link>
+                </li>
+                <li className="border-b border-gray-100 pb-2">
+                  <Link to="/register" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+                    REGISTER
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

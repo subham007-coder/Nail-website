@@ -18,6 +18,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AuthRequiredRoute from "./components/auth/AuthRequiredRoute";
 
 function App() {
   return (
@@ -29,91 +30,45 @@ function App() {
               <EntryPopup />
               <FloatingBar />
               <Routes>
-                {/* Public routes */}
+                {/* Authentication routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                {/* Protected routes */}
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Home />
-                    </ProtectedRoute>
-                  }
-                />
+                {/* Public browsing routes - no authentication required */}
+                <Route path="/" element={<Home />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/tutorial" element={<Tutorial />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/shop/:id" element={<ProductDetails />} />
+                <Route path="/appointment" element={<Appointment />} />
 
-                <Route
-                  path="/contact"
-                  element={
-                    <ProtectedRoute>
-                      <Contact />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/appointment"
-                  element={
-                    <ProtectedRoute>
-                      <Appointment />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/tutorial"
-                  element={
-                    <ProtectedRoute>
-                      <Tutorial />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/shop"
-                  element={
-                    <ProtectedRoute>
-                      <Shop />
-                    </ProtectedRoute>
-                  }
-                />
-
+                {/* User-specific routes - authentication required */}
                 <Route
                   path="/wishlist"
                   element={
-                    <ProtectedRoute>
+                    <AuthRequiredRoute>
                       <Wishlist />
-                    </ProtectedRoute>
+                    </AuthRequiredRoute>
                   }
                 />
 
                 <Route
                   path="/cart"
                   element={
-                    <ProtectedRoute>
+                    <AuthRequiredRoute>
                       <Cart />
-                    </ProtectedRoute>
+                    </AuthRequiredRoute>
                   }
                 />
 
                 <Route
                   path="/account"
                   element={
-                    <ProtectedRoute>
+                    <AuthRequiredRoute>
                       <Account />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/shop/:id"
-                  element={
-                    <ProtectedRoute>
-                      <ProductDetails />
-                    </ProtectedRoute>
+                    </AuthRequiredRoute>
                   }
                 />
               </Routes>

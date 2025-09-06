@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
 import { FiMinus, FiPlus, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import { useCartActions } from '../../hooks/useCartActions';
 
 function ProductInfo({ product }) {
   const [selectedColor, setSelectedColor] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { addToCartWithAuth, addToWishlistWithAuth } = useCartActions();
+
+  const handleAddToCart = () => {
+    const productWithColor = {
+      ...product,
+      selectedColor: product.colors ? product.colors[selectedColor] : null
+    };
+    addToCartWithAuth(productWithColor, quantity);
+  };
+
+  const handleAddToWishlist = () => {
+    const productWithColor = {
+      ...product,
+      selectedColor: product.colors ? product.colors[selectedColor] : null
+    };
+    addToWishlistWithAuth(productWithColor);
+  };
 
   return (
     <div className="space-y-6">
@@ -77,13 +95,19 @@ function ProductInfo({ product }) {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 pt-6">
-        <button className="flex-1 bg-pink-600 text-white px-8 py-4 rounded-xl hover:bg-pink-700 
-          transition-colors flex items-center justify-center gap-2 text-lg font-medium">
+        <button 
+          onClick={handleAddToCart}
+          className="flex-1 bg-pink-600 text-white px-8 py-4 rounded-xl hover:bg-pink-700 
+            transition-colors flex items-center justify-center gap-2 text-lg font-medium"
+        >
           <FiShoppingCart className="w-5 h-5" />
           Add to Cart
         </button>
-        <button className="flex-1 bg-gray-100 text-gray-900 px-8 py-4 rounded-xl hover:bg-gray-200 
-          transition-colors flex items-center justify-center gap-2 text-lg font-medium">
+        <button 
+          onClick={handleAddToWishlist}
+          className="flex-1 bg-gray-100 text-gray-900 px-8 py-4 rounded-xl hover:bg-gray-200 
+            transition-colors flex items-center justify-center gap-2 text-lg font-medium"
+        >
           <FiHeart className="w-5 h-5" />
           Add to Wishlist
         </button>

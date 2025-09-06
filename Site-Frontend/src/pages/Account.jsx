@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiEdit2, FiUser, FiShoppingBag, FiCalendar } from 'react-icons/fi';
-// import { UserProfile } from '@clerk/clerk-react';
+import { FiEdit2, FiUser, FiShoppingBag, FiCalendar, FiMail, FiPhone } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function Account() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
+  const { user } = useAuth();
 
-  const user = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '+91 9999999999',
+  // Mock data - in a real app, this would come from your API
+  const userData = {
+    name: user?.name || 'User',
+    email: user?.email || 'user@example.com',
+    phone: user?.phone || '+91 9999999999',
+    address: user?.address || 'Not provided',
     joinedDate: 'March 2024',
     orders: [
       {
@@ -48,26 +51,115 @@ function Account() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-serif text-gray-900">Profile Information</h2>
+        <button
+          onClick={() => setIsEditing(!isEditing)}
+          className="flex items-center gap-2 px-4 py-2 text-pink-600 border border-pink-600 rounded-lg hover:bg-pink-50 transition-colors"
+        >
+          <FiEdit2 className="w-4 h-4" />
+          {isEditing ? 'Cancel' : 'Edit Profile'}
+        </button>
       </div>
 
-      <div className="clerk-profile-container">
-        <UserProfile 
-          appearance={{
-            elements: {
-              rootBox: "w-full",
-              card: "shadow-none border-0",
-              navbar: "hidden",
-              navbarMobileMenuButton: "hidden",
-              headerTitle: "text-2xl font-serif text-gray-900",
-              headerSubtitle: "text-gray-600",
-              profileSectionTitle: "text-lg font-medium text-gray-900",
-              formButtonPrimary: "bg-pink-600 hover:bg-pink-700 text-white",
-              formFieldInput: "border-gray-200 focus:border-pink-400 focus:ring-pink-100",
-              identityPreviewText: "text-gray-900",
-              identityPreviewEditButton: "text-pink-600 hover:text-pink-700"
-            }
-          }}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Profile Picture */}
+        <div className="space-y-4">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+              {user?.image ? (
+                <img
+                  src={user.image}
+                  alt={userData.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <FiUser className="w-12 h-12 text-gray-400" />
+              )}
+            </div>
+            {isEditing && (
+              <button className="text-sm text-pink-600 hover:text-pink-700">
+                Change Photo
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Profile Details */}
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Full Name
+            </label>
+            {isEditing ? (
+              <input
+                type="text"
+                defaultValue={userData.name}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              />
+            ) : (
+              <p className="text-gray-900">{userData.name}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              <FiMail className="inline w-4 h-4 mr-1" />
+              Email
+            </label>
+            <p className="text-gray-900">{userData.email}</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              <FiPhone className="inline w-4 h-4 mr-1" />
+              Phone
+            </label>
+            {isEditing ? (
+              <input
+                type="tel"
+                defaultValue={userData.phone}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              />
+            ) : (
+              <p className="text-gray-900">{userData.phone}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Address
+            </label>
+            {isEditing ? (
+              <textarea
+                defaultValue={userData.address}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              />
+            ) : (
+              <p className="text-gray-900">{userData.address}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Member Since
+            </label>
+            <p className="text-gray-900">{userData.joinedDate}</p>
+          </div>
+
+          {isEditing && (
+            <div className="flex gap-3 pt-4">
+              <button className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+                Save Changes
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -76,7 +168,7 @@ function Account() {
     <div className="space-y-6">
       <h2 className="text-2xl font-serif text-gray-900">Order History</h2>
       <div className="space-y-4">
-        {user.orders.map(order => (
+      {userData.orders.map(order => (
           <div key={order.id} 
             className="bg-white border rounded-xl p-6 space-y-4 hover:shadow-soft transition-shadow duration-200"
           >
@@ -123,7 +215,7 @@ function Account() {
     <div className="space-y-6">
       <h2 className="text-2xl font-serif text-gray-900">My Appointments</h2>
       <div className="space-y-4">
-        {user.appointments.map(apt => (
+      {userData.appointments.map(apt => (
           <div key={apt.id} 
             className="bg-white border rounded-xl p-6 hover:shadow-soft transition-shadow duration-200"
           >

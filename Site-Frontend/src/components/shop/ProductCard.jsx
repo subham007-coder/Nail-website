@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiHeart, FiShoppingCart, FiStar } from "react-icons/fi";
 import QuickView from "./QuickView";
+import { useCartActions } from "../../hooks/useCartActions";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const [showQuickView, setShowQuickView] = useState(false);
+  const { addToCartWithAuth, addToWishlistWithAuth } = useCartActions();
 
   const extendedProduct = {
     ...product,
@@ -28,12 +30,20 @@ function ProductCard({ product }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    // Add to cart logic here
+    const success = addToCartWithAuth(extendedProduct, 1);
+    if (success) {
+      // You can add a success notification here if needed
+      console.log('Product added to cart:', extendedProduct.name);
+    }
   };
 
   const handleAddToWishlist = (e) => {
     e.stopPropagation();
-    // Add to wishlist logic here
+    const success = addToWishlistWithAuth(extendedProduct);
+    if (success) {
+      // You can add a success notification here if needed
+      console.log('Product added to wishlist:', extendedProduct.name);
+    }
   };
 
   return (
