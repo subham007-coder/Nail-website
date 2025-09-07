@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../utils/api';
 import { useToast } from '../contexts/ToastContext';
+import { uploadToCloudinary, createPreviewUrl, validateImageFile } from '../services/cloudinaryService';
 
 function InstaFeed() {
   const [posts, setPosts] = useState([]);
@@ -39,24 +40,47 @@ function InstaFeed() {
     const file = e.target.files[0];
     if (!file) return;
     
+    // Validate file before upload
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setError(validation.error);
+      showError(validation.error);
+      return;
+    }
+    
     setUploading(true);
+    setError('');
+    
     try {
-      // For now, we'll use FileReader for image preview
-      // In production, you'd upload to a service like Cloudinary, AWS S3, etc.
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setForm({ 
-          ...form, 
-          image: event.target.result, 
-          publicId: `temp_${Date.now()}` 
-        });
-        showSuccess('Image loaded successfully');
-      };
-      reader.readAsDataURL(file);
+      // Create preview URL for immediate display
+      const previewUrl = createPreviewUrl(file);
+      setForm(prev => ({ 
+        ...prev, 
+        image: previewUrl // Show preview immediately
+      }));
+      
+      // Upload to Cloudinary (same implementation as admin)
+      const result = await uploadToCloudinary(file, 'instagram-posts');
+      
+      // Update form with Cloudinary URL
+      setForm(prev => ({ 
+        ...prev, 
+        image: result.url,
+        publicId: result.public_id
+      }));
+      
+      showSuccess('Image uploaded successfully to Cloudinary!');
     } catch (error) {
-      console.error('Image processing error:', error);
-      setError('Image processing failed');
-      showError('Image processing failed');
+      console.error('Cloudinary upload error:', error);
+      setError(`Upload failed: ${error.message}`);
+      showError(`Upload failed: ${error.message}`);
+      
+      // Reset image on error
+      setForm(prev => ({ 
+        ...prev, 
+        image: '',
+        publicId: ''
+      }));
     } finally {
       setUploading(false);
     }

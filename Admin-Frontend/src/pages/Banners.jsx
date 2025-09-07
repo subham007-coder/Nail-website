@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../utils/api';
+import { uploadToCloudinary, createPreviewUrl, validateImageFile } from '../services/cloudinaryService';
 
 function Banners() {
   const [banners, setBanners] = useState([]);
@@ -32,27 +33,51 @@ function Banners() {
     }
   };
 
-  // Image upload handler - simplified for now since upload endpoint is not available
+  // Cloudinary image upload handler
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     
+    // Validate file before upload
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setError(validation.error);
+      return;
+    }
+    
     setUploading(true);
+    setError('');
+    
     try {
-      // For now, we'll use FileReader to create a data URL for preview
-      // In production, you'd want to upload to a service like Cloudinary, AWS S3, etc.
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setForm({ 
-          ...form, 
-          image: event.target.result, 
-          publicId: `temp_${Date.now()}` 
-        });
-      };
-      reader.readAsDataURL(file);
+      // Create preview URL for immediate display
+      const previewUrl = createPreviewUrl(file);
+      setForm(prev => ({ 
+        ...prev, 
+        image: previewUrl // Show preview immediately
+      }));
+      
+      // Upload to Cloudinary (same implementation as admin)
+      const result = await uploadToCloudinary(file, 'banners');
+      
+      // Update form with Cloudinary URL
+      setForm(prev => ({ 
+        ...prev, 
+        image: result.url,
+        publicId: result.public_id
+      }));
+      
+      // Success feedback could be added here if you have a toast system
+      console.log('Banner image uploaded successfully to Cloudinary!');
     } catch (error) {
-      console.error('Image processing error:', error);
-      setError('Image processing failed');
+      console.error('Cloudinary upload error:', error);
+      setError(`Upload failed: ${error.message}`);
+      
+      // Reset image on error
+      setForm(prev => ({ 
+        ...prev, 
+        image: '',
+        publicId: ''
+      }));
     } finally {
       setUploading(false);
     }

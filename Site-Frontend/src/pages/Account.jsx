@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FiEdit2, FiUser, FiShoppingBag, FiCalendar, FiMail, FiPhone } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../utils/api';
+import { uploadToCloudinary, createPreviewUrl, validateImageFile } from '../services/cloudinaryService';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -37,27 +38,50 @@ function Account() {
     }
   }, [user, isEditing]);
 
-  // Image upload function exactly like instaFeed.jsx
+  // Cloudinary image upload function
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     
-    setUploading(true);
-    try {
-      // For now, we'll use FileReader for image preview
-      // In production, you'd upload to a service like Cloudinary, AWS S3, etc.
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setProfileForm({ 
-          ...profileForm, 
-          image: event.target.result
-        });
-        setUpdateStatus('image-success');
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      console.error('Image processing error:', error);
+    // Validate file before upload
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
       setUpdateStatus('image-error');
+      console.error('File validation error:', validation.error);
+      return;
+    }
+    
+    setUploading(true);
+    setUpdateStatus('');
+    
+    try {
+      // Create preview URL for immediate display
+      const previewUrl = createPreviewUrl(file);
+      setProfileForm(prev => ({ 
+        ...prev, 
+        image: previewUrl // Show preview immediately
+      }));
+      
+      // Upload to Cloudinary (same implementation as admin)
+      const result = await uploadToCloudinary(file, 'profile-images');
+      
+      // Update form with Cloudinary URL
+      setProfileForm(prev => ({ 
+        ...prev, 
+        image: result.url
+      }));
+      
+      setUpdateStatus('image-success');
+      console.log('Profile image uploaded successfully to Cloudinary!');
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      setUpdateStatus('image-error');
+      
+      // Reset image on error
+      setProfileForm(prev => ({ 
+        ...prev, 
+        image: user?.image || ''
+      }));
     } finally {
       setUploading(false);
     }
@@ -124,7 +148,10 @@ function Account() {
     address: user?.address || 'Not provided',
     country: user?.country || 'Not provided',
     city: user?.city || 'Not provided',
-    joinedDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A',
+    joinedDate: user?.createdAt
+  ? new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+  : 'N/A',
+
     orders: [
       {
         id: '#ORD001',
@@ -171,7 +198,7 @@ function Account() {
         {/* Profile Picture */}
         <div className="space-y-4">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+            <div className="relative w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden ring-4 ring-pink-200 shadow-lg">
               {profileForm.image || user?.image ? (
                 <img
                   src={profileForm.image || user.image}
