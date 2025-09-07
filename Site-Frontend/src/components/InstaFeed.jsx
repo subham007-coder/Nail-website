@@ -8,7 +8,7 @@ function InstaFeed() {
   useScrollAnimation();
 
   useEffect(() => {
-    apiRequest("/v1/insta-posts/")
+    apiRequest("/insta-posts/")
       .then(data => {
         if (data.length > 0) {
           setInstaPosts(data);

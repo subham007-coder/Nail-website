@@ -13,7 +13,7 @@ function ContactSubmissions() {
   const fetchSubmissions = async () => {
     setLoading(true);
     try {
-      const data = await apiRequest('/api/contact-submissions');
+      const data = await apiRequest('/v1/contact-submissions');
       setSubmissions(data);
     } catch (err) {
       console.error('Failed to fetch submissions:', err.message);
@@ -26,7 +26,7 @@ function ContactSubmissions() {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
     setDeletingId(id);
     try {
-      await apiRequest(`/api/contact-submissions/${id}`, {
+      await apiRequest(`/v1/contact-submissions/${id}`, {
         method: 'DELETE',
       });
       setSubmissions((prev) => prev.filter((sub) => sub._id !== id));

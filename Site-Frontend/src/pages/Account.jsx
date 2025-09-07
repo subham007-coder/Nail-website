@@ -3,21 +3,128 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiEdit2, FiUser, FiShoppingBag, FiCalendar, FiMail, FiPhone } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import { apiRequest } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function Account() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const { user } = useAuth();
+  const [uploading, setUploading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState(null);
+  const [profileForm, setProfileForm] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    country: '',
+    city: '',
+    image: ''
+  });
+  const { user, updateUser, getAuthHeaders } = useAuth();
 
-  // Mock data - in a real app, this would come from your API
+  // Initialize profile form when user data is available or editing starts
+  React.useEffect(() => {
+    if (user && (isEditing || !profileForm.name)) {
+      setProfileForm({
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        country: user.country || '',
+        city: user.city || '',
+        image: user.image || ''
+      });
+    }
+  }, [user, isEditing]);
+
+  // Image upload function exactly like instaFeed.jsx
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setUploading(true);
+    try {
+      // For now, we'll use FileReader for image preview
+      // In production, you'd upload to a service like Cloudinary, AWS S3, etc.
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setProfileForm({ 
+          ...profileForm, 
+          image: event.target.result
+        });
+        setUpdateStatus('image-success');
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Image processing error:', error);
+      setUpdateStatus('image-error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Update profile function
+  const handleUpdateProfile = async () => {
+    if (!user?._id) {
+      setUpdateStatus('error');
+      return;
+    }
+
+    setUpdateLoading(true);
+    setUpdateStatus(null);
+    
+    try {
+      const response = await apiRequest(`/customer/${user._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
+        body: JSON.stringify({
+          name: profileForm.name,
+          email: user.email, // Include required email field
+          phone: profileForm.phone,
+          address: profileForm.address,
+          country: profileForm.country,
+          city: profileForm.city,
+          image: profileForm.image
+        })
+      });
+      
+      // Update user in auth context
+      updateUser({
+        name: profileForm.name,
+        phone: profileForm.phone,
+        address: profileForm.address,
+        country: profileForm.country,
+        city: profileForm.city,
+        image: profileForm.image
+      });
+      
+      setUpdateStatus('success');
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setUpdateStatus('error');
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
+  // Form input change handler
+  const handleInputChange = (field, value) => {
+    setProfileForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Mock data for orders and appointments - in a real app, this would come from your API
   const userData = {
     name: user?.name || 'User',
     email: user?.email || 'user@example.com',
-    phone: user?.phone || '+91 9999999999',
+    phone: user?.phone || 'Not provided',
     address: user?.address || 'Not provided',
-    joinedDate: 'March 2024',
+    country: user?.country || 'Not provided',
+    city: user?.city || 'Not provided',
+    joinedDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A',
     orders: [
       {
         id: '#ORD001',
@@ -65,9 +172,9 @@ function Account() {
         <div className="space-y-4">
           <div className="flex flex-col items-center space-y-4">
             <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              {user?.image ? (
+              {profileForm.image || user?.image ? (
                 <img
-                  src={user.image}
+                  src={profileForm.image || user.image}
                   alt={userData.name}
                   className="w-full h-full object-cover"
                 />
@@ -76,9 +183,26 @@ function Account() {
               )}
             </div>
             {isEditing && (
-              <button className="text-sm text-pink-600 hover:text-pink-700">
-                Change Photo
-              </button>
+              <div className="space-y-2">
+                <label className="cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                  <span className="text-sm text-pink-600 hover:text-pink-700 border border-pink-600 px-3 py-1 rounded-lg hover:bg-pink-50 transition-colors">
+                    {uploading ? 'Uploading...' : 'Change Photo'}
+                  </span>
+                </label>
+                {updateStatus === 'image-success' && (
+                  <div className="text-xs text-green-600">Image loaded successfully!</div>
+                )}
+                {updateStatus === 'image-error' && (
+                  <div className="text-xs text-red-600">Image processing failed</div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -92,8 +216,10 @@ function Account() {
             {isEditing ? (
               <input
                 type="text"
-                defaultValue={userData.name}
+                value={profileForm.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Enter your full name"
               />
             ) : (
               <p className="text-gray-900">{userData.name}</p>
@@ -116,8 +242,10 @@ function Account() {
             {isEditing ? (
               <input
                 type="tel"
-                defaultValue={userData.phone}
+                value={profileForm.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Enter your phone number"
               />
             ) : (
               <p className="text-gray-900">{userData.phone}</p>
@@ -130,12 +258,50 @@ function Account() {
             </label>
             {isEditing ? (
               <textarea
-                defaultValue={userData.address}
+                value={profileForm.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Enter your address"
               />
             ) : (
               <p className="text-gray-900">{userData.address}</p>
+            )}
+          </div>
+
+          {/* Country Field */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Country
+            </label>
+            {isEditing ? (
+              <input
+                type="text"
+                value={profileForm.country}
+                onChange={(e) => handleInputChange('country', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Enter your country"
+              />
+            ) : (
+              <p className="text-gray-900">{userData.country}</p>
+            )}
+          </div>
+
+          {/* City Field */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              City
+            </label>
+            {isEditing ? (
+              <input
+                type="text"
+                value={profileForm.city}
+                onChange={(e) => handleInputChange('city', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Enter your city"
+              />
+            ) : (
+              <p className="text-gray-900">{userData.city}</p>
             )}
           </div>
 
@@ -146,14 +312,45 @@ function Account() {
             <p className="text-gray-900">{userData.joinedDate}</p>
           </div>
 
+          {/* Update Status Messages */}
+          {updateStatus === 'success' && (
+            <div className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+              Profile updated successfully!
+            </div>
+          )}
+          {updateStatus === 'error' && (
+            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+              Failed to update profile. Please try again.
+            </div>
+          )}
+
           {isEditing && (
             <div className="flex gap-3 pt-4">
-              <button className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
-                Save Changes
+              <button 
+                onClick={handleUpdateProfile}
+                disabled={updateLoading || uploading}
+                className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {updateLoading ? 'Saving...' : 'Save Changes'}
               </button>
               <button
-                onClick={() => setIsEditing(false)}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  setIsEditing(false);
+                  setUpdateStatus(null);
+                  // Reset form to original user data
+                  if (user) {
+                    setProfileForm({
+                      name: user.name || '',
+                      phone: user.phone || '',
+                      address: user.address || '',
+                      country: user.country || '',
+                      city: user.city || '',
+                      image: user.image || ''
+                    });
+                  }
+                }}
+                disabled={updateLoading}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

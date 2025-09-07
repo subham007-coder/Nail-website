@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const API_SUPER_ADMIN_URL = import.meta.env.VITE_API_Super_Admin_URL;
 
 export async function apiRequest(path, options = {}) {
-  const url = `${API_BASE_URL}${path}`;
+  const url = `${API_BASE_URL}/v1${path}`;
   const opts = { ...options };
 
   // Add authentication header if token exists

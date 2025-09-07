@@ -22,29 +22,37 @@ function Banners() {
   }, []);
 
   const fetchBanners = async () => {
-    const data = await apiRequest('/api/banners');
-    setBanners(data);
+    try {
+      const data = await apiRequest('/v1/banners/');
+      setBanners(data);
+      setError('');
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+      setError('Failed to fetch banners');
+    }
   };
 
-  // Image upload handler
+  // Image upload handler - simplified for now since upload endpoint is not available
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    
     setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/banners/upload-image`, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.url && data.public_id) {
-        setForm({ ...form, image: data.url, publicId: data.public_id });
-      }
-    } catch {
-      alert('Image upload failed');
+      // For now, we'll use FileReader to create a data URL for preview
+      // In production, you'd want to upload to a service like Cloudinary, AWS S3, etc.
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setForm({ 
+          ...form, 
+          image: event.target.result, 
+          publicId: `temp_${Date.now()}` 
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Image processing error:', error);
+      setError('Image processing failed');
     } finally {
       setUploading(false);
     }
@@ -56,36 +64,57 @@ function Banners() {
       form.title.trim() &&
       form.subtitle.trim() &&
       form.image.trim() &&
-      form.publicId.trim() &&
       form.link.trim() &&
       form.buttonText.trim() &&
-      form.order !== '' // allow 0 as valid
+      form.order !== '' && // allow 0 as valid
+      !isNaN(form.order) // ensure order is a number
     );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
     if (!isFormValid()) {
-      setError('All fields are required.');
+      setError('All fields are required and order must be a valid number.');
       return;
     }
-    if (editingId) {
-      await apiRequest(`/api/banners/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+    
+    try {
+      if (editingId) {
+        await apiRequest(`/v1/banners/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+      } else {
+        await apiRequest('/v1/banners/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+      }
+      
+      // Reset form
+      setForm({ 
+        title: '', 
+        subtitle: '', 
+        image: '', 
+        publicId: '', 
+        link: '', 
+        order: 0, 
+        active: true, 
+        buttonText: '' 
       });
-    } else {
-      await apiRequest('/api/banners', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+      setEditingId(null);
+      setError('');
+      
+      // Refresh banners list
+      await fetchBanners();
+    } catch (error) {
+      console.error('Submit error:', error);
+      setError(`Failed to ${editingId ? 'update' : 'create'} banner. Please try again.`);
     }
-    setForm({ title: '', subtitle: '', image: '', link: '', order: 0, active: true });
-    setEditingId(null);
-    fetchBanners();
   };
 
   const handleEdit = (banner) => {
@@ -94,9 +123,16 @@ function Banners() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this banner?')) return;
-    await apiRequest(`/api/banners/${id}`, { method: 'DELETE' });
-    fetchBanners();
+    if (!window.confirm('Are you sure you want to delete this banner?')) return;
+    
+    try {
+      await apiRequest(`/v1/banners/${id}`, { method: 'DELETE' });
+      await fetchBanners();
+      setError('');
+    } catch (error) {
+      console.error('Delete error:', error);
+      setError('Failed to delete banner. Please try again.');
+    }
   };
 
   return (
@@ -124,18 +160,31 @@ function Banners() {
             className="px-4 py-2 border rounded"
           />
           {/* Image Upload */}
-          <div>
+          <div className="space-y-2">
             <input
               type="file"
-              required
               accept="image/*"
               onChange={handleImageUpload}
               className="px-4 py-2 border rounded w-full"
               disabled={uploading}
             />
-            {uploading && <div className="text-xs text-gray-500 mt-1">Uploading...</div>}
+            <input
+              type="url"
+              placeholder="Or paste image URL"
+              value={form.image}
+              onChange={e => setForm({ ...form, image: e.target.value, publicId: e.target.value ? `url_${Date.now()}` : '' })}
+              className="px-4 py-2 border rounded w-full"
+            />
+            {uploading && <div className="text-xs text-gray-500 mt-1">Processing image...</div>}
             {form.image && (
-              <img src={form.image} alt="Banner" className="mt-2 w-32 h-16 object-cover rounded" />
+              <img 
+                src={form.image} 
+                alt="Banner preview" 
+                className="mt-2 w-32 h-16 object-cover rounded border"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
             )}
           </div>
           <input
@@ -178,7 +227,24 @@ function Banners() {
           {editingId ? 'Update' : 'Add'} Banner
         </button>
         {editingId && (
-          <button type="button" className="ml-4 text-gray-600" onClick={() => { setEditingId(null); setForm({ title: '', subtitle: '', image: '', link: '', order: 0, active: true }); }}>
+          <button 
+            type="button" 
+            className="ml-4 bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-colors" 
+            onClick={() => { 
+              setEditingId(null); 
+              setForm({ 
+                title: '', 
+                subtitle: '', 
+                image: '', 
+                publicId: '', 
+                link: '', 
+                order: 0, 
+                active: true, 
+                buttonText: '' 
+              }); 
+              setError('');
+            }}
+          >
             Cancel
           </button>
         )}

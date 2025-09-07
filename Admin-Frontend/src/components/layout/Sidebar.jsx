@@ -5,14 +5,14 @@ function Sidebar({ open, setOpen }) {
   const location = useLocation();
   
   const navigation = [
-    { name: 'Dashboard', icon: FiHome, href: '/' },
+    // { name: 'Dashboard', icon: FiHome, href: '/' },
     { name: 'Banner', icon: FiImage, href: '/banner' },
     { name: 'InstaFeed', icon: FiInstagram, href: '/instafeed' },
     { name: 'Appointments', icon: FiCalendar, href: '/appointments' },
-    { name: 'Products', icon: FiBox, href: '/products' },
-    { name: 'Orders', icon: FiShoppingBag, href: '/orders' },
-    { name: 'Users', icon: FiUsers, href: '/users' },
-    { name: 'Contact', icon: FiMail, href: '/contact' },
+    // { name: 'Products', icon: FiBox, href: '/products' },
+    // { name: 'Orders', icon: FiShoppingBag, href: '/orders' },
+    // { name: 'Users', icon: FiUsers, href: '/users' },
+    { name: 'Contact Us', icon: FiMail, href: '/contact' },
     { name: 'Contact Submissions', icon: FiMail, href: '/contact-submissions' },
   ];
 

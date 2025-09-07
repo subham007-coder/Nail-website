@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../utils/api';
+import { useToast } from '../contexts/ToastContext';
 
 function InstaFeed() {
   const [posts, setPosts] = useState([]);
@@ -11,35 +12,51 @@ function InstaFeed() {
   });
   const [editingId, setEditingId] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { showSuccess, showError, showWarning } = useToast();
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
   const fetchPosts = async () => {
-    const data = await apiRequest('/api/insta-posts');
-    setPosts(data);
+    try {
+      setLoading(true);
+      const data = await apiRequest('/v1/insta-posts/');
+      setPosts(data);
+      setError('');
+    } catch (error) {
+      console.error('Error fetching Instagram posts:', error);
+      setError('Failed to fetch Instagram posts');
+      showError('Failed to fetch Instagram posts');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    
     setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/insta-posts/upload-image`, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.url && data.public_id) {
-        setForm({ ...form, image: data.url, publicId: data.public_id });
-      }
-    } catch {
-      alert('Image upload failed');
+      // For now, we'll use FileReader for image preview
+      // In production, you'd upload to a service like Cloudinary, AWS S3, etc.
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setForm({ 
+          ...form, 
+          image: event.target.result, 
+          publicId: `temp_${Date.now()}` 
+        });
+        showSuccess('Image loaded successfully');
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Image processing error:', error);
+      setError('Image processing failed');
+      showError('Image processing failed');
     } finally {
       setUploading(false);
     }
@@ -59,24 +76,33 @@ function InstaFeed() {
     setError('');
     if (!isFormValid()) {
       setError('All fields are required.');
+      showWarning('All fields are required.');
       return;
     }
-    if (editingId) {
-      await apiRequest(`/api/insta-posts/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-    } else {
-      await apiRequest('/api/insta-posts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+    
+    try {
+      if (editingId) {
+        await apiRequest(`/v1/insta-posts/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+        showSuccess('Post updated successfully!');
+      } else {
+        await apiRequest('/v1/insta-posts/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+        showSuccess('Post created successfully!');
+      }
+      setForm({ image: '', publicId: '', likes: '', comments: '' });
+      setEditingId(null);
+      fetchPosts();
+    } catch (error) {
+      console.error('Error submitting post:', error);
+      showError(editingId ? 'Failed to update post' : 'Failed to create post');
     }
-    setForm({ image: '', publicId: '', likes: '', comments: '' });
-    setEditingId(null);
-    fetchPosts();
   };
 
   const handleEdit = (post) => {
@@ -86,8 +112,15 @@ function InstaFeed() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this post?')) return;
-    await apiRequest(`/api/insta-posts/${id}`, { method: 'DELETE' });
-    fetchPosts();
+    
+    try {
+      await apiRequest(`/v1/insta-posts/${id}`, { method: 'DELETE' });
+      showSuccess('Post deleted successfully!');
+      fetchPosts();
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      showError('Failed to delete post');
+    }
   };
 
   return (

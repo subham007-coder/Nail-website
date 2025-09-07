@@ -18,7 +18,7 @@ function Carousel() {
   useEffect(() => {
     setMounted(true);
     // Fetch banners from backend
-    apiRequest('/v1/banners/')
+    apiRequest('/banners/')
       .then(data => {
         const activeBanners = data.filter(b => b.active).sort((a, b) => a.order - b.order);
         if (activeBanners.length > 0) {

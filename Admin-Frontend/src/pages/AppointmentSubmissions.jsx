@@ -13,7 +13,7 @@ function AppointmentSubmissions() {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      const data = await apiRequest('/api/appointment-submissions');
+      const data = await apiRequest('/v1/appointment-submissions');
       setAppointments(data);
     } catch (err) {
       console.error('Failed to fetch appointments:', err.message);
@@ -26,7 +26,7 @@ function AppointmentSubmissions() {
     if (!window.confirm('Are you sure you want to delete this appointment?')) return;
     setDeletingId(id);
     try {
-      await apiRequest(`/api/appointment-submissions/${id}`, {
+      await apiRequest(`/v1/appointment-submissions/${id}`, {
         method: 'DELETE',
       });
       setAppointments((prev) => prev.filter((apt) => apt._id !== id));
@@ -52,7 +52,7 @@ function AppointmentSubmissions() {
               <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">Service</th>
               <th className="px-4 py-2">Location</th>
-              <th className="px-4 py-2">Address</th>
+              {/* <th className="px-4 py-2">Address</th> */}
               <th className="px-4 py-2">Time</th>
               <th className="px-4 py-2">Action</th>
             </tr>
@@ -66,7 +66,7 @@ function AppointmentSubmissions() {
                 <td className="px-4 py-2">{apt.email}</td>
                 <td className="px-4 py-2">{apt.service}</td>
                 <td className="px-4 py-2">{apt.location}</td>
-                <td className="px-4 py-2">{apt.address}</td>
+                {/* <td className="px-4 py-2">{apt.address}</td> */}
                 <td className="px-4 py-2">{apt.appointmentTime}</td>
                 <td className="px-4 py-2">
                   <button

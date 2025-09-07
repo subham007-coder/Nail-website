@@ -15,7 +15,7 @@ function Contact() {
 
   const fetchContactData = async () => {
     try {
-      const data = await apiRequest('/api/contact');
+      const data = await apiRequest('/v1/contacts');
       setContactData(data);
       setEditedData(data);
     } catch (error) {
@@ -27,7 +27,7 @@ function Contact() {
 
   const handleSave = async () => {
     try {
-      const updatedData = await apiRequest('/api/contact', {
+      const updatedData = await apiRequest('/v1/contacts', {
         method: 'PUT',
         body: JSON.stringify(editedData),
         headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ function Contact() {
 
   const handleSectionUpdate = async (section, data) => {
     try {
-      await apiRequest(`/api/contact/${section}`, {
+      await apiRequest(`/v1/contacts/${section}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' },
@@ -59,7 +59,7 @@ function Contact() {
     formData.append('image', file);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/upload-image`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/v1/contacts/upload-image`, {
         method: 'POST',
         body: formData,
       });

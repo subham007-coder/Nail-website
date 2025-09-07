@@ -59,7 +59,7 @@ function Appointment() {
     setIsSubmitting(true);
     
     try {
-      await apiRequest('/v1/appointment-submissions/', {
+      await apiRequest('/appointment-submissions/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
