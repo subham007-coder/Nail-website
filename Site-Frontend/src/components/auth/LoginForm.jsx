@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import GoogleAuthButton from './GoogleAuthButton';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -144,6 +145,23 @@ const LoginForm = () => {
             </Link>
           </div>
         </form>
+
+        {/* Divider */}
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-50 text-gray-500">Or continue with</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Google Auth Button */}
+        <div className="mt-6">
+          <GoogleAuthButton buttonText="Sign in with Google" />
+        </div>
       </div>
     </div>
   );

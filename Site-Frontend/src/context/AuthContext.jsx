@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiRequest } from '../utils/api';
 import Cookies from 'js-cookie';
+import { signOutFromGoogle } from '../config/googleOAuth';
 
 const AuthContext = createContext();
 
@@ -164,7 +165,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      // Sign out from Google if applicable
+      await signOutFromGoogle();
+    } catch (error) {
+      console.error('Google sign-out error:', error);
+    }
+    
     setUser(null);
     setToken(null);
     Cookies.remove('authToken');
@@ -194,6 +202,8 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateUser,
     getAuthHeaders,
+    setUser, // Expose setUser function
+    setToken, // Expose setToken function
     isAuthenticated: !!user && !!token
   };
 
