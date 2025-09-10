@@ -17,8 +17,9 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+// import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AuthRequiredRoute from "./components/auth/AuthRequiredRoute";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <CartProvider>
         <Router>
           <ScrollProvider>
+            <ScrollToTop />
             <div className="App">
               <EntryPopup />
               <FloatingBar />

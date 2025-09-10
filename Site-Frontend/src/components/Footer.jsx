@@ -108,7 +108,10 @@ function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm">
-              © {new Date().getFullYear()} Nailz By Angana. All rights reserved.
+              © {new Date().getFullYear()} AR Lashes. All rights reserved.
+            </p>
+            <p className="text-sm">
+              Website Design And Development by <a href="https://growstara.in" className="hover:text-pink-500 transition-colors font-semibold">Growstara Digital</a>
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-sm hover:text-pink-500 transition-colors">

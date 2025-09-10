@@ -167,13 +167,13 @@ function ProductSlider() {
                 onMouseEnter={() => handleMouseEnter(productId)}
                 onMouseLeave={() => handleMouseLeave(productId)}
               >
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-[4/3] overflow-hidden p-4">
                   <img
                     src={
                       hoveredProducts.has(productId) ? hoverImage : mainImage
                     }
                     alt={title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 hidden sm:flex">
                     <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
