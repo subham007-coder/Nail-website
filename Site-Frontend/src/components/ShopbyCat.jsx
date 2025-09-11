@@ -9,7 +9,7 @@ const categories = [
     id: 1,
     name: "Wedding Nails",
     image:
-      "https://images-static.nykaa.com/creatives/90dec38d-e38c-4205-9520-f071407e07a8/default.jpg?tr=cm-pad_resize,w-900",
+      "https://nailknack.com/cdn/shop/collections/nailknack-41486.jpg?v=1718624213&width=535",
   },
   {
     id: 2,
@@ -50,7 +50,7 @@ function ShopbyCat() {
             className="group relative"
             data-card // Add this attribute
           >
-            <div className="aspect-[4/4] overflow-hidden rounded-lg">
+            <div className="aspect-[4/3] overflow-hidden rounded-lg">
               <img
                 src={category.image}
                 alt={category.name}
