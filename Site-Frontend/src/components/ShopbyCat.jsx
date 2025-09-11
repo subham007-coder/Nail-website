@@ -43,14 +43,14 @@ function ShopbyCat() {
         Shop By Occasion
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         {categories.map((category) => (
           <div
             key={category.id}
             className="group relative"
             data-card // Add this attribute
           >
-            <div className="aspect-[4/3] overflow-hidden rounded-lg">
+            <div className="aspect-[5/3] overflow-hidden rounded-lg">
               <img
                 src={category.image}
                 alt={category.name}
