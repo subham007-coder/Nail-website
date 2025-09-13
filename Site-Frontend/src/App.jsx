@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 // import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/auth/forget-password/:token" element={<ResetPassword />} />
 
                 {/* Public browsing routes - no authentication required */}
                 <Route path="/" element={<Home />} />
