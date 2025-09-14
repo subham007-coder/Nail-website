@@ -161,7 +161,7 @@ function ProductSlider() {
           }
 
           return (
-            <SwiperSlide key={productId} className="pb-10">
+            <SwiperSlide key={productId} className="pb-2">
               <div
                 className="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
                 onMouseEnter={() => handleMouseEnter(productId)}
