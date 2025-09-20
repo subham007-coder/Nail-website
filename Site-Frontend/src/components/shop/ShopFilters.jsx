@@ -1,28 +1,35 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Disclosure } from '@headlessui/react';
 import RangeSlider from './RangeSlider';
 
-const filterCategories = {
-  availability: [
-    { label: 'In stock', count: 179 },
-    { label: 'Out of stock', count: 8 },
-  ],
-  type: [
-    { label: 'Best Sellers', count: 25 },
-    { label: 'Casual Wear Nails', count: 92 },
-    { label: 'French Nails', count: 28 },
-    { label: 'Ombre Nails', count: 9 },
-  ],
-  // ...add other categories
-};
-
-function ShopFilters({ filters, setFilters }) {
+/**
+ * Sidebar filters for Shop page
+ * - Shows Price Range
+ * - Shows dynamic Categories (from API)
+ */
+function ShopFilters({
+  filters,
+  setFilters,
+  categories = [],
+  activeCategoryId = '',
+  onCategorySelect,
+}) {
   const handlePriceChange = (newValues) => {
     setFilters({ ...filters, priceRange: newValues });
   };
 
+  // Flatten one level if categories have children
+  const flatCategories = useMemo(() => {
+    const items = Array.isArray(categories)
+      ? categories.flatMap((c) =>
+          Array.isArray(c.children) && c.children.length ? c.children : [c]
+        )
+      : [];
+    return items;
+  }, [categories]);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Price Range */}
       <div className="py-2">
         <h3 className="text-lg font-serif text-gray-900 mb-4">Price Range</h3>
@@ -38,43 +45,50 @@ function ShopFilters({ filters, setFilters }) {
         </div>
       </div>
 
-      {/* Filter Categories */}
-      {Object.entries(filterCategories).map(([category, options]) => (
-        <Disclosure key={category} defaultOpen={true}>
-          {({ open }) => (
-            <div className="space-y-2"> {/* Changed from <> to <div> */}
-              <Disclosure.Button className="flex justify-between w-full text-lg font-serif text-gray-900">
-                <span>{category.charAt(0).toUpperCase() + category.slice(1)}</span>
-                <span className="transform transition-transform duration-200">
-                  {open ? '−' : '+'}
-                </span>
-              </Disclosure.Button>
-              <Disclosure.Panel className="mt-4 space-y-2">
-                {options.map((option) => (
-                  <label key={option.label} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300 text-pink-600 
-                               focus:ring-pink-500 focus:ring-offset-0"
-                      checked={filters[category]?.includes(option.label)}
-                      onChange={(e) => {
-                        const newFilters = e.target.checked
-                          ? [...(filters[category] || []), option.label]
-                          : filters[category]?.filter((item) => item !== option.label);
-                        setFilters({ ...filters, [category]: newFilters });
-                      }}
-                    />
-                    <span className="ml-3 text-sm text-gray-600">
-                      {option.label}
-                      <span className="ml-1 text-gray-400">({option.count})</span>
-                    </span>
-                  </label>
-                ))}
-              </Disclosure.Panel>
-            </div> /* Changed from </> to </div> */
-          )}
-        </Disclosure>
-      ))}
+      {/* Categories */}
+      <Disclosure defaultOpen={true}>
+        {({ open }) => (
+          <div className="space-y-3">
+            <Disclosure.Button className="flex justify-between w-full text-lg font-serif text-gray-900">
+              <span>Categories</span>
+              <span className="transform transition-transform duration-200">
+                {open ? '−' : '+'}
+              </span>
+            </Disclosure.Button>
+            <Disclosure.Panel className="mt-2 space-y-2">
+              {flatCategories.length === 0 ? (
+                <p className="text-sm text-gray-500">No categories found.</p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {flatCategories.map((cat) => {
+                    const cid = cat?._id || cat?.id;
+                    const label =
+                      (typeof cat?.name === 'object' ? cat?.name?.en : cat?.name) ||
+                      cat?.title ||
+                      'Unnamed';
+                    const active = cid === activeCategoryId;
+                    return (
+                      <button
+                        key={cid}
+                        onClick={() => onCategorySelect?.(cid, label)}
+                        className={
+                          'w-full text-left px-3 py-2 rounded-lg border text-sm transition ' +
+                          (active
+                            ? 'bg-rose-600 text-white border-rose-600'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-rose-400')
+                        }
+                        title={label}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </Disclosure.Panel>
+          </div>
+        )}
+      </Disclosure>
     </div>
   );
 }

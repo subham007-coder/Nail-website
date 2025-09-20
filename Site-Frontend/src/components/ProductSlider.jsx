@@ -34,48 +34,22 @@ function ProductSlider() {
 
   const { addToCart, cartAnimation } = useCart();
 
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const data = await adminApiRequest("/v1/products/show");
-  //       setProducts(data.products || []);
-  //     } catch (err) {
-  //       console.error("Error fetching products:", err);
-  //       setError("Failed to load products");
-  //       setProducts(fallbackProducts);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchProducts();
-  // }, []);
-
   useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const data = await adminApiRequest("/v1/products/show");
-
-      // handle both cases: array or { products: [] }
-      if (Array.isArray(data)) {
-        setProducts(data);
-      } else if (data.products) {
-        setProducts(data.products);
-      } else {
-        setProducts([]);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await adminApiRequest("/v1/products");
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products");
+        setProducts(fallbackProducts);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to load products");
-      setProducts(fallbackProducts);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchProducts();
-}, []);
-
+    };
+    fetchProducts();
+  }, []);
 
   const handleMouseEnter = (productId) => {
     setHoveredProducts((prev) => new Set([...prev, productId]));

@@ -1,13 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ShopFilters from "../components/shop/ShopFilters";
 import ProductGrid from "../components/shop/ProductGrid";
 import MobileFilters from "../components/shop/MobileFilters";
+import { fetchCategories } from "../services/categoryService";
+import slugify from "../utils/slugify";
+
+function useQuery() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
 
 function Shop() {
+  const navigate = useNavigate();
+  const query = useQuery();
+
   const [filters, setFilters] = useState({
     availability: [],
     priceRange: [0, 699],
@@ -19,7 +29,48 @@ function Shop() {
     color: [],
   });
 
+  const [categories, setCategories] = useState([]);
+  const [activeCategoryId, setActiveCategoryId] = useState("");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
+  // Load categories
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await fetchCategories();
+        if (!cancelled) setCategories(Array.isArray(data?.data) ? data.data : data);
+      } catch (e) {
+        console.error("Failed to load categories", e);
+        if (!cancelled) setCategories([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Sync from URL: /shop?category=slug&_id=id
+  useEffect(() => {
+    const qId = query.get("_id") || "";
+    const qCat = query.get("category") || "";
+    // If both exist, trust _id as active selection
+    if (qId) setActiveCategoryId(qId);
+    // Optionally, if no id but category exists, try to match by slug
+    if (!qId && qCat && categories?.length) {
+      const all = categories.flatMap((c) => (Array.isArray(c.children) && c.children.length ? c.children : [c]));
+      const match = all.find((c) => slugify(c?.name?.en || c?.name || "") === qCat);
+      if (match?._id) setActiveCategoryId(match._id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, categories]);
+
+  const handleCategorySelect = (id, name) => {
+    setActiveCategoryId(id);
+    const slug = slugify(name);
+    // Update URL to mirror Next store style
+    navigate(`/shop?category=${encodeURIComponent(slug)}&_id=${encodeURIComponent(id)}`);
+  };
 
   return (
     <div className="min-h-screen bg-[#FDF8F5]">
@@ -143,12 +194,8 @@ function Shop() {
 
       {/* Shop Content */}
       <div className="container mx-auto px-2 sm:px-4 py-8">
-        {" "}
-        {/* Reduced padding */}
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-4 px-2">
-          {" "}
-          {/* Added padding to filter button container */}
           <button
             onClick={() => setIsMobileFiltersOpen(true)}
             className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl
@@ -171,15 +218,22 @@ function Shop() {
             Filter Products
           </button>
         </div>
+
         <div className="flex gap-8">
-          {/* Desktop Filters */}
+          {/* Desktop Sidebar Filters: Price Range + Categories */}
           <div className="hidden lg:block w-64 flex-shrink-0">
-            <ShopFilters filters={filters} setFilters={setFilters} />
+            <ShopFilters
+              filters={filters}
+              setFilters={setFilters}
+              categories={categories}
+              activeCategoryId={activeCategoryId}
+              onCategorySelect={handleCategorySelect}
+            />
           </div>
 
           {/* Product Grid */}
           <div className="flex-1">
-            <ProductGrid filters={filters} />
+            <ProductGrid filters={{ ...filters, categoryId: activeCategoryId }} />
           </div>
         </div>
       </div>
@@ -190,6 +244,9 @@ function Shop() {
         onClose={() => setIsMobileFiltersOpen(false)}
         filters={filters}
         setFilters={setFilters}
+        categories={categories}
+        activeCategoryId={activeCategoryId}
+        onCategorySelect={handleCategorySelect}
       />
 
       <Footer />

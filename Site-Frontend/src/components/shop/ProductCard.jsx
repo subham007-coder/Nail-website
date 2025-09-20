@@ -11,13 +11,56 @@ function ProductCard({ product }) {
   const { addToCartWithAuth, addToWishlistWithAuth } = useCartActions();
 
   const extendedProduct = {
-    ...product,
-    subtext: "Long-lasting & Easy to Apply",
-    shades: 3,
+    id: product.id,
+    name: product.name,
+    image: product.image,
+    price: product.price,
+    // oldPrice used by QuickView; originalPrice for card display
+    oldPrice: product.originalPrice ?? product.oldPrice ?? null,
+    originalPrice: product.originalPrice ?? product.oldPrice ?? null,
+    percentOff: (() => {
+      const op = product.originalPrice ?? product.oldPrice ?? null; // original price from backend
+      const pr = product.price ?? null; // current price from backend
+
+      // Parse incoming discount (could be number, numeric string, or amount off)
+      let d = null;
+      if (typeof product.percentOff === "number") d = product.percentOff;
+      else if (typeof product.percentOff === "string") {
+        const parsed = parseFloat(product.percentOff);
+        d = Number.isFinite(parsed) ? parsed : null;
+      }
+
+      // If discount provided and positive
+      if (Number.isFinite(d) && d > 0) {
+        // If it looks like an absolute amount (matches originalPrice - price) or is > 100
+        if (op != null && pr != null && op > pr) {
+          const diff = Math.round(op - pr);
+          const looksLikeAmount = Math.abs(diff - Math.round(d)) <= 1 || d > 100;
+          if (looksLikeAmount) {
+            const computed = Math.round(((op - pr) / op) * 100);
+            // Allow 100% only when price is 0; otherwise clamp to 99 to avoid false 100%
+            return Math.max(0, pr === 0 ? Math.min(100, computed) : Math.min(99, computed));
+          }
+        }
+        // Otherwise treat d as a percentage and clamp sensibly
+        return Math.max(0, Math.min(99, Math.round(d)));
+      }
+
+      // Fallback: if we have price and originalPrice, compute percent for display only
+      if (op != null && pr != null && op > pr) {
+        const computed = Math.round(((op - pr) / op) * 100);
+        return Math.max(0, pr === 0 ? Math.min(100, computed) : Math.min(99, computed));
+      }
+
+      return 0;
+    })(),
+    description: typeof product.description === "string" ? product.description : "",
+    categoryName: product.categoryName || "",
+    isNew: !!product.isNew,
+    // Demo-only placeholders for ratings (replace when ratings are real)
+    // shades: 3,
     reviews: 128,
     rating: 4.5,
-    originalPrice: Math.round(product.price * 1.25),
-    percentOff: 20,
   };
 
   const handleCardClick = (e) => {
@@ -74,19 +117,21 @@ function ProductCard({ product }) {
               </motion.div>
             )}
 
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-            >
-              <span
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 
-                bg-green-100 text-green-700 text-[10px] font-medium tracking-wide rounded-full"
+            {extendedProduct.percentOff > 0 && (
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                {extendedProduct.percentOff}% OFF
-              </span>
-            </motion.div>
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 
+                  bg-green-100 text-green-700 text-[10px] font-medium tracking-wide rounded-full"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  {extendedProduct.percentOff}% OFF
+                </span>
+              </motion.div>
+            )}
           </div>
         </div>
 
@@ -99,9 +144,11 @@ function ProductCard({ product }) {
             >
               {extendedProduct.name}
             </h3>
-            <p className="font-inter text-[10px] sm:text-xs text-gray-500 mt-0.5">
-              {extendedProduct.subtext}
-            </p>
+            {extendedProduct.description && (
+              <p className="font-inter text-[10px] sm:text-xs text-gray-500 mt-0.5 line-clamp-1">
+                {extendedProduct.description}
+              </p>
+            )}
           </div>
 
           {/* Ratings & Reviews */}
@@ -115,9 +162,9 @@ function ProductCard({ product }) {
             <span className="font-inter text-xs text-gray-500">
               ({extendedProduct.reviews})
             </span>
-            <span className="font-inter text-xs text-gray-500 ml-2">
+            {/* <span className="font-inter text-xs text-gray-500 ml-2">
               {extendedProduct.shades} shades
-            </span>
+            </span> */}
           </div>
 
           {/* Pricing */}
@@ -125,12 +172,16 @@ function ProductCard({ product }) {
             <span className="font-inter text-sm font-medium text-gray-900">
               ₹{extendedProduct.price}
             </span>
-            <span className="font-inter text-xs text-gray-500 line-through">
-              ₹{extendedProduct.originalPrice}
-            </span>
-            <span className="font-inter text-xs text-green-600 font-medium">
-              {extendedProduct.percentOff}% off
-            </span>
+            {extendedProduct.originalPrice && extendedProduct.originalPrice > extendedProduct.price ? (
+              <span className="font-inter text-xs text-gray-500 line-through">
+                ₹{extendedProduct.originalPrice}
+              </span>
+            ) : null}
+            {extendedProduct.percentOff > 0 && (
+              <span className="font-inter text-xs text-green-600 font-medium">
+                {extendedProduct.percentOff}% off
+              </span>
+            )}
           </div>
 
           {/* Action Buttons */}

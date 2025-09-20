@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import ShopFilters from './ShopFilters';
 
-function MobileFilters({ isOpen, onClose, filters, setFilters }) {
+function MobileFilters({
+  isOpen,
+  onClose,
+  filters,
+  setFilters,
+  categories = [],
+  activeCategoryId = '',
+  onCategorySelect,
+}) {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -48,8 +55,17 @@ function MobileFilters({ isOpen, onClose, filters, setFilters }) {
                         </button>
                       </div>
                     </div>
-                    <div className="px-4 sm:px-6">
-                      <ShopFilters filters={filters} setFilters={setFilters} />
+                    <div className="px-4 sm:px-6 pb-8">
+                      <ShopFilters
+                        filters={filters}
+                        setFilters={setFilters}
+                        categories={categories}
+                        activeCategoryId={activeCategoryId}
+                        onCategorySelect={(id, name) => {
+                          onCategorySelect?.(id, name);
+                          onClose?.(); // close after selecting on mobile
+                        }}
+                      />
                     </div>
                   </div>
                 </Dialog.Panel>
