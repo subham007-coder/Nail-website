@@ -12,7 +12,8 @@ import { fetchStoreProducts } from "../../services/productService";
 function ProductGrid({ filters }) {
   const activeCategoryId = filters?.categoryId || "";
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [apiData, setApiData] = useState({ products: [], popularProducts: [], discountedProducts: [] });
 
@@ -20,7 +21,7 @@ function ProductGrid({ filters }) {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      setLoading(true);
+      setIsLoading(true);
       setError("");
       try {
         const data = await fetchStoreProducts({ category: activeCategoryId });
@@ -28,7 +29,7 @@ function ProductGrid({ filters }) {
       } catch (e) {
         if (!cancelled) setError(e?.message || "Failed to load products");
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     }
     load();
@@ -47,7 +48,7 @@ function ProductGrid({ filters }) {
 
   const filteredProducts = useMemo(() => {
     let items = baseList.map((p) => ({
-      id: p._id || p.id,
+      id: p.slug || p._id || p.id,
       name:
         typeof p?.title === "object"
           ? p?.title?.en || p?.title?.default || ""
@@ -126,8 +127,17 @@ function ProductGrid({ filters }) {
     };
   }, [filteredProducts]);
 
-  if (loading) {
-    return <div className="text-center text-gray-500 py-10">Loading products...</div>;
+  // if (loading) {
+  //   return <div className="text-center text-gray-500 py-10">Loading products...</div>;
+  // }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-600 border-t-transparent"></div>
+      </div>
+    );
   }
 
   if (error) {

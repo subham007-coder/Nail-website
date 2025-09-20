@@ -74,14 +74,21 @@ function QuickView({ product, isOpen, onClose }) {
                   <h2 className="text-2xl font-medium text-gray-900">
                     {product.name}
                   </h2>
-                  <p className="text-sm text-gray-500">{product.category}</p>
+                  <p className="text-sm text-gray-500">{product.categoryName || product.category}</p>
                 </div>
 
                 <div className="space-y-1">
-                  <p className="text-2xl font-medium text-gray-900">₹{product.price}</p>
-                  {product.oldPrice && (
-                    <p className="text-sm text-gray-500 line-through">₹{product.oldPrice}</p>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-medium text-gray-900">₹{product.price}</p>
+                    {(product.originalPrice || product.oldPrice) && (
+                      <p className="text-sm text-gray-500 line-through">₹{product.originalPrice || product.oldPrice}</p>
+                    )}
+                    {Number(product.percentOff) > 0 && (
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-medium rounded-full">
+                        {Math.round(product.percentOff)}% OFF
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Color Options */}

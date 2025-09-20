@@ -4,7 +4,9 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { FiHeart, FiEye, FiShoppingCart, FiStar } from "react-icons/fi";
 import { adminApiRequest } from "../utils/api";
 import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 import CartAnimation from "./shop/CartAnimation";
+import QuickView from "./shop/QuickView";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -31,8 +33,10 @@ function ProductSlider() {
   const [error, setError] = useState(null);
   const [hoveredProducts, setHoveredProducts] = useState(new Set());
   const [animatingProduct, setAnimatingProduct] = useState(null);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
 
   const { addToCart, cartAnimation } = useCart();
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   const fetchProducts = async () => {
@@ -134,6 +138,29 @@ function ProductSlider() {
         />
       )}
 
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickView
+          product={{
+            id: quickViewProduct.slug || quickViewProduct._id || quickViewProduct.id,
+            name: quickViewProduct.title?.en || quickViewProduct.name || "",
+            image: Array.isArray(quickViewProduct.image) && quickViewProduct.image.length
+              ? quickViewProduct.image[0]
+              : quickViewProduct.image || "",
+            price: quickViewProduct.prices?.price ?? quickViewProduct.price ?? 0,
+            originalPrice: quickViewProduct.prices?.originalPrice ?? quickViewProduct.prices?.compareAtPrice ?? null,
+            oldPrice: quickViewProduct.prices?.originalPrice ?? null,
+            percentOff: quickViewProduct.prices?.discount ?? 0,
+            categoryName: typeof quickViewProduct?.category?.name === "object"
+              ? quickViewProduct?.category?.name?.en || quickViewProduct?.category?.name?.default || ""
+              : quickViewProduct?.category?.name || "",
+            isNew: !!quickViewProduct?.isNew,
+          }}
+          isOpen={true}
+          onClose={() => setQuickViewProduct(null)}
+        />
+      )}
+
       <h2
         className="text-2xl md:text-3xl font-bold mb-6"
         data-animation="fade-up"
@@ -192,6 +219,7 @@ function ProductSlider() {
                 className="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
                 onMouseEnter={() => handleMouseEnter(productId)}
                 onMouseLeave={() => handleMouseLeave(productId)}
+                onClick={() => navigate(`/shop/${product.slug || product._id || product.id}`)}
               >
                 <div className="relative aspect-[4/3] overflow-hidden p-4">
                   <img
@@ -205,11 +233,14 @@ function ProductSlider() {
                     <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
                       <FiHeart className="w-5 h-5" />
                     </button>
-                    <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setQuickViewProduct(product); }}
+                      className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
+                    >
                       <FiEye className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={(e) => handleAddToCart(e, product)}
+                      onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
                       className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
                     >
                       <FiShoppingCart className="w-5 h-5" />
@@ -246,7 +277,7 @@ function ProductSlider() {
 
                   {/* Add to Cart Button */}
                   <button
-                    onClick={(e) => handleAddToCart(e, product)}
+                    onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
                     className="mt-3 w-full bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center gap-2 text-xs"
                   >
                     <FiShoppingCart className="w-4 h-4" />

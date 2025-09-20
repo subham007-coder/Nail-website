@@ -38,12 +38,41 @@ export const CartProvider = ({ children }) => {
         updatedItems[existingItemIndex].quantity += quantity;
         return updatedItems;
       } else {
+        // Normalize fields for consistent cart display
+        const resolveName = product.title?.en || product.title?.default || product.name || '';
+        const resolveDesc = product.description?.en || product.description?.default || product.description || '';
+        const resolvePrice = (product.prices?.price ?? product.salePrice ?? product.price) ?? 0;
+        const resolveOld = (product.prices?.originalPrice ?? product.originalPrice ?? product.prices?.compareAtPrice) ?? null;
+
+        // Resolve a reliable image URL for the cart item
+        let resolveImage = '';
+        if (Array.isArray(product.image) && product.image.length) {
+          // Some sources provide `image` as an array
+          resolveImage = product.image[0];
+        } else if (typeof product.image === 'string' && product.image) {
+          // Some sources provide a single image string
+          resolveImage = product.image;
+        } else if (Array.isArray(product.images) && product.images.length) {
+          // ProductDetails normalization provides `images` array
+          resolveImage = product.images[0];
+        } else if (typeof product.images === 'string' && product.images) {
+          // Edge-case: images provided as a string
+          resolveImage = product.images;
+        } else if (product.images?.default) {
+          // Edge-case: object with default
+          resolveImage = product.images.default;
+        } else {
+          // Stable fallback image (avoid via.placeholder.com DNS issues)
+          resolveImage = 'https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360';
+        }
+
         const newItem = {
           id: product._id || product.id,
-          name: product.title?.en || product.name,
-          price: product.prices?.price || product.salePrice || product.price,
-          oldPrice: product.prices?.originalPrice || product.originalPrice,
-          image: product.image?.[0] || (product.images?.default),
+          name: resolveName,
+          description: resolveDesc,
+          price: resolvePrice,
+          oldPrice: resolveOld,
+          image: resolveImage,
           category: product.category || 'Nail Product',
           quantity: quantity
         };

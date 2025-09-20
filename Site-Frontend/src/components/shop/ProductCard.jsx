@@ -91,7 +91,8 @@ function ProductCard({ product }) {
 
   return (
     <>
-      <div className="group relative bg-white overflow-hidden cursor-pointer">
+      {/* Click anywhere on the card to navigate to product details */}
+      <div className="group relative bg-white overflow-hidden cursor-pointer" onClick={handleCardClick}>
         <div className="aspect-[3/4] relative overflow-hidden">
           <img
             src={extendedProduct.image}

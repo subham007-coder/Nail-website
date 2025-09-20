@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom';
 
 function CartItem({ product, onRemove, onQuantityChange }) {
   // Helper function to safely extract category text
-  const getCategoryText = (category) => {
-    if (!category) return 'Nail Product';
-    if (typeof category === 'string') return category;
-    if (typeof category === 'object') {
-      if (category.name) {
-        return typeof category.name === 'object' && category.name.en 
-          ? category.name.en 
-          : category.name;
-      }
-      return 'Nail Product';
-    }
-    return 'Nail Product';
-  };
+  // const getCategoryText = (category) => {
+  //   if (!category) return 'Nail Product';
+  //   if (typeof category === 'string') return category;
+  //   if (typeof category === 'object') {
+  //     if (category.name) {
+  //       return typeof category.name === 'object' && category.name.en 
+  //         ? category.name.en 
+  //         : category.name;
+  //     }
+  //     return 'Nail Product';
+  //   }
+  //   return 'Nail Product';
+  // };
 
   return (
     <motion.div
@@ -43,9 +43,14 @@ function CartItem({ product, onRemove, onQuantityChange }) {
           >
             {product.name}
           </Link>
-          <p className="text-sm text-gray-500">
+          {/* Optional short description */}
+          {product.description && (
+            <p className="text-xs text-gray-500 line-clamp-2">{product.description}</p>
+          )}
+
+          {/* <p className="text-sm text-gray-500">
             {getCategoryText(product.category)}
-          </p>
+          </p> */}
           
           {/* Price and Quantity Controls */}
           <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
