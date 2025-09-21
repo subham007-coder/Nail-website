@@ -2,7 +2,7 @@ import React from "react";
 
 function Download_App_section() {
   return (
-    <div className="flex justify-center items-center my-5">
+    <div className="flex justify-center items-center my-2">
       {/* Outer pink background */}
       <div className="w-[95%] bg-pink-600 py-8 px-10 rounded-lg">
         {/* Inner white box */}

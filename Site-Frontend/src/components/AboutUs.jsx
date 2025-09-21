@@ -5,7 +5,7 @@ function AboutUs() {
   useScrollAnimation();
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-2 bg-white">
       <div className="site-container">
         {/* Main Heading */}
         <h1

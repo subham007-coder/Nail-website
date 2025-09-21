@@ -129,7 +129,7 @@ function ProductSlider() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 relative">
+    <div className="site-container mx-auto px-4 py-4 relative">
       {/* Cart Animation */}
       {animatingProduct && (
         <CartAnimation
@@ -270,7 +270,7 @@ function ProductSlider() {
                     )}
                     {discount > 0 && (
                       <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
-                        {discount}% OFF
+                       ₹{discount} OFF
                       </span>
                     )}
                   </div>

@@ -63,8 +63,8 @@ function InstaFeed() {
   }, []);
 
   return (
-    <div className="py-6 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4">
+    <div className="py-2 bg-gradient-to-b from-white to-gray-50">
+      <div className="site-container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12" data-animation="fade-up">
           <div className="flex items-center justify-center gap-2 mb-4">

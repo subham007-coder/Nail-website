@@ -44,7 +44,7 @@ function Groupimages() {
 
   return (
     <div className="py-3 overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className="site-container mx-auto px-4">
         <h2
           className="text-2xl md:text-3xl font-bold text-center mb-4"
           data-animation="fade-up"

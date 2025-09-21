@@ -33,7 +33,7 @@ const categories = [
 
 function ShopbyCat() {
   return (
-    <section className="py-16">
+    <section className="py-2">
       <div className="site-container">
         <h2
           className="text-2xl md:text-3xl font-bold mb-4"
