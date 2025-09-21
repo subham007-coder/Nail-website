@@ -4,7 +4,7 @@ function Download_App_section() {
   return (
     <div className="flex justify-center items-center my-2">
       {/* Outer pink background */}
-      <div className="w-[95%] bg-pink-600 py-8 px-10 rounded-lg">
+      <div className="w-[95%] bg-pink-600 py-8 px-4 rounded-lg">
         {/* Inner white box */}
         <div className="bg-white py-10 px-5 rounded-lg flex flex-col md:flex-row justify-between">
           {/* Left content */}

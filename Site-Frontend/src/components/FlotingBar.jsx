@@ -6,18 +6,69 @@ import { useCart } from '../context/CartContext';
 
 function FloatingBar() {
   const [isVisible, setIsVisible] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsVisible(scrollY > 100);
-    };
+//   useEffect(() => {
+//   let timeout;
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+//   const handleScroll = () => {
+//     const currentScrollY = window.scrollY;
+
+//     if (currentScrollY < lastScrollY) {
+//       // scrolling up
+//       clearTimeout(timeout);
+//       setIsVisible(true);
+//     } else {
+//       // scrolling down
+//       clearTimeout(timeout);
+//       // hide after 300ms delay
+//       timeout = setTimeout(() => {
+//         setIsVisible(false);
+//       }, 3000);
+//     }
+
+//     setLastScrollY(currentScrollY);
+//   };
+
+//   window.addEventListener('scroll', handleScroll);
+//   return () => {
+//     window.removeEventListener('scroll', handleScroll);
+//     clearTimeout(timeout);
+//   };
+// }, [lastScrollY]);
+
+useEffect(() => {
+  let timeout;
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY < lastScrollY) {
+      // scrolling up → immediately show
+      clearTimeout(timeout);
+      setIsVisible(true);
+    } else if (currentScrollY > lastScrollY) {
+      // scrolling down → hide after delay
+      clearTimeout(timeout);
+      setIsVisible(false); // immediately hide if user scrolls down after scrolling up
+      // Optional: uncomment below if you want extra delay for smoother hide
+      // timeout = setTimeout(() => {
+      //   setIsVisible(false);
+      // }, 3000);
+    }
+
+    setLastScrollY(currentScrollY);
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  return () => {
+    window.removeEventListener('scroll', handleScroll);
+    clearTimeout(timeout);
+  };
+}, [lastScrollY]);
+
 
   const menuItems = [
     { icon: <FiHome size={20} />, label: 'Home', link: '/' },
