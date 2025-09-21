@@ -129,167 +129,171 @@ function ProductSlider() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 relative">
-      {/* Cart Animation */}
-      {animatingProduct && (
-        <CartAnimation
-          product={animatingProduct}
-          onAnimationComplete={() => setAnimatingProduct(null)}
-        />
-      )}
+    <section className="py-16">
+      <div className="site-container">
+        <div className="container mx-auto px-4 py-8 relative">
+          {/* Cart Animation */}
+          {animatingProduct && (
+            <CartAnimation
+              product={animatingProduct}
+              onAnimationComplete={() => setAnimatingProduct(null)}
+            />
+          )}
 
-      {/* Quick View Modal */}
-      {quickViewProduct && (
-        <QuickView
-          product={{
-            id: quickViewProduct.slug || quickViewProduct._id || quickViewProduct.id,
-            name: quickViewProduct.title?.en || quickViewProduct.name || "",
-            image: Array.isArray(quickViewProduct.image) && quickViewProduct.image.length
-              ? quickViewProduct.image[0]
-              : quickViewProduct.image || "",
-            price: quickViewProduct.prices?.price ?? quickViewProduct.price ?? 0,
-            originalPrice: quickViewProduct.prices?.originalPrice ?? quickViewProduct.prices?.compareAtPrice ?? null,
-            oldPrice: quickViewProduct.prices?.originalPrice ?? null,
-            percentOff: quickViewProduct.prices?.discount ?? 0,
-            categoryName: typeof quickViewProduct?.category?.name === "object"
-              ? quickViewProduct?.category?.name?.en || quickViewProduct?.category?.name?.default || ""
-              : quickViewProduct?.category?.name || "",
-            isNew: !!quickViewProduct?.isNew,
-          }}
-          isOpen={true}
-          onClose={() => setQuickViewProduct(null)}
-        />
-      )}
+          {/* Quick View Modal */}
+          {quickViewProduct && (
+            <QuickView
+              product={{
+                id: quickViewProduct.slug || quickViewProduct._id || quickViewProduct.id,
+                name: quickViewProduct.title?.en || quickViewProduct.name || "",
+                image: Array.isArray(quickViewProduct.image) && quickViewProduct.image.length
+                  ? quickViewProduct.image[0]
+                  : quickViewProduct.image || "",
+                price: quickViewProduct.prices?.price ?? quickViewProduct.price ?? 0,
+                originalPrice: quickViewProduct.prices?.originalPrice ?? quickViewProduct.prices?.compareAtPrice ?? null,
+                oldPrice: quickViewProduct.prices?.originalPrice ?? null,
+                percentOff: quickViewProduct.prices?.discount ?? 0,
+                categoryName: typeof quickViewProduct?.category?.name === "object"
+                  ? quickViewProduct?.category?.name?.en || quickViewProduct?.category?.name?.default || ""
+                  : quickViewProduct?.category?.name || "",
+                isNew: !!quickViewProduct?.isNew,
+              }}
+              isOpen={true}
+              onClose={() => setQuickViewProduct(null)}
+            />
+          )}
 
-      <h2
-        className="text-2xl md:text-3xl font-bold mb-6"
-        data-animation="fade-up"
-      >
-        French Press on Nails
-      </h2>
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        navigation={{
-          prevEl: ".swiper-button-prev-custom",
-          nextEl: ".swiper-button-next-custom",
-        }}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-        }}
-        breakpoints={{
-          320: { slidesPerView: 1.5, spaceBetween: 8 }, // Better for small phones
-          480: { slidesPerView: 2, spaceBetween: 10 },
-          640: { slidesPerView: 2.2, spaceBetween: 12 },
-          768: { slidesPerView: 3, spaceBetween: 18 },
-          1024: { slidesPerView: 4, spaceBetween: 24 },
-        }}
-        grabCursor={true}
-        className="product-slider bg-[#F5E6DA] rounded-xl p-4"
-      >
-        {products.map((product) => {
-          const productId = product._id || product.id;
-          const title = product.title?.en || product.name || "Product";
-          const description =
-            product.description?.en || product.description || "description";
-          const stock = product.stock?.en || product.stock || "In stock";
-          const originalPrice =
-            product.prices?.originalPrice || product.price || 0;
-          const salePrice = product.prices?.price || product.salePrice || 0;
-          const discount = product.prices?.discount || 0;
+          <h2
+            className="text-2xl md:text-3xl font-bold mb-6"
+            data-animation="fade-up"
+          >
+            French Press on Nails
+          </h2>
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            navigation={{
+              prevEl: ".swiper-button-prev-custom",
+              nextEl: ".swiper-button-next-custom",
+            }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            breakpoints={{
+              320: { slidesPerView: 1.5, spaceBetween: 8 }, // Better for small phones
+              480: { slidesPerView: 2, spaceBetween: 10 },
+              640: { slidesPerView: 2.2, spaceBetween: 12 },
+              768: { slidesPerView: 3, spaceBetween: 18 },
+              1024: { slidesPerView: 4, spaceBetween: 24 },
+            }}
+            grabCursor={true}
+            className="product-slider bg-[#F5E6DA] rounded-xl p-4"
+          >
+            {products.map((product) => {
+              const productId = product._id || product.id;
+              const title = product.title?.en || product.name || "Product";
+              const description =
+                product.description?.en || product.description || "description";
+              const stock = product.stock?.en || product.stock || "In stock";
+              const originalPrice =
+                product.prices?.originalPrice || product.price || 0;
+              const salePrice = product.prices?.price || product.salePrice || 0;
+              const discount = product.prices?.discount || 0;
 
-          let mainImage, hoverImage;
-          if (product.image && product.image.length > 0) {
-            mainImage = product.image[0].replace(/\s+/g, "").replace(/`/g, "");
-            hoverImage =
-              product.image.length > 1
-                ? product.image[1].replace(/\s+/g, "").replace(/`/g, "")
-                : mainImage;
-          } else if (product.images) {
-            mainImage = product.images.default;
-            hoverImage = product.images.hover;
-          } else {
-            mainImage = "https://via.placeholder.com/300";
-            hoverImage = "https://via.placeholder.com/300";
-          }
+              let mainImage, hoverImage;
+              if (product.image && product.image.length > 0) {
+                mainImage = product.image[0].replace(/\s+/g, "").replace(/`/g, "");
+                hoverImage =
+                  product.image.length > 1
+                    ? product.image[1].replace(/\s+/g, "").replace(/`/g, "")
+                    : mainImage;
+              } else if (product.images) {
+                mainImage = product.images.default;
+                hoverImage = product.images.hover;
+              } else {
+                mainImage = "https://via.placeholder.com/300";
+                hoverImage = "https://via.placeholder.com/300";
+              }
 
-          return (
-            <SwiperSlide key={productId} className="pb-2">
-              <div
-                className="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
-                onMouseEnter={() => handleMouseEnter(productId)}
-                onMouseLeave={() => handleMouseLeave(productId)}
-                onClick={() => navigate(`/shop/${product.slug || product._id || product.id}`)}
-              >
-                <div className="relative aspect-[4/3] overflow-hidden p-4">
-                  <img
-                    src={
-                      hoveredProducts.has(productId) ? hoverImage : mainImage
-                    }
-                    alt={title}
-                    className="w-full h-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 hidden sm:flex">
-                    <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
-                      <FiHeart className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setQuickViewProduct(product); }}
-                      className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
-                    >
-                      <FiEye className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
-                      className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
-                    >
-                      <FiShoppingCart className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-3 text-center">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 line-clamp-1">
-                    {title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 mt-1">
-                    {description}
-                  </p>
-                  <p className="text-xs text-green-600 mt-1">
-                    Only {stock} left!
-                  </p>
-
-                  <div className="mt-2 flex items-center justify-center gap-2">
-                    <span className="text-base font-bold text-pink-600">
-                      ₹{salePrice}
-                    </span>
-                    {originalPrice > salePrice && (
-                      <span className="text-sm text-gray-400 line-through">
-                        ₹{originalPrice}
-                      </span>
-                    )}
-                    {discount > 0 && (
-                      <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
-                        {discount}% OFF
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Add to Cart Button */}
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
-                    className="mt-3 w-full bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center gap-2 text-xs"
+              return (
+                <SwiperSlide key={productId} className="pb-2">
+                  <div
+                    className="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+                    onMouseEnter={() => handleMouseEnter(productId)}
+                    onMouseLeave={() => handleMouseLeave(productId)}
+                    onClick={() => navigate(`/shop/${product.slug || product._id || product.id}`)}
                   >
-                    <FiShoppingCart className="w-4 h-4" />
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
-    </div>
+                    <div className="relative aspect-[4/3] overflow-hidden p-4">
+                      <img
+                        src={
+                          hoveredProducts.has(productId) ? hoverImage : mainImage
+                        }
+                        alt={title}
+                        className="w-full h-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 hidden sm:flex">
+                        <button className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition">
+                          <FiHeart className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setQuickViewProduct(product); }}
+                          className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
+                        >
+                          <FiEye className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
+                          className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
+                        >
+                          <FiShoppingCart className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="p-3 text-center">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-900 line-clamp-1">
+                        {title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 mt-1">
+                        {description}
+                      </p>
+                      <p className="text-xs text-green-600 mt-1">
+                        Only {stock} left!
+                      </p>
+
+                      <div className="mt-2 flex items-center justify-center gap-2">
+                        <span className="text-base font-bold text-pink-600">
+                          ₹{salePrice}
+                        </span>
+                        {originalPrice > salePrice && (
+                          <span className="text-sm text-gray-400 line-through">
+                            ₹{originalPrice}
+                          </span>
+                        )}
+                        {discount > 0 && (
+                          <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+                            {discount}% OFF
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Add to Cart Button */}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
+                        className="mt-3 w-full bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center gap-2 text-xs"
+                      >
+                        <FiShoppingCart className="w-4 h-4" />
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
+      </div>
+    </section>
   );
 }
 
