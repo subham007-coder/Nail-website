@@ -14,6 +14,7 @@ function Carousel() {
   const [banners, setBanners] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -60,8 +61,11 @@ function Carousel() {
   // Only render Swiper when banners are loaded
   if (!banners.length) {
     return (
-      <div className="h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] w-full flex items-center justify-center bg-gray-100">
-        <span className="text-gray-400">Loading...</span>
+      <div className="h-[40vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[90vh] w-full flex items-center justify-center bg-gray-100">
+        {/* <span className="text-gray-400">Loading...</span> */}
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-600"></div>
+        </div>
       </div>
     );
   }
@@ -77,7 +81,7 @@ function Carousel() {
         }}
         loop={true}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-        className="h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] w-full"
+        className="h-[40vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[90vh] w-full"
       >
         {banners.map((slide, index) => (
           <SwiperSlide key={slide._id}>
