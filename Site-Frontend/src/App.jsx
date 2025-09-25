@@ -21,6 +21,8 @@ import { AuthProvider } from "./context/AuthContext";
 // import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AuthRequiredRoute from "./components/auth/AuthRequiredRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import Checkout from "./pages/Checkout";
+import OrderDetails from "./pages/OrderDetails";
 
 function App() {
   return (
@@ -47,6 +49,24 @@ function App() {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/shop/:id" element={<ProductDetails />} />
                 <Route path="/appointment" element={<Appointment />} />
+
+                {/* Checkout */}
+                <Route
+                  path="/checkout"
+                  element={
+                    <AuthRequiredRoute>
+                      <Checkout />
+                    </AuthRequiredRoute>
+                  }
+                />
+                <Route
+                  path="/order/:id"
+                  element={
+                    <AuthRequiredRoute>
+                      <OrderDetails />
+                    </AuthRequiredRoute>
+                  }
+                />
 
                 {/* User-specific routes - authentication required */}
                 <Route

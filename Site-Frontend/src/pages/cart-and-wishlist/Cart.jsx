@@ -78,8 +78,9 @@ function Cart() {
                   </div>
                 </div>
 
-                <button
-                  className="w-full bg-pink-600 text-white mt-6 px-8 py-4 rounded-xl 
+                <Link
+                  to="/checkout"
+                  className="block text-center w-full bg-pink-600 text-white mt-6 px-8 py-4 rounded-xl 
                     hover:bg-pink-700 transition-colors duration-200 flex items-center 
                     justify-center group text-lg font-medium"
                 >
@@ -87,7 +88,7 @@ function Cart() {
                   <span className="ml-2 transform group-hover:translate-x-1 transition-transform">
                     →
                   </span>
-                </button>
+                </Link>
               </motion.div>
             </div>
           </div>
