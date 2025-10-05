@@ -30,7 +30,10 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
       const existingItemIndex = prevItems.findIndex(item =>
-        item.id === (product._id || product.id)
+        item.id === (product._id || product.id) &&
+        item.selectedLength === product.selectedLength &&
+        item.selectedCurl === product.selectedCurl &&
+        item.selectedColor === product.selectedColor
       );
 
       if (existingItemIndex >= 0) {
@@ -74,7 +77,10 @@ export const CartProvider = ({ children }) => {
           oldPrice: resolveOld,
           image: resolveImage,
           category: product.category || 'Nail Product',
-          quantity: quantity
+          quantity: quantity,
+          selectedLength: product.selectedLength,
+          selectedCurl: product.selectedCurl,
+          selectedColor: product.selectedColor
         };
         return [...prevItems, newItem];
       }
@@ -91,15 +97,25 @@ export const CartProvider = ({ children }) => {
     }, 3000);
   };
 
-  const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  const removeFromCart = (item) => {
+    setCartItems(prevItems => prevItems.filter(cartItem =>
+      !(cartItem.id === item.id &&
+        cartItem.selectedLength === item.selectedLength &&
+        cartItem.selectedCurl === item.selectedCurl &&
+        cartItem.selectedColor === item.selectedColor)
+    ));
   };
 
-  const updateQuantity = (productId, newQuantity) => {
+  const updateQuantity = (item, newQuantity) => {
     if (newQuantity < 1) return;
     setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
+      prevItems.map(cartItem =>
+        (cartItem.id === item.id &&
+         cartItem.selectedLength === item.selectedLength &&
+         cartItem.selectedCurl === item.selectedCurl &&
+         cartItem.selectedColor === item.selectedColor)
+          ? { ...cartItem, quantity: newQuantity }
+          : cartItem
       )
     );
   };

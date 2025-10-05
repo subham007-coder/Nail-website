@@ -6,6 +6,7 @@ import Footer from '../../components/Footer';
 import CartItem from '../../components/shop/cart-and-wishlist/CartItem';
 import EmptyCart from '../../components/shop/cart-and-wishlist/EmptyCart';
 import { useCart } from '../../context/CartContext';
+import { getLengthQuantityBreakdown, sortLengths } from '../../utils/cartUtils';
 
 function Cart() {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
@@ -41,12 +42,12 @@ function Cart() {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-6">
               <AnimatePresence>
-                {cartItems.map(item => (
+                {cartItems.map((item, index) => (
                   <CartItem
-                    key={item.id}
+                    key={`${item.id}-${item.selectedLength}-${item.selectedCurl}-${item.selectedColor}-${index}`}
                     product={item}
-                    onRemove={removeFromCart}
-                    onQuantityChange={updateQuantity}
+                    onRemove={() => removeFromCart(item)}
+                    onQuantityChange={(newQty) => updateQuantity(item, newQty)}
                   />
                 ))}
               </AnimatePresence>
@@ -78,9 +79,40 @@ function Cart() {
                   </div>
                 </div>
 
+                {/* MM Length Breakdown */}
+                {(() => {
+                  const lengthBreakdown = getLengthQuantityBreakdown(cartItems);
+                  const lengths = Object.keys(lengthBreakdown);
+                  
+                  if (lengths.length > 0) {
+                    return (
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <h3 className="text-sm font-medium text-gray-900 mb-3">Length Breakdown</h3>
+                        <div className="space-y-2">
+                          {sortLengths(lengths).map((length) => (
+                            <div key={length} className="flex justify-between items-center text-sm">
+                              <span className="text-gray-600">{length}</span>
+                              <span className="font-medium text-gray-900">{lengthBreakdown[length]} pieces</span>
+                            </div>
+                          ))}
+                          <div className="pt-2 border-t border-gray-100">
+                            <div className="flex justify-between items-center text-sm font-medium">
+                              <span className="text-gray-900">Total Pieces</span>
+                              <span className="text-gray-900">
+                                {Object.values(lengthBreakdown).reduce((sum, qty) => sum + qty, 0)} pieces
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
+
                 <Link
                   to="/checkout"
-                  className="block text-center w-full bg-pink-600 text-white mt-6 px-8 py-4 rounded-xl 
+                  className="text-center w-full bg-pink-600 text-white mt-6 px-8 py-4 rounded-xl 
                     hover:bg-pink-700 transition-colors duration-200 flex items-center 
                     justify-center group text-lg font-medium"
                 >

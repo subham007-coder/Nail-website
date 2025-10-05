@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { apiRequest } from "../utils/api";
+import { getLengthQuantityBreakdown, sortLengths } from "../utils/cartUtils";
 
 function OrderDetails() {
   const { id } = useParams();
@@ -47,16 +48,55 @@ function OrderDetails() {
                 <h2 className="text-lg font-semibold text-gray-900">Items</h2>
                 <ul className="divide-y">
                   {order.cart?.map((item, idx) => (
-                    <li key={idx} className="py-3 flex items-center gap-3">
+                    <li key={`${item._id}-${item.selectedLength}-${item.selectedCurl}-${item.selectedColor}-${idx}`} className="py-3 flex items-center gap-3">
                       <img src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover" />
                       <div className="flex-1">
                         <p className="text-sm text-gray-900">{item.name}</p>
-                        <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                        <div className="text-xs text-gray-500 space-y-1">
+                          <p>Qty: {item.quantity}</p>
+                          {item.selectedLength && <p>Length: {item.selectedLength}</p>}
+                          {item.selectedCurl && <p>Curl: {item.selectedCurl}</p>}
+                          {item.selectedColor && <p>Color: {item.selectedColor}</p>}
+                        </div>
                       </div>
                       <div className="text-sm text-gray-900">₹{(item.price || 0) * (item.quantity || 0)}</div>
                     </li>
                   ))}
                 </ul>
+
+                {/* MM Length Breakdown */}
+                {/* {(() => {
+                  const lengthBreakdown = getLengthQuantityBreakdown(order.cart || []);
+                  const lengths = Object.keys(lengthBreakdown);
+                  
+                  if (lengths.length > 0) {
+                    return (
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Length Breakdown</h3>
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <div className="space-y-2">
+                            {sortLengths(lengths).map((length) => (
+                              <div key={length} className="flex justify-between items-center text-sm">
+                                <span className="text-gray-600">{length}</span>
+                                <span className="font-medium text-gray-900">{lengthBreakdown[length]} pieces</span>
+                              </div>
+                            ))}
+                            <div className="pt-2 border-t border-gray-200">
+                              <div className="flex justify-between items-center text-sm font-medium">
+                                <span className="text-gray-900">Total Pieces</span>
+                                <span className="text-gray-900">
+                                  {Object.values(lengthBreakdown).reduce((sum, qty) => sum + qty, 0)} pieces
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()} */}
+
               </div>
               <div className="space-y-4">
                 <div>

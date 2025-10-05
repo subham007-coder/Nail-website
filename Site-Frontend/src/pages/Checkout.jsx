@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { apiRequest } from "../utils/api";
+import { getLengthQuantityBreakdown, sortLengths } from "../utils/cartUtils";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -57,13 +58,16 @@ function Checkout() {
     setSubmitting(true);
     setError("");
     try {
-      // Normalize cart for backend stock deduction: include _id and quantity
+      // Normalize cart for backend stock deduction: include _id, quantity, and variant info
       const cart = cartItems.map((item) => ({
         _id: item.id,
         quantity: item.quantity,
         name: item.name,
         price: item.price,
         image: item.image,
+        selectedLength: item.selectedLength,
+        selectedCurl: item.selectedCurl,
+        selectedColor: item.selectedColor,
       }));
 
       const userDetails = {
@@ -221,17 +225,54 @@ function Checkout() {
             <h3 className="text-sm font-medium text-gray-900 mb-2">Items</h3>
             <ul className="space-y-3 max-h-64 overflow-auto pr-2">
               {cartItems.map((item) => (
-                <li key={item.id} className="flex items-center gap-3">
+                <li key={`${item.id}-${item.selectedLength}-${item.selectedCurl}-${item.selectedColor}`} className="flex items-center gap-3">
                   <img src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover" />
                   <div className="flex-1">
                     <p className="text-gray-900 text-sm line-clamp-1">{item.name}</p>
-                    <p className="text-gray-500 text-xs">Qty: {item.quantity}</p>
+                    <div className="text-gray-500 text-xs space-y-1">
+                      <p>Qty: {item.quantity}</p>
+                      {item.selectedLength && <p>Length: {item.selectedLength}</p>}
+                      {item.selectedCurl && <p>Curl: {item.selectedCurl}</p>}
+                      {item.selectedColor && <p>Color: {item.selectedColor}</p>}
+                    </div>
                   </div>
                   <div className="text-sm text-gray-900">₹{item.price * item.quantity}</div>
                 </li>
               ))}
             </ul>
           </div>
+
+          {/* MM Length Breakdown */}
+          {/* {(() => {
+            const lengthBreakdown = getLengthQuantityBreakdown(cartItems);
+            const lengths = Object.keys(lengthBreakdown);
+            
+            if (lengths.length > 0) {
+              return (
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Length Breakdown</h3>
+                  <div className="space-y-2">
+                    {sortLengths(lengths).map((length) => (
+                      <div key={length} className="flex justify-between items-center text-sm">
+                        <span className="text-gray-600">{length}</span>
+                        <span className="font-medium text-gray-900">{lengthBreakdown[length]} pieces</span>
+                      </div>
+                    ))}
+                    <div className="pt-2 border-t border-gray-100">
+                      <div className="flex justify-between items-center text-sm font-medium">
+                        <span className="text-gray-900">Total Pieces</span>
+                        <span className="text-gray-900">
+                          {Object.values(lengthBreakdown).reduce((sum, qty) => sum + qty, 0)} pieces
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })()} */}
+
         </div>
       </div>
 

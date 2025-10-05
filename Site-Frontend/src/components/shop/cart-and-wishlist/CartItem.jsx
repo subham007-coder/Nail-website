@@ -37,12 +37,20 @@ function CartItem({ product, onRemove, onQuantityChange }) {
       {/* Product Details */}
       <div className="flex-1 flex flex-col justify-between">
         <div className="space-y-2">
-          <Link 
+          <Link
             to={`/shop/${product.id}`}
             className="text-xl font-medium text-gray-900 hover:text-pink-600 transition-colors"
           >
             {product.name}
           </Link>
+          {/* Variant details */}
+          {(product.selectedLength || product.selectedCurl || product.selectedColor) && (
+            <div className="text-sm text-gray-600 space-y-1">
+              {product.selectedLength && <p>Length: {product.selectedLength}</p>}
+              {product.selectedCurl && <p>Curl: {product.selectedCurl}</p>}
+              {product.selectedColor && <p>Color: {product.selectedColor}</p>}
+            </div>
+          )}
           {/* Optional short description */}
           {product.description && (
             <p className="text-xs text-gray-500 line-clamp-2">{product.description}</p>
@@ -63,7 +71,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
 
             <div className="flex items-center gap-3">
               <button
-                onClick={() => onQuantityChange(product.id, product.quantity - 1)}
+                onClick={() => onQuantityChange(product.quantity - 1)}
                 disabled={product.quantity <= 1}
                 className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center
                   hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -72,7 +80,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
               </button>
               <span className="w-12 text-center">{product.quantity}</span>
               <button
-                onClick={() => onQuantityChange(product.id, product.quantity + 1)}
+                onClick={() => onQuantityChange(product.quantity + 1)}
                 className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center
                   hover:bg-gray-200"
               >
