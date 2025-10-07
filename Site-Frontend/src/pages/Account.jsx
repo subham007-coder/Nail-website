@@ -14,6 +14,9 @@ function Account() {
   const [uploading, setUploading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateStatus, setUpdateStatus] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState('');
   const [profileForm, setProfileForm] = useState({
     name: '',
     phone: '',
@@ -135,12 +138,38 @@ function Account() {
     }
   };
 
+  // Fetch user orders when viewing Orders tab (single fetch, no polling)
+  React.useEffect(() => {
+    const shouldFetch = activeTab === 'orders' && user;
+    if (!shouldFetch) {
+      return undefined;
+    }
+
+    const fetchOrders = async () => {
+      try {
+        setOrdersLoading(true);
+        setOrdersError('');
+        // Backend resolves user from auth token; supports pagination but we can fetch first page
+        const data = await apiRequest(`/order?limit=20&page=1`);
+        const list = Array.isArray(data?.orders) ? data.orders : (Array.isArray(data) ? data : []);
+        setOrders(list);
+      } catch (err) {
+        setOrdersError(err.message || 'Failed to load orders');
+      } finally {
+        setOrdersLoading(false);
+      }
+    };
+
+    fetchOrders();
+    return undefined;
+  }, [activeTab, user]);
+
   // Form input change handler
   const handleInputChange = (field, value) => {
     setProfileForm(prev => ({ ...prev, [field]: value }));
   };
 
-  // Mock data for orders and appointments - in a real app, this would come from your API
+  // Mock data for appointments only; orders now come from API
   const userData = {
     name: user?.name || 'User',
     email: user?.email || 'user@example.com',
@@ -152,18 +181,7 @@ function Account() {
   ? new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
   : 'N/A',
 
-    orders: [
-      {
-        id: '#ORD001',
-        date: '2024-03-15',
-        status: 'Delivered',
-        total: 599,
-        items: [
-          { name: 'Classic French Tips', quantity: 1, price: 299 },
-          { name: 'Glitter Ombre', quantity: 1, price: 300 }
-        ]
-      }
-    ],
+    orders: [],
     appointments: [
       {
         id: 'APT001',
@@ -391,47 +409,63 @@ function Account() {
   const renderOrdersContent = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-serif text-gray-900">Order History</h2>
-      <div className="space-y-4">
-      {userData.orders.map(order => (
-          <div key={order.id} 
-            className="bg-white border rounded-xl p-6 space-y-4 hover:shadow-soft transition-shadow duration-200"
-          >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Order ID</p>
-                <p className="font-medium">{order.id}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Date</p>
-                <p className="font-medium">{new Date(order.date).toLocaleDateString()}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Status</p>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                  bg-green-100 text-green-800">
-                  {order.status}
-                </span>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total</p>
-                <p className="font-medium">₹{order.total}</p>
-              </div>
-            </div>
-            
-            <div className="border-t pt-4">
-              <p className="text-sm font-medium text-gray-900 mb-3">Items</p>
-              <div className="space-y-2">
-                {order.items.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm">
-                    <span className="text-gray-600">{item.name} × {item.quantity}</span>
-                    <span className="font-medium">₹{item.price}</span>
+      {ordersLoading && (
+        <div className="text-sm text-gray-500">Loading orders...</div>
+      )}
+      {ordersError && (
+        <div className="text-sm text-red-600">{ordersError}</div>
+      )}
+      {!ordersLoading && !ordersError && (
+        <div className="space-y-4">
+          {orders.length === 0 ? (
+            <div className="text-sm text-gray-500">No orders yet.</div>
+          ) : (
+            orders.map((order) => {
+              const status = (order.status || '').toLowerCase();
+              const statusClasses = status === 'delivered'
+                ? 'bg-green-100 text-green-800'
+                : status === 'processing'
+                ? 'bg-yellow-100 text-yellow-800'
+                : status === 'cancel'
+                ? 'bg-red-100 text-red-800'
+                : status === 'pending'
+                ? 'bg-blue-100 text-blue-800'
+                : 'bg-gray-100 text-gray-800';
+              return (
+                <div key={order._id}
+                  className="bg-white border rounded-xl p-6 space-y-4 hover:shadow-soft transition-shadow duration-200"
+                >
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Order</p>
+                      <p className="font-medium">#{order.invoice}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Date</p>
+                      <p className="font-medium">{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Status</p>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClasses}`}>
+                        {status ? status.charAt(0).toUpperCase() + status.slice(1) : ''}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Total</p>
+                      <p className="font-medium">₹{order.total}</p>
+                    </div>
+                    <div className="flex items-end justify-between md:justify-end md:gap-4">
+                      <span className="text-sm text-gray-500">{(order.cart || []).reduce((s, it) => s + (it.quantity || 0), 0)} items</span>
+                      <Link to={`/order/${order._id}`} className="text-pink-600 hover:underline text-sm whitespace-nowrap">View details</Link>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                  {/* Concise summary only; details available on order page */}
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 
@@ -458,9 +492,8 @@ function Account() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Status</p>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                  bg-blue-100 text-blue-800">
-                  {apt.status}
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                {apt.status}
                 </span>
               </div>
             </div>
