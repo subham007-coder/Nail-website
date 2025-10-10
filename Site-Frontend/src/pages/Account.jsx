@@ -17,6 +17,9 @@ function Account() {
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersError, setOrdersError] = useState('');
+  const [appointments, setAppointments] = useState([]);
+  const [appointmentsLoading, setAppointmentsLoading] = useState(false);
+  const [appointmentsError, setAppointmentsError] = useState('');
   const [profileForm, setProfileForm] = useState({
     name: '',
     phone: '',
@@ -161,6 +164,31 @@ function Account() {
     };
 
     fetchOrders();
+    return undefined;
+  }, [activeTab, user]);
+
+  // Fetch user appointments when viewing Appointments tab (single fetch)
+  React.useEffect(() => {
+    const shouldFetch = activeTab === 'appointments' && user;
+    if (!shouldFetch) {
+      return undefined;
+    }
+
+    const fetchAppointments = async () => {
+      try {
+        setAppointmentsLoading(true);
+        setAppointmentsError('');
+        const data = await apiRequest(`/appointment-submissions/mine`);
+        const list = Array.isArray(data) ? data : [];
+        setAppointments(list);
+      } catch (err) {
+        setAppointmentsError(err.message || 'Failed to load appointments');
+      } finally {
+        setAppointmentsLoading(false);
+      }
+    };
+
+    fetchAppointments();
     return undefined;
   }, [activeTab, user]);
 
@@ -472,34 +500,56 @@ function Account() {
   const renderAppointmentsContent = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-serif text-gray-900">My Appointments</h2>
-      <div className="space-y-4">
-      {userData.appointments.map(apt => (
-          <div key={apt.id} 
-            className="bg-white border rounded-xl p-6 hover:shadow-soft transition-shadow duration-200"
-          >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Service</p>
-                <p className="font-medium">{apt.service}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Date</p>
-                <p className="font-medium">{apt.date}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Time</p>
-                <p className="font-medium">{apt.time}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Status</p>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                {apt.status}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {appointmentsLoading && (
+        <div className="text-sm text-gray-500">Loading appointments...</div>
+      )}
+      {appointmentsError && (
+        <div className="text-sm text-red-600">{appointmentsError}</div>
+      )}
+      {!appointmentsLoading && !appointmentsError && (
+        <div className="space-y-4">
+          {appointments.length === 0 ? (
+            <div className="text-sm text-gray-500">No appointments yet.</div>
+          ) : (
+            appointments.map((apt) => {
+              const status = (apt.status || 'Pending').toLowerCase();
+              const statusClasses = status === 'confirmed'
+                ? 'bg-emerald-100 text-emerald-800'
+                : status === 'completed'
+                ? 'bg-green-100 text-green-800'
+                : status === 'cancelled'
+                ? 'bg-red-100 text-red-800'
+                : 'bg-blue-100 text-blue-800';
+              return (
+                <div key={apt._id}
+                  className="bg-white border rounded-xl p-6 hover:shadow-soft transition-shadow duration-200"
+                >
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Service</p>
+                      <p className="font-medium">{apt.service}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Date</p>
+                      <p className="font-medium">{apt.appointmentDate ? new Date(apt.appointmentDate).toLocaleDateString() : '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Time</p>
+                      <p className="font-medium">{apt.appointmentTime}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Status</p>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClasses}`}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 
