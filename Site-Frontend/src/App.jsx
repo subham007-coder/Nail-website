@@ -23,6 +23,9 @@ import AuthRequiredRoute from "./components/auth/AuthRequiredRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import Checkout from "./pages/Checkout";
 import OrderDetails from "./pages/OrderDetails";
+import Terms from "./pages/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ReturnPolicy from "./pages/ReturnPolicy";
 
 function App() {
   return (
@@ -49,7 +52,9 @@ function App() {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/shop/:id" element={<ProductDetails />} />
                 <Route path="/appointment" element={<Appointment />} />
-
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/return" element={<ReturnPolicy />} />
                 {/* Checkout */}
                 <Route
                   path="/checkout"

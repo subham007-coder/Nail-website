@@ -1,10 +1,19 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiMenu, FiX, FiUser, FiHeart, FiShoppingCart, FiSearch, FiLogOut } from 'react-icons/fi';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  FiMenu,
+  FiX,
+  FiUser,
+  FiHeart,
+  FiShoppingCart,
+  FiSearch,
+  FiLogOut,
+} from "react-icons/fi";
+import { MdCalendarMonth } from "react-icons/md";
 // import { UserButton } from '@clerk/clerk-react';
-import ShopMegaMenu from './ShopMegaMenu';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import ShopMegaMenu from "./ShopMegaMenu";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -67,6 +76,18 @@ export default function Navbar() {
               />
             </Link>
 
+            {/* Appointment Icon */}
+            <div className="relative">
+              <Link to="/appointment" className="relative cart-icon">
+                <MdCalendarMonth className="w-6 h-6 text-gray-800 cursor-pointer hover:text-[#E91E63]" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+
             {/* Cart Icon */}
             <div className="relative">
               <Link to="/cart" className="relative cart-icon">
@@ -81,7 +102,7 @@ export default function Navbar() {
           </div>
 
           {/* Search Bar */}
-          <div className="px-4 pt-4">
+          {/* <div className="px-4 pt-4">
             <div className="relative">
               <input
                 type="text"
@@ -90,7 +111,7 @@ export default function Navbar() {
               />
               <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Desktop Navigation */}
@@ -98,19 +119,41 @@ export default function Navbar() {
           <div className="flex items-center justify-between px-4">
             {/* Logo */}
             <Link to="/" className="flex-shrink-0">
-              <img src="/assets/logo2.PNG" alt="Nail Knack" className="h-14 md:h-20 rounded-full bg-black" />
+              <img
+                src="/assets/logo2.PNG"
+                alt="Nail Knack"
+                className="h-14 md:h-20 rounded-full bg-black"
+              />
             </Link>
 
             {/* Desktop Navigation Links */}
             <div className="flex items-center space-x-8">
-              <Link to="/" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">HOME</Link>
+              <Link
+                to="/"
+                className="text-gray-800 hover:text-[#E91E63] text-sm font-medium"
+              >
+                HOME
+              </Link>
 
               {/* SHOP with Mega Menu */}
               <div className="relative group">
-                <Link to="/shop" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium flex items-center">
+                <Link
+                  to="/shop"
+                  className="text-gray-800 hover:text-[#E91E63] text-sm font-medium flex items-center"
+                >
                   SHOP
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </Link>
                 <div className="absolute left-0 top-full w-[800px] hidden group-hover:block z-50 pt-4">
@@ -119,9 +162,24 @@ export default function Navbar() {
               </div>
 
               {/* <Link to="/sale" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">SALE</Link> */}
-              <Link to="/appointment" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">BOOK AN APPOINTMENT</Link>
-              <Link to="/tutorial" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">TUTORIAL</Link>
-              <Link to="/contact" className="text-gray-800 hover:text-[#E91E63] text-sm font-medium">CONTACT US</Link>
+              <Link
+                to="/appointment"
+                className="text-gray-800 hover:text-[#E91E63] text-sm font-medium"
+              >
+                BOOK AN APPOINTMENT
+              </Link>
+              <Link
+                to="/tutorial"
+                className="text-gray-800 hover:text-[#E91E63] text-sm font-medium"
+              >
+                TUTORIAL
+              </Link>
+              <Link
+                to="/contact"
+                className="text-gray-800 hover:text-[#E91E63] text-sm font-medium"
+              >
+                CONTACT US
+              </Link>
             </div>
 
             {/* Search and Icons */}
@@ -147,14 +205,14 @@ export default function Navbar() {
                         {user?.image ? (
                           <img
                             src={user.image}
-                            alt={user?.name || 'User'}
+                            alt={user?.name || "User"}
                             className="w-8 h-8 rounded-full object-cover"
                           />
                         ) : (
                           <FiUser className="w-6 h-6" />
                         )}
                         <span className="hidden md:block text-sm font-medium">
-                          {user?.name || 'User'}
+                          {user?.name || "User"}
                         </span>
                       </button>
 
@@ -186,7 +244,9 @@ export default function Navbar() {
                       className="flex items-center gap-2 text-gray-800 hover:text-[#E91E63] transition-colors"
                     >
                       <FiUser className="w-6 h-6" />
-                      <span className="hidden md:block text-sm font-medium">Login</span>
+                      <span className="hidden md:block text-sm font-medium">
+                        Login
+                      </span>
                     </Link>
                   )}
                 </div>
@@ -213,7 +273,7 @@ export default function Navbar() {
       <div
         className={`
         lg:hidden fixed inset-0 bg-white z-50 transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
         <div className="p-4 h-full overflow-y-auto">
@@ -226,7 +286,11 @@ export default function Navbar() {
 
           <ul className="mt-12 space-y-4">
             <li className="border-b border-gray-100 pb-2">
-              <Link to="/" className="text-gray-800 hover:text-pink-600 block py-2" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                to="/"
+                className="text-gray-800 hover:text-pink-600 block py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 HOME
               </Link>
             </li>
@@ -237,39 +301,66 @@ export default function Navbar() {
               >
                 SHOP
                 <svg
-                  className={`w-4 h-4 transition-transform duration-300 ${shopHover ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    shopHover ? "rotate-180" : ""
+                  }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
               <div
                 className={`
                 overflow-hidden transition-all duration-300 ease-in-out
-                ${shopHover ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}
+                ${
+                  shopHover ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+                }
               `}
               >
                 <div className="py-2 px-4 space-y-4">
                   {/* Shop Categories */}
                   <div>
-                    <h4 className="font-medium text-sm mb-2">Shop By Category</h4>
+                    <h4 className="font-medium text-sm mb-2">
+                      Shop By Category
+                    </h4>
                     <ul className="space-y-2 ml-2">
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Best Sellers</li>
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">French nails</li>
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Casual Wear Nails</li>
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Toe Nails</li>
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Ombre Nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Best Sellers
+                      </li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        French nails
+                      </li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Casual Wear Nails
+                      </li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Toe Nails
+                      </li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Ombre Nails
+                      </li>
                     </ul>
                   </div>
                   {/* Shop By Shape */}
                   <div>
                     <h4 className="font-medium text-sm mb-2">Shop By Shape</h4>
                     <ul className="space-y-2 ml-2">
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Coffin Nails</li>
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Stiletto Nails</li>
-                      <li className="text-gray-600 hover:text-pink-600 text-sm">Square Nails</li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Coffin Nails
+                      </li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Stiletto Nails
+                      </li>
+                      <li className="text-gray-600 hover:text-pink-600 text-sm">
+                        Square Nails
+                      </li>
                       {/* ...other shapes... */}
                     </ul>
                   </div>
@@ -281,12 +372,20 @@ export default function Navbar() {
               <Link to="/sale" className="text-gray-800 hover:text-pink-600">SALE</Link>
             </li> */}
             <li className="border-b border-gray-100 pb-2">
-              <Link to="/appointment" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                to="/appointment"
+                className="text-gray-800 hover:text-pink-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 BOOK AN APPOINTMENT
               </Link>
             </li>
             <li className="border-b border-gray-100 pb-2">
-              <Link to="/tutorial" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                to="/tutorial"
+                className="text-gray-800 hover:text-pink-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 TUTORIAL
               </Link>
             </li>
@@ -294,21 +393,29 @@ export default function Navbar() {
               <Link to="/blog" className="text-gray-800 hover:text-pink-600">BLOG</Link>
             </li> */}
             <li className="border-b border-gray-100 pb-2">
-              <Link to="/contact" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                to="/contact"
+                className="text-gray-800 hover:text-pink-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 CONTACT US
               </Link>
             </li>
-            
+
             {/* Authentication Links */}
             {isAuthenticated ? (
               <>
                 <li className="border-b border-gray-100 pb-2">
-                  <Link to="/account" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    to="/account"
+                    className="text-gray-800 hover:text-pink-600"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     MY ACCOUNT
                   </Link>
                 </li>
                 <li className="border-b border-gray-100 pb-2">
-                  <button 
+                  <button
                     onClick={() => {
                       logout();
                       setIsMobileMenuOpen(false);
@@ -322,12 +429,20 @@ export default function Navbar() {
             ) : (
               <>
                 <li className="border-b border-gray-100 pb-2">
-                  <Link to="/login" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    to="/login"
+                    className="text-gray-800 hover:text-pink-600"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     LOGIN
                   </Link>
                 </li>
                 <li className="border-b border-gray-100 pb-2">
-                  <Link to="/register" className="text-gray-800 hover:text-pink-600" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    to="/register"
+                    className="text-gray-800 hover:text-pink-600"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     REGISTER
                   </Link>
                 </li>

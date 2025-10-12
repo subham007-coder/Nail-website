@@ -1,15 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FiInstagram, FiFacebook, FiTwitter, FiYoutube } from 'react-icons/fi';
+import React from "react";
+import { Link } from "react-router-dom";
+import { FiInstagram, FiFacebook, FiTwitter, FiYoutube } from "react-icons/fi";
 
 function Footer() {
   // Update quickLinks array
   const quickLinks = [
-    { name: 'Home', path: '/' },
+    { name: "Home", path: "/" },
     // { name: 'About Us', path: '/about' },
-    { name: 'Shop', path: '/shop' },
-    { name: 'Book an Appointment', path: '/appointment' },
-    { name: 'Contact', path: '/contact' }
+    { name: "Shop", path: "/shop" },
+    { name: "Book an Appointment", path: "/appointment" },
+    { name: "Contact", path: "/contact" },
+  ];
+  // Update customerService array
+  const customerService = [
+    { name: "Shipping Policy", path: "/shipping" },
+    { name: "Return Policy", path: "/return" },
+    { name: "FAQ", path: "/faq" },
+    { name: "Track Order", path: "/track-order" },
   ];
 
   return (
@@ -19,14 +26,15 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Section */}
           <div className="space-y-4">
-            <img 
-              src="/assets/logo2.PNG" 
-              alt="Nailz By Angana Logo" 
+            <img
+              src="/assets/logo2.PNG"
+              alt="Nailz By Angana Logo"
               className="w-32 md:w-40 object-contain filter brightness-110 hover:brightness-125 transition-all duration-300"
             />
             <p className="text-sm leading-relaxed">
-              Experience the perfect blend of style and convenience with our premium press-on nails. 
-              Designed for the modern woman who values both beauty and time.
+              Experience the perfect blend of style and convenience with our
+              premium press-on nails. Designed for the modern woman who values
+              both beauty and time.
             </p>
             <div className="flex space-x-4">
               {/* <a href="https://www.instagram.com/nailz_by_angana?igsh=ZnAxNnk2OTQzeGpl" className="hover:text-pink-500 transition-colors"> */}
@@ -52,7 +60,7 @@ function Footer() {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link 
+                  <Link
                     to={link.path}
                     className="text-sm hover:text-pink-500 transition-colors"
                   >
@@ -65,18 +73,18 @@ function Footer() {
 
           {/* Customer Service */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Customer Service</h3>
+            <h3 className="text-lg font-semibold text-white">
+              Customer Service
+            </h3>
             <ul className="space-y-2">
-              {[
-                'Shipping Policy',
-                'Return Policy',
-                'FAQ',
-                'Track Order'
-              ].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm hover:text-pink-500 transition-colors">
-                    {item}
-                  </a>
+              {customerService.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.path}
+                    className="text-sm hover:text-pink-500 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -85,7 +93,9 @@ function Footer() {
           {/* Newsletter */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-white">Stay Updated</h3>
-            <p className="text-sm">Subscribe to our newsletter for exclusive offers and updates.</p>
+            <p className="text-sm">
+              Subscribe to our newsletter for exclusive offers and updates.
+            </p>
             <form className="flex flex-col space-y-2">
               <input
                 type="email"
@@ -111,15 +121,27 @@ function Footer() {
               © {new Date().getFullYear()} AR Lashes. All rights reserved.
             </p>
             <p className="text-sm">
-              Website Design And Development by <a href="https://growstara.in" className="hover:text-pink-500 transition-colors font-semibold">Growstara Digital</a>
+              Website Design And Development by{" "}
+              <a
+                href="https://growstara.in"
+                className="hover:text-pink-500 transition-colors font-semibold"
+              >
+                Growstara Digital
+              </a>
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-sm hover:text-pink-500 transition-colors">
+              <Link
+                to="/privacy"
+                className="text-sm hover:text-pink-500 transition-colors"
+              >
                 Privacy Policy
-              </a>
-              <a href="#" className="text-sm hover:text-pink-500 transition-colors">
+              </Link>
+              <Link
+                to="/terms"
+                className="text-sm hover:text-pink-500 transition-colors"
+              >
                 Terms of Service
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -35,4 +35,4 @@ function BookAppo() {
   )
 }
 
-export default BookAppo
+export default BookAppo;

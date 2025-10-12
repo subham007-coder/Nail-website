@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
-import { FiMinus, FiPlus, FiHeart, FiShoppingCart } from 'react-icons/fi';
-import { motion } from 'framer-motion';
-import { useCartActions } from '../../hooks/useCartActions';
+import React, { useState } from "react";
+import { FiMinus, FiPlus, FiShoppingCart, FiX } from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
+import { useCartActions } from "../../hooks/useCartActions";
 
 function ProductInfo({ product }) {
   const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedCurl, setSelectedCurl] = useState('');
+  const [selectedCurl, setSelectedCurl] = useState("");
   const [lengthQuantities, setLengthQuantities] = useState({
-    '8mm': 0,
-    '9mm': 0,
-    '10mm': 0,
-    '11mm': 0,
-    '12mm': 0,
-    '13mm': 0
+    "8mm": 0,
+    "9mm": 0,
+    "10mm": 0,
+    "11mm": 0,
+    "12mm": 0,
+    "13mm": 0,
+    "14mm": 0,
+    "15mm": 0,
+    Max: 0,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { addToCartWithAuth } = useCartActions();
 
   const updateLengthQuantity = (length, newQuantity) => {
-    setLengthQuantities(prev => ({
+    setLengthQuantities((prev) => ({
       ...prev,
-      [length]: Math.max(0, newQuantity)
+      [length]: Math.max(0, newQuantity),
     }));
   };
 
@@ -33,48 +37,55 @@ function ProductInfo({ product }) {
 
   const handleAddToCart = () => {
     if (!selectedCurl) {
-      alert('Please select a curl before adding to cart.');
+      alert("Please select a curl before adding to cart.");
       return;
     }
 
-    const selectedLengths = Object.entries(lengthQuantities)
-      .filter(([_, qty]) => qty > 0);
+    const selectedLengths = Object.entries(lengthQuantities).filter(
+      ([_, qty]) => qty > 0
+    );
 
     if (selectedLengths.length === 0) {
-      alert('Please select at least one length with quantity before adding to cart.');
+      alert("Please select at least one length with quantity.");
       return;
     }
 
-    // Add each length variant as a separate cart item
+    // Add each variant separately
     selectedLengths.forEach(([length, qty]) => {
       const productWithVariants = {
         ...product,
         selectedColor: product.colors ? product.colors[selectedColor] : null,
         selectedLength: length,
-        selectedCurl
+        selectedCurl,
       };
       addToCartWithAuth(productWithVariants, qty);
     });
 
-    // Reset quantities after adding to cart
+    // Reset quantities after adding
     setLengthQuantities({
-      '8mm': 0,
-      '9mm': 0,
-      '10mm': 0,
-      '11mm': 0,
-      '12mm': 0,
-      '13mm': 0
+      "8mm": 0,
+      "9mm": 0,
+      "10mm": 0,
+      "11mm": 0,
+      "12mm": 0,
+      "13mm": 0,
+      "14mm": 0,
+      "15mm": 0,
+      Max: 0,
     });
+    setIsModalOpen(false);
   };
 
   return (
     <div className="space-y-6">
       {/* Product Title & Category */}
       <div>
-        <h1 className="text-2xl md:text-3xl font-medium text-gray-900">
+        <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
           {product.name}
         </h1>
-        <p className="mt-2 text-gray-500">{product.category}</p>
+        <p className="mt-1 text-sm text-gray-500 uppercase">
+          {product.category}
+        </p>
       </div>
 
       {/* Price */}
@@ -94,7 +105,7 @@ function ProductInfo({ product }) {
         <p className="text-gray-600">{product.description}</p>
       </div>
 
-      {/* Color Options */}
+      {/* Colors */}
       {product.colors && (
         <div className="space-y-3">
           <p className="font-medium text-gray-900">Colors</p>
@@ -103,10 +114,11 @@ function ProductInfo({ product }) {
               <button
                 key={index}
                 onClick={() => setSelectedColor(index)}
-                className={`w-10 h-10 rounded-full border-2 transition-all
-                  ${selectedColor === index 
-                    ? 'border-pink-500 ring-2 ring-pink-200' 
-                    : 'border-white hover:border-gray-300'}`}
+                className={`w-10 h-10 rounded-full border-2 transition-all ${
+                  selectedColor === index
+                    ? "border-pink-500 ring-2 ring-pink-200"
+                    : "border-gray-200 hover:border-pink-300"
+                }`}
                 style={{ backgroundColor: color }}
               />
             ))}
@@ -114,87 +126,113 @@ function ProductInfo({ product }) {
         </div>
       )}
 
-      {/* Length Options */}
-      <div className="space-y-3">
-        <p className="font-medium text-gray-900">Select Length</p>
-        <div className="space-y-3">
-          {Object.entries(lengthQuantities).map(([length, qty]) => (
-            <div key={length} className="flex items-center justify-between p-3 border border-gray-200 rounded-xl">
-              <span className="font-medium text-gray-900">{length}</span>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => updateLengthQuantity(length, qty - 1)}
-                  className="w-8 h-8 rounded-full border border-gray-200 hover:border-pink-500
-                    text-gray-600 hover:text-pink-600 transition-colors flex items-center justify-center"
-                >
-                  <FiMinus className="w-4 h-4" />
-                </button>
-                <span className="w-8 text-center text-lg">{qty}</span>
-                <button
-                  onClick={() => updateLengthQuantity(length, qty + 1)}
-                  className="w-8 h-8 rounded-full border border-gray-200 hover:border-pink-500
-                    text-gray-600 hover:text-pink-600 transition-colors flex items-center justify-center"
-                >
-                  <FiPlus className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Curl Options */}
-      <div className="space-y-3">
-        <p className="font-medium text-gray-900">Select Curl</p>
-        <select
-          value={selectedCurl}
-          onChange={(e) => setSelectedCurl(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-        >
-          <option value="">Choose Curl</option>
-          {['C', 'D', 'DD'].map(curl => (
-            <option key={curl} value={curl}>{curl}</option>
-          ))}
-        </select>
-      </div>
-
       {/* Subtotal */}
       <div className="bg-gray-50 p-4 rounded-xl">
         <div className="flex justify-between items-center">
           <span className="font-medium text-gray-900">Subtotal</span>
-          <span className="font-medium text-gray-900">₹{getSubtotal().toFixed(2)}</span>
+          <span className="font-medium text-gray-900">
+            ₹{getSubtotal().toFixed(2)}
+          </span>
         </div>
       </div>
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 pt-6">
         <button
-          onClick={handleAddToCart}
-          className="flex-1 bg-pink-600 text-white px-8 py-4 rounded-xl hover:bg-pink-700
-            transition-colors flex items-center justify-center gap-2 text-lg font-medium"
+          onClick={() => setIsModalOpen(true)}
+          className="flex-1 bg-pink-600 text-white px-8 py-4 rounded-xl hover:bg-pink-700 transition-colors flex items-center justify-center gap-2 text-lg font-medium"
         >
           <FiShoppingCart className="w-5 h-5" />
-          Add to Cart
+          Select Options
         </button>
         <button
-          className="flex-1 bg-gray-100 text-gray-900 px-8 py-4 rounded-xl hover:bg-gray-200
-            transition-colors flex items-center justify-center gap-2 text-lg font-medium"
+          className="flex-1 bg-gray-100 text-gray-900 px-8 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 text-lg font-medium"
         >
           Start Order
         </button>
       </div>
 
-      {/* Additional Info */}
-      <div className="border-t pt-6 mt-8 space-y-4">
-        <div>
-          <p className="font-medium text-gray-900">Product Details</p>
-          <ul className="mt-2 space-y-2 text-sm text-gray-600">
-            {product.details?.map((detail, index) => (
-              <li key={index}>{detail}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      {/* Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 space-y-6 relative"
+            >
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              >
+                <FiX className="w-6 h-6" />
+              </button>
+
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                Select Length & Curl
+              </h2>
+
+              {/* Length selection */}
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {Object.entries(lengthQuantities).map(([length, qty]) => (
+                  <div
+                    key={length}
+                    className="flex items-center justify-between p-3 border border-gray-200 rounded-xl"
+                  >
+                    <span className="font-medium text-gray-900">{length}</span>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => updateLengthQuantity(length, qty - 1)}
+                        className="w-8 h-8 rounded-full border border-gray-200 hover:border-pink-500 text-gray-600 hover:text-pink-600 transition-colors flex items-center justify-center"
+                      >
+                        <FiMinus className="w-4 h-4" />
+                      </button>
+                      <span className="w-8 text-center text-lg">{qty}</span>
+                      <button
+                        onClick={() => updateLengthQuantity(length, qty + 1)}
+                        className="w-8 h-8 rounded-full border border-gray-200 hover:border-pink-500 text-gray-600 hover:text-pink-600 transition-colors flex items-center justify-center"
+                      >
+                        <FiPlus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Curl selection */}
+              <div>
+                <p className="font-medium text-gray-900 mb-2">Select Curl</p>
+                <select
+                  value={selectedCurl}
+                  onChange={(e) => setSelectedCurl(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500"
+                >
+                  <option value="">Choose Curl</option>
+                  {["C", "D", "DD"].map((curl) => (
+                    <option key={curl} value={curl}>
+                      {curl}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Confirm button */}
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-pink-600 text-white py-4 rounded-xl text-lg font-medium hover:bg-pink-700 transition-colors"
+              >
+                Add to Cart
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
