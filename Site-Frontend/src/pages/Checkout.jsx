@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,10 +9,14 @@ import { useAuth } from "../context/AuthContext";
 import { apiRequest } from "../utils/api";
 import { getLengthQuantityBreakdown, sortLengths } from "../utils/cartUtils";
 
-function Checkout() {
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
+function CheckoutInner() {
   const navigate = useNavigate();
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
+  const stripe = useStripe();
+  const elements = useElements();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -25,6 +31,7 @@ function Checkout() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("Cash"); // "Cash" | "Card"
 
   useEffect(() => {
     if (user) {
@@ -83,7 +90,7 @@ function Checkout() {
       const orderInfo = {
         user_info: userDetails,
         shippingOption: form.shippingOption,
-        paymentMethod: "Cash", // COD
+        paymentMethod,
         cart,
         subTotal: subtotal,
         shippingCost,
@@ -92,14 +99,58 @@ function Checkout() {
         // status omitted to use backend default "Pending"
       };
 
-      const order = await apiRequest("/order/add", {
-        method: "POST",
-        body: JSON.stringify(orderInfo),
-      });
+      if (paymentMethod === "Card") {
+        if (!stripe || !elements) {
+          throw new Error("Stripe not initialized");
+        }
 
-      // Navigate to order details page
-      clearCart();
-      navigate(`/order/${order._id}`);
+        // Create a PaymentMethod on client
+        const pmResult = await stripe.createPaymentMethod({
+          type: "card",
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: userDetails.name,
+            email: userDetails.email,
+            phone: userDetails.contact,
+          },
+        });
+        if (pmResult.error || !pmResult.paymentMethod) {
+          throw new Error(pmResult.error?.message || "Failed to create payment method");
+        }
+
+        // Create Payment Intent on server
+        const paymentIntent = await apiRequest("/order/create-payment-intent", {
+          method: "POST",
+          body: JSON.stringify({ total, cardInfo: pmResult.paymentMethod, email: userDetails.email }),
+        });
+
+        // Confirm card payment
+        const confirmRes = await stripe.confirmCardPayment(paymentIntent?.client_secret, {
+          payment_method: {
+            card: elements.getElement(CardElement),
+          },
+        });
+        if (confirmRes.error) {
+          throw new Error(confirmRes.error.message || "Payment confirmation failed");
+        }
+
+        // Save order only after successful payment confirmation
+        const order = await apiRequest("/order/add", {
+          method: "POST",
+          body: JSON.stringify({ ...orderInfo, cardInfo: paymentIntent }),
+        });
+
+        clearCart();
+        navigate(`/order/${order._id}`);
+      } else {
+        // Cash on Delivery (existing flow)
+        const order = await apiRequest("/order/add", {
+          method: "POST",
+          body: JSON.stringify(orderInfo),
+        });
+        clearCart();
+        navigate(`/order/${order._id}`);
+      }
     } catch (err) {
       setError(err.message || "Failed to place order");
     } finally {
@@ -141,60 +192,86 @@ function Checkout() {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">First Name</label>
-                <input name="firstName" value={form.firstName} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input name="firstName" value={form.firstName} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Last Name</label>
-                <input name="lastName" value={form.lastName} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input name="lastName" value={form.lastName} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Contact</label>
-                <input name="contact" value={form.contact} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input name="contact" value={form.contact} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Email</label>
-                <input type="email" name="email" value={form.email} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input type="email" name="email" value={form.email} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-gray-600 mb-1">Address</label>
-              <input name="address" value={form.address} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+              <input name="address" value={form.address} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Country</label>
-                <input name="country" value={form.country} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input name="country" value={form.country} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">City</label>
-                <input name="city" value={form.city} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input name="city" value={form.city} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Zip Code</label>
-                <input name="zipCode" value={form.zipCode} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
+                <input name="zipCode" value={form.zipCode} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300" required />
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Shipping Option</label>
-                <select name="shippingOption" value={form.shippingOption} onChange={handleChange} className="w-full border rounded-lg px-3 py-2">
+                <select name="shippingOption" value={form.shippingOption} onChange={handleChange} className="w-full border rounded-lg px-3 py-2 border-gray-300">
                   <option value="Standard">Standard (Free)</option>
                 </select>
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Payment Method</label>
-                <input value="Cash on Delivery" readOnly className="w-full border rounded-lg px-3 py-2 bg-gray-50" />
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="Cash"
+                      checked={paymentMethod === "Cash"}
+                      onChange={() => setPaymentMethod("Cash")}
+                    />
+                    Cash on Delivery
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="Card"
+                      checked={paymentMethod === "Card"}
+                      onChange={() => setPaymentMethod("Card")}
+                    />
+                    Credit/Debit Card
+                  </label>
+                </div>
+                {paymentMethod === "Card" && (
+                  <div className="mt-3 p-3 border rounded-lg">
+                    <CardElement />
+                  </div>
+                )}
               </div>
             </div>
 
             <button type="submit" disabled={submitting} className="w-full bg-pink-600 text-white mt-4 px-8 py-3 rounded-xl hover:bg-pink-700 transition-colors font-medium">
-              {submitting ? "Placing Order..." : "Place Order (COD)"}
+              {submitting ? "Processing..." : paymentMethod === "Card" ? "Pay & Place Order" : "Place Order (COD)"}
             </button>
           </form>
         </div>
@@ -278,6 +355,14 @@ function Checkout() {
 
       <Footer />
     </div>
+  );
+}
+
+function Checkout() {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutInner />
+    </Elements>
   );
 }
 

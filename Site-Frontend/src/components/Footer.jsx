@@ -77,7 +77,7 @@ function Footer() {
               Customer Service
             </h3>
             <ul className="space-y-2">
-              {customerService.map((link) => (
+            {customerService.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
@@ -130,7 +130,7 @@ function Footer() {
               </a>
             </p>
             <div className="flex space-x-6">
-              <Link
+            <Link
                 to="/privacy"
                 className="text-sm hover:text-pink-500 transition-colors"
               >
