@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiMessageCircle, FiMapPin } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuthenticatedApi } from '../hooks/useAuthenticatedApi';
@@ -53,9 +54,27 @@ const handleSubmit = async (e) => {
     });
     setSubmitStatus('success');
     setFormState({ name: '', contactNumber: '', email: '', reason: '', message: '' });
+    
+    toast.success("Message sent successfully! We'll get back to you soon.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   } catch (error) {
     console.error('Error submitting contact form:', error);
     setSubmitStatus('error');
+    
+    toast.error("Failed to send message. Please try again.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   }
 };
 

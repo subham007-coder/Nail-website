@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import Appointment from "./pages/Appointment"; 
@@ -16,6 +18,7 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ThankYou from "./pages/ThankYou";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 // import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -72,6 +75,14 @@ function App() {
                     </AuthRequiredRoute>
                   }
                 />
+                <Route
+                  path="/thank-you"
+                  element={
+                    <AuthRequiredRoute>
+                      <ThankYou />
+                    </AuthRequiredRoute>
+                  }
+                />
 
                 {/* User-specific routes - authentication required */}
                 <Route
@@ -102,6 +113,22 @@ function App() {
                 />
               </Routes>
             </div>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              toastStyle={{
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              }}
+            />
           </ScrollProvider>
         </Router>
       </CartProvider>

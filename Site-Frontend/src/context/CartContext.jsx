@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const CartContext = createContext();
 
@@ -28,6 +29,9 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product, quantity = 1) => {
+    // Get product name for toast notification
+    const productName = product.title?.en || product.title?.default || product.name || 'Product';
+    
     setCartItems(prevItems => {
       const existingItemIndex = prevItems.findIndex(item =>
         item.id === (product._id || product.id) &&
@@ -86,6 +90,16 @@ export const CartProvider = ({ children }) => {
       }
     });
 
+    // Show success toast
+    toast.success(`${productName} added to cart!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
     // Trigger animation
     setCartAnimation({
       product,
@@ -104,6 +118,16 @@ export const CartProvider = ({ children }) => {
         cartItem.selectedCurl === item.selectedCurl &&
         cartItem.selectedColor === item.selectedColor)
     ));
+    
+    // Show removal toast
+    toast.info(`${item.name} removed from cart`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const updateQuantity = (item, newQuantity) => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
@@ -141,7 +142,15 @@ function CheckoutInner() {
         });
 
         clearCart();
-        navigate(`/order/${order._id}`);
+        toast.success("Order placed successfully! Payment completed.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        navigate(`/thank-you?orderId=${order._id}`);
       } else {
         // Cash on Delivery (existing flow)
         const order = await apiRequest("/order/add", {
@@ -149,7 +158,15 @@ function CheckoutInner() {
           body: JSON.stringify(orderInfo),
         });
         clearCart();
-        navigate(`/order/${order._id}`);
+        toast.success("Order placed successfully! We'll contact you soon.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        navigate(`/thank-you?orderId=${order._id}`);
       }
     } catch (err) {
       setError(err.message || "Failed to place order");

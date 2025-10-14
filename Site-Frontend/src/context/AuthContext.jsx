@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { apiRequest } from '../utils/api';
 import Cookies from 'js-cookie';
 import { signOutFromGoogle } from '../config/googleOAuth';
@@ -106,6 +107,14 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Login error:', error);
+      toast.error(error.message || "Login failed. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return { success: false, error: error.message };
     } finally {
       setLoading(false);
@@ -123,6 +132,14 @@ export const AuthProvider = ({ children }) => {
       return { success: true, message: response.message };
     } catch (error) {
       console.error('Registration error:', error);
+      toast.error(error.message || "Registration failed. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return { success: false, error: error.message };
     } finally {
       setLoading(false);
@@ -159,6 +176,14 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Registration completion error:', error);
+      toast.error(error.message || "Email verification failed. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return { success: false, error: error.message };
     } finally {
       setLoading(false);
@@ -177,6 +202,15 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     Cookies.remove('authToken');
     Cookies.remove('refreshToken');
+    
+    toast.success("Logged out successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const updateUser = (updatedUser) => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCalendar from '../components/CustomCalendar';
@@ -73,9 +74,27 @@ function Appointment() {
       setFormData({ name: '', email: '', phone: '', service: '', location: '', address: '' });
       setSelectedDate(null);
       setSelectedTime(null);
+      
+      toast.success("Appointment booked successfully! We'll contact you soon.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } catch (error) {
       console.error('Error booking appointment:', error);
       setSubmitStatus('error');
+      
+      toast.error("Failed to book appointment. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } finally {
       setIsSubmitting(false);
     }
