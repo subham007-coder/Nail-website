@@ -8,7 +8,7 @@ function Sidebar({ open, setOpen }) {
     // { name: 'Dashboard', icon: FiHome, href: '/' },
     { name: 'Banner', icon: FiImage, href: '/banner' },
     { name: 'InstaFeed', icon: FiInstagram, href: '/instafeed' },
-    { name: 'Appointments', icon: FiCalendar, href: '/appointments' },
+    // { name: 'Appointments', icon: FiCalendar, href: '/appointments' },
     // { name: 'Products', icon: FiBox, href: '/products' },
     // { name: 'Orders', icon: FiShoppingBag, href: '/orders' },
     // { name: 'Users', icon: FiUsers, href: '/users' },
