@@ -26,7 +26,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
       className="bg-white rounded-2xl p-4 shadow-soft flex flex-col md:flex-row gap-4"
     >
       {/* Product Image */}
-      <Link to={`/shop/${product.id}`} className="w-full md:w-48 h-48 rounded-xl overflow-hidden">
+      <Link to={`/shop/${product._id}`} className="w-full md:w-48 h-48 rounded-xl overflow-hidden">
         <img
           src={product.image || "https://nailknack.com/cdn/shop/files/AnyConv.com__Untitleddesign_1_e0aced8b-e2a2-407b-9cd1-89d6d6d38697.webp?v=1699194525&width=360"}
           alt={product.name}
@@ -38,7 +38,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
       <div className="flex-1 flex flex-col justify-between">
         <div className="space-y-2">
           <Link
-            to={`/shop/${product.id}`}
+            to={`/shop/${product._id}`}
             className="text-xl font-medium text-gray-900 hover:text-pink-600 transition-colors"
           >
             {product.name}
@@ -93,7 +93,7 @@ function CartItem({ product, onRemove, onQuantityChange }) {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-2 mt-4">
           <button
-            onClick={() => onRemove(product.id)}
+            onClick={() => onRemove(product._id)}
             className="flex-1 bg-gray-100 text-gray-700 px-6 py-2.5 rounded-xl hover:bg-gray-200 
               transition-colors duration-200 text-sm font-medium"
           >

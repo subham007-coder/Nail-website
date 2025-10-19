@@ -68,7 +68,7 @@ function CheckoutInner() {
     try {
       // Normalize cart for backend stock deduction: include _id, quantity, and variant info
       const cart = cartItems.map((item) => ({
-        _id: item.id,
+        _id: item._id,
         quantity: item.quantity,
         name: item.name,
         price: item.price,
@@ -319,7 +319,7 @@ function CheckoutInner() {
             <h3 className="text-sm font-medium text-gray-900 mb-2">Items</h3>
             <ul className="space-y-3 max-h-64 overflow-auto pr-2">
               {cartItems.map((item) => (
-                <li key={`${item.id}-${item.selectedLength}-${item.selectedCurl}-${item.selectedColor}`} className="flex items-center gap-3">
+                <li key={`${item._id}-${item.selectedLength}-${item.selectedCurl}-${item.selectedColor}`} className="flex items-center gap-3">
                   <img src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover" />
                   <div className="flex-1">
                     <p className="text-gray-900 text-sm line-clamp-1">{item.name}</p>
