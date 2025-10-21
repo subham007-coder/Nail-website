@@ -57,6 +57,13 @@ function ProductDetails() {
                 typeof p?.description === "object"
                   ? p?.description?.en || p?.description?.default || ""
                   : p?.description || "",
+              shortDescription:
+                typeof p?.shortDescription === "object"
+                  ? p?.shortDescription?.en ||
+                    p?.shortDescription?.default ||
+                    ""
+                  : p?.shortDescription || "",
+
               images: (() => {
                 const arr = Array.isArray(p?.image)
                   ? p.image.filter(Boolean)
@@ -94,6 +101,10 @@ function ProductDetails() {
                   ? rp?.description?.en || rp?.description?.default || ""
                   : rp?.description || "",
               price: rp?.prices?.price ?? rp?.price ?? 0,
+              shortDescription:
+                typeof rp?.shortDescription === "object"
+                  ? rp?.shortDescription?.en || rp?.shortDescription?.default || ""
+                  : rp?.shortDescription || "",
               originalPrice:
                 rp?.prices?.originalPrice ?? rp?.prices?.compareAtPrice ?? null,
               percentOff: rp?.prices?.discount ?? 0,

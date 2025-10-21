@@ -58,6 +58,10 @@ function ProductGrid({ filters }) {
           ? p?.description?.en || p?.description?.default || ""
           : p?.description || "",
       price: p?.prices?.price ?? p?.price ?? 0,
+      shortDescription:
+        typeof p?.shortDescription === "object"
+          ? p?.shortDescription?.en || p?.shortDescription?.default || ""
+          : p?.shortDescription || "",
       originalPrice: p?.prices?.originalPrice ?? p?.prices?.compareAtPrice ?? null,
 
 

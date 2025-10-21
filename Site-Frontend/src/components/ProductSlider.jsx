@@ -56,30 +56,29 @@ function ProductSlider() {
   // }, []);
 
   useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const data = await adminApiRequest("/v1/products/show");
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await adminApiRequest("/v1/products/show");
 
-      // handle both cases: array or { products: [] }
-      if (Array.isArray(data)) {
-        setProducts(data);
-      } else if (data.products) {
-        setProducts(data.products);
-      } else {
-        setProducts([]);
+        // handle both cases: array or { products: [] }
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data.products) {
+          setProducts(data.products);
+        } else {
+          setProducts([]);
+        }
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products");
+        setProducts(fallbackProducts);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to load products");
-      setProducts(fallbackProducts);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchProducts();
-}, []);
-
+    };
+    fetchProducts();
+  }, []);
 
   const handleMouseEnter = (productId) => {
     setHoveredProducts((prev) => new Set([...prev, productId]));
@@ -142,18 +141,30 @@ function ProductSlider() {
       {quickViewProduct && (
         <QuickView
           product={{
-            id: quickViewProduct.slug || quickViewProduct._id || quickViewProduct.id,
+            id:
+              quickViewProduct.slug ||
+              quickViewProduct._id ||
+              quickViewProduct.id,
             name: quickViewProduct.title?.en || quickViewProduct.name || "",
-            image: Array.isArray(quickViewProduct.image) && quickViewProduct.image.length
-              ? quickViewProduct.image[0]
-              : quickViewProduct.image || "",
-            price: quickViewProduct.prices?.price ?? quickViewProduct.price ?? 0,
-            originalPrice: quickViewProduct.prices?.originalPrice ?? quickViewProduct.prices?.compareAtPrice ?? null,
+            image:
+              Array.isArray(quickViewProduct.image) &&
+              quickViewProduct.image.length
+                ? quickViewProduct.image[0]
+                : quickViewProduct.image || "",
+            price:
+              quickViewProduct.prices?.price ?? quickViewProduct.price ?? 0,
+            originalPrice:
+              quickViewProduct.prices?.originalPrice ??
+              quickViewProduct.prices?.compareAtPrice ??
+              null,
             oldPrice: quickViewProduct.prices?.originalPrice ?? null,
             percentOff: quickViewProduct.prices?.discount ?? 0,
-            categoryName: typeof quickViewProduct?.category?.name === "object"
-              ? quickViewProduct?.category?.name?.en || quickViewProduct?.category?.name?.default || ""
-              : quickViewProduct?.category?.name || "",
+            categoryName:
+              typeof quickViewProduct?.category?.name === "object"
+                ? quickViewProduct?.category?.name?.en ||
+                  quickViewProduct?.category?.name?.default ||
+                  ""
+                : quickViewProduct?.category?.name || "",
             isNew: !!quickViewProduct?.isNew,
           }}
           isOpen={true}
@@ -192,6 +203,10 @@ function ProductSlider() {
           const title = product.title?.en || product.name || "Product";
           const description =
             product.description?.en || product.description || "description";
+          const shortDescription =
+            product.shortDescription?.en ||
+            product.shortDescription ||
+            "Short Description";
           const stock = product.stock?.en || product.stock || "In stock";
           const originalPrice =
             product.prices?.originalPrice || product.price || 0;
@@ -219,7 +234,9 @@ function ProductSlider() {
                 className="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
                 onMouseEnter={() => handleMouseEnter(productId)}
                 onMouseLeave={() => handleMouseLeave(productId)}
-                onClick={() => navigate(`/shop/${product.slug || product._id || product.id}`)}
+                onClick={() =>
+                  navigate(`/shop/${product.slug || product._id || product.id}`)
+                }
               >
                 <div className="relative aspect-[4/3] overflow-hidden p-4">
                   <img
@@ -234,13 +251,19 @@ function ProductSlider() {
                       <FiHeart className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); setQuickViewProduct(product); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setQuickViewProduct(product);
+                      }}
                       className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
                     >
                       <FiEye className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(e, product);
+                      }}
                       className="p-2 bg-white/80 backdrop-blur rounded-full shadow hover:bg-pink-600 hover:text-white transition"
                     >
                       <FiShoppingCart className="w-5 h-5" />
@@ -253,13 +276,14 @@ function ProductSlider() {
                     {title}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 mt-1">
-                    {description}
+                    {shortDescription}
                   </p>
                   <p className="text-xs text-green-600 mt-1">
                     Only {stock} left!
                   </p>
 
-                  <div className="mt-2 flex items-center justify-center gap-2">
+                    {/* Product price */}
+                  {/* <div className="mt-2 flex items-center justify-center gap-2">
                     <span className="text-base font-bold text-pink-600">
                       ₹{salePrice}
                     </span>
@@ -273,11 +297,31 @@ function ProductSlider() {
                        ₹{discount} OFF
                       </span>
                     )}
+                  </div> */}
+
+                  {/* Product price */}
+                  <div className="mt-2 flex items-center justify-center gap-2">
+                    <span className="text-base font-bold text-pink-600">
+                      ₹{salePrice.toFixed(2)}
+                    </span>
+                    {originalPrice > salePrice && (
+                      <span className="text-sm text-gray-400 line-through">
+                        ₹{originalPrice.toFixed(2)}
+                      </span>
+                    )}
+                    {discount > 0 && (
+                      <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+                        ₹{discount.toFixed(2)} OFF
+                      </span>
+                    )}
                   </div>
 
                   {/* Add to Cart Button */}
                   <button
-                    onClick={(e) => { e.stopPropagation(); handleAddToCart(e, product); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(e, product);
+                    }}
                     className="mt-3 w-full bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center gap-2 text-xs"
                   >
                     <FiShoppingCart className="w-4 h-4" />

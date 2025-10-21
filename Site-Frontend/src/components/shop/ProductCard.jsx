@@ -55,6 +55,8 @@ function ProductCard({ product }) {
       return 0;
     })(),
     description: typeof product.description === "string" ? product.description : "",
+    shortDescription: typeof product.shortDescription === "string" ? product.shortDescription : "",
+
     categoryName: product.categoryName || "",
     isNew: !!product.isNew,
     // Demo-only placeholders for ratings (replace when ratings are real)
@@ -62,6 +64,9 @@ function ProductCard({ product }) {
     reviews: 128,
     rating: 4.5,
   };
+
+  // console.log("Short Description:", extendedProduct.shortDescription);
+
 
   const handleCardClick = (e) => {
     // Prevent navigation if clicking on buttons
@@ -145,9 +150,9 @@ function ProductCard({ product }) {
             >
               {extendedProduct.name}
             </h3>
-            {extendedProduct.description && (
+            {extendedProduct.shortDescription && (
               <p className="font-inter text-[10px] sm:text-xs text-gray-500 mt-0.5 line-clamp-1">
-                {extendedProduct.description}
+                {extendedProduct.shortDescription}
               </p>
             )}
           </div>

@@ -119,9 +119,13 @@ function ProductInfo({ product }) {
         )}
       </div>
 
-      {/* Description */}
-      <div className="prose prose-sm max-w-none">
+      {/* Long Description */}
+      {/* <div className="prose prose-sm max-w-none">
         <p className="text-gray-600">{product.description}</p>
+      </div> */}
+      {/* Short Description */}
+      <div className="prose prose-sm max-w-none">
+        <p className="text-gray-600">{product.shortDescription}</p>
       </div>
 
       {/* Colors */}
